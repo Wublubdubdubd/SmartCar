@@ -1,0 +1,156 @@
+C251 COMPILER V5.60.0,  main                                                               24/03/25  20:56:38  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE main
+OBJECT MODULE PLACED IN .\out_file\main.obj
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\main.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(0,SIZE) BRO
+                    -WSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;.
+                    -.\user;..\code) DEBUG PRINT(.\out_file\main.lst) TABS(2) OBJECT(.\out_file\main.obj) 
+
+stmt  level    source
+
+    1          /********************************************************************************************************
+             -*************
+    2          * AI8051U Opensourec Library 即（AI8051U 开源库）是一个基于官方 SDK 接口的第三方开源库
+    3          * Copyright (c) 2022 SEEKFREE 逐飞科技
+    4          *
+    5          * 本文件是STC 开源库的一部分
+    6          *
+    7          * AI8051U 开源库 是免费软件
+    8          * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公共许可证）的条款
+    9          * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/或修改它
+   10          *
+   11          * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+   12          * 甚至没有隐含的适销性或适合特定用途的保证
+   13          * 更多细节请参见 GPL
+   14          *
+   15          * 您应该在收到本开源库的同时收到一份 GPL 的副本
+   16          * 如果没有，请参阅<https://www.gnu.org/licenses/>
+   17          *
+   18          * 额外注明：
+   19          * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+   20          * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+   21          * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+   22          * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（即本声明）
+   23          *
+   24          * 文件名称          
+   25          * 公司名称          成都逐飞科技有限公司
+   26          * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+   27          * 开发环境          MDK FOR C251
+   28          * 适用平台          AI8051U
+   29          * 店铺链接          https://seekfree.taobao.com/
+   30          *
+   31          * 修改记录
+   32          * 日期              作者           备注
+   33          * 2024-08-01        大W            first version
+   34          *********************************************************************************************************
+             -***********/
+   35          
+   36          #include "zf_common_headfile.h"
+   37          #include "pid.h"
+   38          
+   39          #define PIT_IMU  (TIM0_PIT) // IMU 中断源 TIM0
+   40          
+   41          void pit_hanlder_imu(void); // TIM0 中断服务函数
+   42          
+   43          //acc gyro 参数
+   44          float imu_acc[3],imu_gyro[3];
+   45          
+   46          void main()
+   47          {
+   48   1          unsigned char index=0;  //循环变量
+   49   1          clock_init(SYSTEM_CLOCK_40M); // 务必保留
+   50   1          debug_init(); // 务必保留
+   51   1      
+   52   1          //屏幕初始化
+   53   1          ips114_init();
+   54   1          ips114_show_string(0, 16*0, "ISP init successfully.");
+   55   1          
+C251 COMPILER V5.60.0,  main                                                               24/03/25  20:56:38  PAGE 2   
+
+   56   1          //IMU初始化
+   57   1          while(imu660ra_init()!=0)
+   58   1            ips114_show_string(0, 16*1, "IMU660RA init error.");                                 // IMU660RA 初
+             -始化失败
+   59   1          
+   60   1          system_delay_ms(1000); //后期删除
+   61   1          ips114_clear(RGB565_WHITE);//清屏
+   62   1          
+   63   1          //加速度
+   64   1          ips114_set_color(RGB565_BLUE,RGB565_WHITE);
+   65   1          ips114_show_string(0,16*0,"Acc: x,y,z");
+   66   1          ips114_show_char(60,16*1,'g');
+   67   1          ips114_show_char(140,16*1,'g');
+   68   1          ips114_show_char(220,16*1,'g');
+   69   1        
+   70   1          //角速度
+   71   1          ips114_show_string(0,16*2,"Gyro: x,y,z");
+   72   1          ips114_show_char(60,16*3,'d');
+   73   1          ips114_show_char(140,16*3,'d');
+   74   1          ips114_show_char(220,16*3,'d');
+   75   1          ips114_set_color(RGB565_RED,RGB565_WHITE);
+   76   1          
+   77   1          //设置中断回调函数 5ms采样一次IMU数据
+   78   1          tim0_irq_handler = pit_hanlder_imu; 
+   79   1          pit_ms_init(PIT_IMU, 5);
+   80   1        
+   81   1          
+   82   1          while(1)
+   83   1          {
+   84   2            for(index=0;index<3;index++)
+   85   2            {
+   86   3              ips114_show_float(80*index, 16*1 ,imu_acc[index],2,3);//加速度信息 字符8x16
+   87   3              ips114_show_float(80*index, 16*3 ,imu_gyro[index],2,3);//角速度信息
+   88   3            }
+   89   2            system_delay_ms(1000);
+   90   2          }
+   91   1      }
+   92          /**
+   93            * @brief TIM0中断处理函数，提取imu数据
+   94            * @param 无
+   95            * @return 无
+   96            */
+   97          void pit_hanlder_imu(void)
+   98          {
+   99   1          imu660ra_get_acc();                                                         // 获取 IMU660RA 的加速度
+             -测量数值
+  100   1          imu660ra_get_gyro();                                                        // 获取 IMU660RA 的角速度
+             -测量数值
+  101   1          
+  102   1          //转换为实际物理值
+  103   1          imu_acc[0]=imu660ra_acc_x/imu660ra_transition_factor[0];
+  104   1          imu_acc[1]=imu660ra_acc_y/imu660ra_transition_factor[0];
+  105   1          imu_acc[2]=imu660ra_acc_z/imu660ra_transition_factor[0];
+  106   1        
+  107   1          imu_gyro[0]=imu660ra_gyro_x/imu660ra_transition_factor[1];
+  108   1          imu_gyro[1]=imu660ra_gyro_y/imu660ra_transition_factor[1];
+  109   1          imu_gyro[2]=imu660ra_gyro_z/imu660ra_transition_factor[1]; 
+  110   1      }
+  111          
+  112          
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       655     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+C251 COMPILER V5.60.0,  main                                                               24/03/25  20:56:38  PAGE 3   
+
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =        25     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =        67     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
