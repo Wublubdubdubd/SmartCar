@@ -1,0 +1,39 @@
+C251 COMPILER V5.60.0,  gps                                                                29/03/25  00:46:35  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE gps
+OBJECT MODULE PLACED IN .\out_file\gps.obj
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\gps.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BROW
+                    -SE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;..
+                    -\user;..\code) DEBUG PRINT(.\out_file\gps.lst) TABS(2) OBJECT(.\out_file\gps.obj) 
+
+stmt  level    source
+
+    1          #include "gps.h"
+    2          
+    3          bit gps_date_ready=0;
+    4          
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =         2     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =         1     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

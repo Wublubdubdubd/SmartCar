@@ -1,9 +1,9 @@
-C251 COMPILER V5.60.0,  pid                                                                24/03/25  20:07:11  PAGE 1   
+C251 COMPILER V5.60.0,  pid                                                                29/03/25  00:53:11  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE pid
 OBJECT MODULE PLACED IN .\out_file\pid.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\pid.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(0,SIZE) BROW
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\pid.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BROW
                     -SE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;..
                     -\user;..\code) DEBUG PRINT(.\out_file\pid.lst) TABS(2) OBJECT(.\out_file\pid.obj) 
 
@@ -66,7 +66,7 @@ stmt  level    source
    55          {
    56   1          /* 累积误差 */
    57   1          pid->integrator += error;
-C251 COMPILER V5.60.0,  pid                                                                24/03/25  20:07:11  PAGE 2   
+C251 COMPILER V5.60.0,  pid                                                                29/03/25  00:53:11  PAGE 2   
 
    58   1      
    59   1          /* 误差限幅 */
@@ -135,9 +135,9 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-C251 COMPILER V5.60.0,  pid                                                                24/03/25  20:07:11  PAGE 3   
+C251 COMPILER V5.60.0,  pid                                                                29/03/25  00:53:11  PAGE 3   
 
-  code size            =      1998     ------
+  code size            =      1820     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------

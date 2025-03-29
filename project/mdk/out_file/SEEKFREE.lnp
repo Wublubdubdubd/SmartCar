@@ -20,24 +20,24 @@
 ".\out_file\zf_driver_timer.obj",
 ".\out_file\zf_driver_uart.obj",
 ".\out_file\zf_device_config.obj",
-".\out_file\zf_device_type.obj",
-".\out_file\zf_device_tft180.obj",
 ".\out_file\zf_device_ips114.obj",
-".\out_file\zf_device_ips200.obj",
-".\out_file\zf_device_dl1a.obj",
 ".\out_file\zf_device_ble6a20.obj",
-".\out_file\zf_device_wireless_uart.obj",
-".\out_file\zf_device_mpu6050.obj",
-".\out_file\zf_device_icm20602.obj",
 ".\out_file\zf_device_imu660ra.obj",
-".\out_file\zf_device_imu963ra.obj",
 ".\out_file\zf_device_gps_tau1201.obj",
 ".\out_file\zf_device_tsl1401.obj",
+".\out_file\zf_device_type.obj",
+".\out_file\zf_device_wireless_uart.obj",
 ".\out_file\seekfree_assistant.obj",
 ".\out_file\seekfree_assistant_interface.obj",
 ".\out_file\isr.obj",
 ".\out_file\main.obj",
-".\out_file\pid.obj" 
+".\out_file\pid.obj",
+".\out_file\ips114.obj",
+".\out_file\imu.obj",
+".\out_file\gps.obj",
+".\out_file\bluetooth.obj",
+".\out_file\init.obj",
+".\out_file\pwm.obj" 
 TO ".\out_file\SEEKFREE" 
 PRINT(".\out_file\SEEKFREE.map") CASE DISABLEWARNING (57,16) 
 REMOVEUNUSED 

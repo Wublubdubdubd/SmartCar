@@ -1,9 +1,9 @@
-C251 COMPILER V5.60.0,  main                                                               25/03/25  23:25:37  PAGE 1   
+C251 COMPILER V5.60.0,  main                                                               29/03/25  00:53:11  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE main
 OBJECT MODULE PLACED IN .\out_file\main.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\main.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(0,SIZE) BRO
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\main.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BRO
                     -WSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;.
                     -.\user;..\code) DEBUG PRINT(.\out_file\main.lst) TABS(2) OBJECT(.\out_file\main.obj) 
 
@@ -45,145 +45,38 @@ stmt  level    source
    33          * 2024-08-01        大W            first version
    34          *********************************************************************************************************
              -***********/
-   35          
-   36          #include "zf_common_headfile.h"
-   37          #include "pid.h"
-   38          
-   39          #define PIT_IMU  (TIM0_PIT) // IMU 中断源 TIM0
-   40          
-   41          void pit_hanlder_imu(void); // TIM0 中断服务函数
-   42          
-   43          //acc gyro 参数
-   44          float imu_acc[3],imu_gyro[3];
-   45          
-   46          void main()
-   47          {
-   48   1          unsigned char index=0;  //循环变量
-   49   1          clock_init(SYSTEM_CLOCK_40M); // 务必保留
-   50   1          debug_init(); // 务必保留
-   51   1        
-   52   1          //GPS初始化
-   53   1          gps_init();
-   54   1      
-   55   1          //屏幕初始化
-C251 COMPILER V5.60.0,  main                                                               25/03/25  23:25:37  PAGE 2   
+   35          #include "init.h"
+   36          
+   37          void main()
+   38          {
+   39   1          init();  
+   40   1          while(1)
+   41   1          {
+   42   2      #if IPS_USE     
+                     IPS114_Show_Info(); //显示必要信息
+               #endif
+   45   2            switch(blue_tooth_read())
+   46   2            {
+   47   3              case 's':pwm_set_duty(PWM_1,550);pwm_set_duty(PWM_2,550);break;
+   48   3              case 'b':pwm_set_duty(PWM_1,500);pwm_set_duty(PWM_2,500);break;
+   49   3              default :;
+   50   3            }
+   51   2      
+   52   2            system_delay_ms(500);
+   53   2          }
+   54   1      }
 
-   56   1          ips114_init();
-   57   1          ips114_show_string(0, 16*0, "ISP init successfully.");
-   58   1          
-   59   1          //IMU初始化
-   60   1          while(imu660ra_init()!=0)
-   61   1            ips114_show_string(0, 16*1, "IMU660RA init error.");                                 // IMU660RA 初
-             -始化失败
-   62   1          
-   63   1          system_delay_ms(1000); //后期删除
-   64   1          ips114_clear(RGB565_WHITE);//清屏
-   65   1          
-   66   1          //加速度
-   67   1          ips114_set_color(RGB565_BLUE,RGB565_WHITE);
-   68   1          ips114_show_string(0,16*0,"Acc: x,y,z");
-   69   1          ips114_show_char(60,16*1,'g');
-   70   1          ips114_show_char(140,16*1,'g');
-   71   1          ips114_show_char(220,16*1,'g');
-   72   1        
-   73   1          //角速度
-   74   1          ips114_set_color(RGB565_PURPLE,RGB565_WHITE);
-   75   1          ips114_show_string(0,16*2,"Gyro: x,y,z");
-   76   1          ips114_show_char(60,16*3,'d');
-   77   1          ips114_show_char(140,16*3,'d');
-   78   1          ips114_show_char(220,16*3,'d');
-   79   1      
-   80   1          
-   81   1          //GPS
-   82   1          ips114_set_color(RGB565_YELLOW,RGB565_WHITE);
-   83   1          ips114_show_string(0, 16*5, "S: ");//定位状态
-   84   1          ips114_show_string(40, 16*5,"N: ");//卫星数目
-   85   1          ips114_show_string(100, 16*5,"H: ");//GPS天线高度
-   86   1      
-   87   1          ips114_show_string(0, 16*6, "Lat");//纬度
-   88   1          ips114_show_string(120, 16*6, "Lon");//经度
-   89   1          ips114_show_string(0, 16*7, "v");//速度
-   90   1          ips114_show_string(120, 16*7, "d");//方向
-   91   1      
-   92   1          
-   93   1          //设置中断回调函数 5ms采样一次IMU数据
-   94   1          tim0_irq_handler = pit_hanlder_imu; 
-   95   1          pit_ms_init(PIT_IMU, 5);
-   96   1        
-   97   1          ips114_set_color(RGB565_RED,RGB565_WHITE);
-   98   1          while(1)
-   99   1          {
-  100   2            //IMU
-  101   2            for(index=0;index<3;index++)
-  102   2            {
-  103   3              ips114_show_float(80*index, 16*1 ,imu_acc[index],2,3);//加速度信息 字符8x16
-  104   3              ips114_show_float(80*index, 16*3 ,imu_gyro[index],2,3);//角速度信息
-  105   3            }
-  106   2            //GPS
-  107   2            if(gps_tau1201_flag)
-  108   2            {
-  109   3              gps_tau1201_flag = 0;
-  110   3              if(!gps_data_parse())          //开始解析数据
-  111   3              {
-  112   4              //显示GPS位置信息
-  113   4              ips114_show_uint8(20, 16*5, gps_tau1201.state);
-  114   4              ips114_show_uint8(60, 16*5, gps_tau1201.satellite_used);
-  115   4              ips114_show_float(120, 16*5, gps_tau1201.height, 4, 6);
-  116   4                
-  117   4              ips114_show_float(20, 16*6, gps_tau1201.latitude, 4, 6);
-  118   4              ips114_show_float(140, 16*6, gps_tau1201.longitude, 4, 6);
-  119   4              ips114_show_float(20, 16*7, gps_tau1201.speed, 4, 6);
-  120   4              ips114_show_float(140, 16*7, gps_tau1201.direction, 4, 6);
-C251 COMPILER V5.60.0,  main                                                               25/03/25  23:25:37  PAGE 3   
-
-  121   4      
-  122   4              
-  123   4      //        printf("gps_state       = %d\r\n" , gps_tau1201.state);         //输出当前定位有效模式 1：定位有效 
-             - 0：定位无效
-  124   4      //        printf("latitude        = %lf\r\n", gps_tau1201.latitude);      //输出纬度信息
-  125   4      //        printf("longitude       = %lf\r\n", gps_tau1201.longitude);     //输出经度信息
-  126   4      //        printf("speed           = %lf\r\n", gps_tau1201.speed);         //输出速度信息
-  127   4      //        printf("direction       = %lf\r\n", gps_tau1201.direction);     //输出方向信息
-  128   4      //        printf("satellite_used  = %d\r\n" , gps_tau1201.satellite_used);//输出当前用于定位的卫星数量
-  129   4      //        printf("height          = %lf\r\n", gps_tau1201.height);        //输出当前GPS天线所处高度
-  130   4              }
-  131   3            }
-  132   2            system_delay_ms(1000);
-  133   2           }
-  134   1      }
-  135          /**
-  136            * @brief TIM0中断处理函数，提取imu数据
-  137            * @param 无
-  138            * @return 无
-  139            */
-  140          void pit_hanlder_imu(void)
-  141          {
-  142   1          imu660ra_get_acc();                                                         // 获取 IMU660RA 的加速度
-             -测量数值
-  143   1          imu660ra_get_gyro();                                                        // 获取 IMU660RA 的角速度
-             -测量数值
-  144   1          
-  145   1          //转换为实际物理值
-  146   1          imu_acc[0]=imu660ra_acc_x/imu660ra_transition_factor[0];
-  147   1          imu_acc[1]=imu660ra_acc_y/imu660ra_transition_factor[0];
-  148   1          imu_acc[2]=imu660ra_acc_z/imu660ra_transition_factor[0];
-  149   1        
-  150   1          imu_gyro[0]=imu660ra_gyro_x/imu660ra_transition_factor[1];
-  151   1          imu_gyro[1]=imu660ra_gyro_y/imu660ra_transition_factor[1];
-  152   1          imu_gyro[2]=imu660ra_gyro_z/imu660ra_transition_factor[1]; 
-  153   1      }
-  154          
-  155          
+C251 COMPILER V5.60.0,  main                                                               29/03/25  00:53:11  PAGE 2   
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =      1110     ------
+  code size            =        70     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        25     ------
+  xdata size           =    ------     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
@@ -193,7 +86,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =        91     ------
+  hconst size          =    ------     ------
 End of Module Information.
 
 

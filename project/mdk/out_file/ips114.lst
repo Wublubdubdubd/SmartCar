@@ -1,0 +1,102 @@
+C251 COMPILER V5.60.0,  ips114                                                             29/03/25  00:46:35  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE ips114
+OBJECT MODULE PLACED IN .\out_file\ips114.obj
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\ips114.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) B
+                    -ROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver
+                    -;..\user;..\code) DEBUG PRINT(.\out_file\ips114.lst) TABS(2) OBJECT(.\out_file\ips114.obj) 
+
+stmt  level    source
+
+    1          #include "ips114.h"
+    2          
+    3          /**
+    4            * @brief 显示单位
+    5            * @param 无
+    6            * @return 无
+    7            */
+    8          void IPS114_Show_Unit(void) 
+    9          {  
+   10   1          //加速度
+   11   1          ips114_set_color(RGB565_BLUE,RGB565_WHITE);
+   12   1          ips114_show_string(0,16*0,"Acc: x,y,z");
+   13   1          ips114_show_char(60,16*1,'g');
+   14   1          ips114_show_char(140,16*1,'g');
+   15   1          ips114_show_char(220,16*1,'g');
+   16   1      
+   17   1          //角速度
+   18   1          ips114_set_color(RGB565_PURPLE,RGB565_WHITE);
+   19   1          ips114_show_string(0,16*2,"Gyro: x,y,z");
+   20   1          ips114_show_char(60,16*3,'d');
+   21   1          ips114_show_char(140,16*3,'d');
+   22   1          ips114_show_char(220,16*3,'d');
+   23   1      
+   24   1          //GPS
+   25   1          ips114_set_color(RGB565_PINK,RGB565_WHITE);
+   26   1          ips114_show_string(0, 16*5, "S: ");//定位状态
+   27   1          ips114_show_string(50, 16*5,"N: ");//卫星数目
+   28   1          ips114_show_string(130, 16*5,"H: ");//GPS天线高度
+   29   1      
+   30   1          ips114_show_string(0, 16*6, "Lat:");//纬度
+   31   1          ips114_show_string(130, 16*6, "Lon:");//经度
+   32   1          ips114_show_string(0, 16*7, "v:");//速度
+   33   1          ips114_show_string(130, 16*7, "d:");//方向
+   34   1          
+   35   1          ips114_set_color(RGB565_RED,RGB565_WHITE);
+   36   1      }
+   37          /**
+   38            * @brief 显示信息
+   39            * @param 无
+   40            * @return 无
+   41            */
+   42          void IPS114_Show_Info(void)
+   43          {   
+   44   1          //循环变量
+   45   1          unsigned char index=0;  
+   46   1          //IMU
+   47   1          for(index=0;index<3;index++)
+   48   1          {
+   49   2            ips114_show_float(80*index, 16*1 ,imu_acc[index],2,3);//加速度信息 字符8x16
+   50   2            ips114_show_float(80*index, 16*3 ,imu_gyro[index],2,3);//角速度信息
+   51   2          }
+   52   1          //GPS
+   53   1          if(gps_date_ready)
+   54   1          {
+   55   2            //显示GPS位置信息
+   56   2            ips114_show_uint8(15, 16*5, gps_tau1201.state);
+   57   2            ips114_show_uint8(70, 16*5, gps_tau1201.satellite_used);
+C251 COMPILER V5.60.0,  ips114                                                             29/03/25  00:46:35  PAGE 2   
+
+   58   2            ips114_show_float(160, 16*5, gps_tau1201.height, 4, 6);
+   59   2              
+   60   2            ips114_show_float(30, 16*6, gps_tau1201.latitude, 4, 6);
+   61   2            ips114_show_float(160, 16*6, gps_tau1201.longitude, 4, 6);
+   62   2            ips114_show_float(30, 16*7, gps_tau1201.speed, 4, 6);
+   63   2            ips114_show_float(160, 16*7, gps_tau1201.direction, 4, 6);
+   64   2          }
+   65   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       735     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =         1     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =        51     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

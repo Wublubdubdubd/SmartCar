@@ -36,6 +36,15 @@
 #ifndef __ISR_H_
 #define __ISR_H_
 
+#include "init.h"
 
+#define PIT_IMU  (TIM0_PIT) // IMU 中断源 TIM0
+#define PIT_GPS  (TIM1_PIT) // GPS 中断源 TIM1
+
+
+void pit_hanlder_imu(void); // TIM0 中断服务函数
+void pit_hanlder_GPS(void); // TIM1 中断服务函数
+
+void my_pit_init(void);
 
 #endif

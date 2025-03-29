@@ -264,7 +264,7 @@
             <uUch>0</uUch>
             <uFlt64>1</uFlt64>
             <Fuzzy>3</Fuzzy>
-            <Optim>0</Optim>
+            <Optim>2</Optim>
             <wLevel>3</wLevel>
             <SizSpd>0</SizSpd>
             <AcaOpt>0</AcaOpt>
@@ -555,26 +555,6 @@
               <FilePath>..\..\libraries\zf_device\zf_device_config.h</FilePath>
             </File>
             <File>
-              <FileName>zf_device_type.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_type.c</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_type.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_type.h</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_tft180.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_tft180.c</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_tft180.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_tft180.h</FilePath>
-            </File>
-            <File>
               <FileName>zf_device_ips114.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\libraries\zf_device\zf_device_ips114.c</FilePath>
@@ -583,26 +563,6 @@
               <FileName>zf_device_ips114.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\libraries\zf_device\zf_device_ips114.h</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_ips200.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_ips200.c</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_ips200.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_ips200.h</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_dl1a.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_dl1a.c</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_dl1a.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_dl1a.h</FilePath>
             </File>
             <File>
               <FileName>zf_device_ble6a20.c</FileName>
@@ -615,36 +575,6 @@
               <FilePath>..\..\libraries\zf_device\zf_device_ble6a20.h</FilePath>
             </File>
             <File>
-              <FileName>zf_device_wireless_uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_wireless_uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_wireless_uart.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_wireless_uart.h</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_mpu6050.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_mpu6050.c</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_mpu6050.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_mpu6050.h</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_icm20602.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_icm20602.c</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_icm20602.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_icm20602.h</FilePath>
-            </File>
-            <File>
               <FileName>zf_device_imu660ra.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\libraries\zf_device\zf_device_imu660ra.c</FilePath>
@@ -653,16 +583,6 @@
               <FileName>zf_device_imu660ra.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\libraries\zf_device\zf_device_imu660ra.h</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_imu963ra.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_imu963ra.c</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_imu963ra.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_imu963ra.h</FilePath>
             </File>
             <File>
               <FileName>zf_device_gps_tau1201.c</FileName>
@@ -683,6 +603,26 @@
               <FileName>zf_device_tsl1401.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\libraries\zf_device\zf_device_tsl1401.h</FilePath>
+            </File>
+            <File>
+              <FileName>zf_device_type.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\libraries\zf_device\zf_device_type.c</FilePath>
+            </File>
+            <File>
+              <FileName>zf_device_type.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\libraries\zf_device\zf_device_type.h</FilePath>
+            </File>
+            <File>
+              <FileName>zf_device_wireless_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\libraries\zf_device\zf_device_wireless_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>zf_device_wireless_uart.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\libraries\zf_device\zf_device_wireless_uart.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -738,6 +678,66 @@
               <FileName>pid.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\pid.h</FilePath>
+            </File>
+            <File>
+              <FileName>ips114.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\ips114.c</FilePath>
+            </File>
+            <File>
+              <FileName>ips114.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\ips114.h</FilePath>
+            </File>
+            <File>
+              <FileName>imu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\imu.c</FilePath>
+            </File>
+            <File>
+              <FileName>imu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\imu.h</FilePath>
+            </File>
+            <File>
+              <FileName>gps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\gps.c</FilePath>
+            </File>
+            <File>
+              <FileName>gps.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\gps.h</FilePath>
+            </File>
+            <File>
+              <FileName>bluetooth.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\bluetooth.c</FilePath>
+            </File>
+            <File>
+              <FileName>bluetooth.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\bluetooth.h</FilePath>
+            </File>
+            <File>
+              <FileName>init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\init.c</FilePath>
+            </File>
+            <File>
+              <FileName>init.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\init.h</FilePath>
+            </File>
+            <File>
+              <FileName>pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\pwm.h</FilePath>
             </File>
           </Files>
         </Group>

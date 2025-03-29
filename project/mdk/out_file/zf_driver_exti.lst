@@ -1,10 +1,10 @@
-C251 COMPILER V5.60.0,  zf_driver_exti                                                     24/03/25  20:07:10  PAGE 1   
+C251 COMPILER V5.60.0,  zf_driver_exti                                                     29/03/25  00:46:33  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_driver_exti
 OBJECT MODULE PLACED IN .\out_file\zf_driver_exti.obj
 COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\..\libraries\zf_driver\zf_driver_exti.c LARGE NOALIAS FLOAT64 WARNINGL
-                    -EVEL(3) OPTIMIZE(0,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device
+                    -EVEL(3) OPTIMIZE(2,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device
                     -;..\..\libraries\zf_driver;..\user;..\code) DEBUG PRINT(.\out_file\zf_driver_exti.lst) TABS(2) OBJECT(.\out_file\zf_driv
                     -er_exti.obj) 
 
@@ -67,7 +67,7 @@ Module Information          Static   Overlayable
   bit size             =    ------     ------
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
-C251 COMPILER V5.60.0,  zf_driver_exti                                                     24/03/25  20:07:10  PAGE 2   
+C251 COMPILER V5.60.0,  zf_driver_exti                                                     29/03/25  00:46:33  PAGE 2   
 
   ebitaddressable size =    ------     ------
   far data size        =    ------     ------

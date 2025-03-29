@@ -1,0 +1,61 @@
+C251 COMPILER V5.60.0,  pwm                                                                29/03/25  00:46:35  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE pwm
+OBJECT MODULE PLACED IN .\out_file\pwm.obj
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\pwm.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BROW
+                    -SE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;..
+                    -\user;..\code) DEBUG PRINT(.\out_file\pwm.lst) TABS(2) OBJECT(.\out_file\pwm.obj) 
+
+stmt  level    source
+
+    1          #include "pwm.h"
+    2          
+    3          uint16 duty[4]={0}; //四个电机的占空比
+    4          
+    5          void my_pwm_init(void)
+    6          {
+    7   1          pwm_init(PWM_1, FREQ, 0);                                                   // PWM 通道1 初始化频率 5
+             -0Hz  占空比初始为 0
+    8   1          pwm_init(PWM_2, FREQ, 0);                                                   // PWM 通道2 初始化频率 5
+             -0Hz  占空比初始为 0
+    9   1          pwm_init(PWM_3, FREQ, 0);                                                   // PWM 通道1 初始化频率 50
+             -Hz  占空比初始为 0
+   10   1          pwm_init(PWM_4, FREQ, 0);                                                   // PWM 通道2 初始化频率 5
+             -0Hz  占空比初始为 0
+   11   1        
+   12   1          // 电调控制是看高电平时间，范围： 1ms-2ms
+   13   1          // 1ms 为 0%
+   14   1          // 2ms 为 100%
+   15   1          // 计算无刷电调转速   （1ms - 2ms）/20ms * 10000（10000是PWM的满占空比时候的值）
+   16   1          // 在50Hz的控制频率下，无刷电调转速 0%   为 500
+   17   1          // 在50Hz的控制频率下，无刷电调转速 20%  为 600
+   18   1          // 在50Hz的控制频率下，无刷电调转速 40%  为 700
+   19   1          // 在50Hz的控制频率下，无刷电调转速 60%  为 800
+   20   1          // 在50Hz的控制频率下，无刷电调转速 80%  为 900
+   21   1          // 在50Hz的控制频率下，无刷电调转速 100% 为 1000
+   22   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =        93     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =         8     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =        13     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

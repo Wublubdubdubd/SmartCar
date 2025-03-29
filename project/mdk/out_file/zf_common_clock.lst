@@ -1,10 +1,10 @@
-C251 COMPILER V5.60.0,  zf_common_clock                                                    24/03/25  20:07:09  PAGE 1   
+C251 COMPILER V5.60.0,  zf_common_clock                                                    29/03/25  00:46:33  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_common_clock
 OBJECT MODULE PLACED IN .\out_file\zf_common_clock.obj
 COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\..\libraries\zf_common\zf_common_clock.c LARGE NOALIAS FLOAT64 WARNING
-                    -LEVEL(3) OPTIMIZE(0,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_devic
+                    -LEVEL(3) OPTIMIZE(2,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_devic
                     -e;..\..\libraries\zf_driver;..\user;..\code) DEBUG PRINT(.\out_file\zf_common_clock.lst) TABS(2) OBJECT(.\out_file\zf_co
                     -mmon_clock.obj) 
 
@@ -66,7 +66,7 @@ stmt  level    source
    52   1      
    53   1        // 外部晶振
    54   1          XOSCCR = 0xc0;          // 启动外部晶振
-C251 COMPILER V5.60.0,  zf_common_clock                                                    24/03/25  20:07:09  PAGE 2   
+C251 COMPILER V5.60.0,  zf_common_clock                                                    29/03/25  00:46:33  PAGE 2   
 
    55   1          while (!(XOSCCR & 1));  // 等待时钟稳定
    56   1          CLKDIV = 0x00;          // 时钟不分频
@@ -121,7 +121,7 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       237     ------
+  code size            =       236     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
@@ -135,7 +135,7 @@ Module Information          Static   Overlayable
   ebitaddressable size =    ------     ------
   far data size        =    ------     ------
   huge data size       =    ------     ------
-C251 COMPILER V5.60.0,  zf_common_clock                                                    24/03/25  20:07:09  PAGE 3   
+C251 COMPILER V5.60.0,  zf_common_clock                                                    29/03/25  00:46:33  PAGE 3   
 
   const size           =    ------     ------
   hconst size          =         9     ------

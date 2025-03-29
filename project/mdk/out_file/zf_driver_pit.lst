@@ -1,10 +1,10 @@
-C251 COMPILER V5.60.0,  zf_driver_pit                                                      24/03/25  20:07:10  PAGE 1   
+C251 COMPILER V5.60.0,  zf_driver_pit                                                      29/03/25  00:46:33  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_driver_pit
 OBJECT MODULE PLACED IN .\out_file\zf_driver_pit.obj
 COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\..\libraries\zf_driver\zf_driver_pit.c LARGE NOALIAS FLOAT64 WARNINGLE
-                    -VEL(3) OPTIMIZE(0,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;
+                    -VEL(3) OPTIMIZE(2,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;
                     -..\..\libraries\zf_driver;..\user;..\code) DEBUG PRINT(.\out_file\zf_driver_pit.lst) TABS(2) OBJECT(.\out_file\zf_driver
                     -_pit.obj) 
 
@@ -66,7 +66,7 @@ stmt  level    source
    50          void pit_init(pit_index_enum pit_n, uint32 period)
    51          {
    52   1        uint8 freq_div = 0;                
-C251 COMPILER V5.60.0,  zf_driver_pit                                                      24/03/25  20:07:10  PAGE 2   
+C251 COMPILER V5.60.0,  zf_driver_pit                                                      29/03/25  00:46:33  PAGE 2   
 
    53   1          uint16 period_temp = 0;               
    54   1          uint16 temp = 0;
@@ -134,7 +134,7 @@ stmt  level    source
   116   1          
   117   1        
   118   1        freq_div = ((period) >> 15);                   // 计算预分频
-C251 COMPILER V5.60.0,  zf_driver_pit                                                      24/03/25  20:07:10  PAGE 3   
+C251 COMPILER V5.60.0,  zf_driver_pit                                                      29/03/25  00:46:33  PAGE 3   
 
   119   1        period_temp = ((period) / (freq_div+1));       // 计算自动重装载值
   120   1      
@@ -196,14 +196,14 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       803     ------
+  code size            =       755     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
   xdata size           =        11     ------
   xdata-const size     =    ------     ------
-C251 COMPILER V5.60.0,  zf_driver_pit                                                      24/03/25  20:07:10  PAGE 4   
+C251 COMPILER V5.60.0,  zf_driver_pit                                                      29/03/25  00:46:33  PAGE 4   
 
   edata size           =    ------     ------
   bit size             =    ------     ------

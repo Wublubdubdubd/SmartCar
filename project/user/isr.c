@@ -32,10 +32,7 @@
 * 日期              作者           备注
 * 2024-08-01        大W            first version
 ********************************************************************************************************************/
-
-#include "zf_common_headfile.h"
-
-
+#include "isr.h"
 
 void DMA_UART1_IRQHandler (void) interrupt 4
 {
@@ -210,6 +207,52 @@ void TM11_IRQHandler() interrupt 24
     {
         tim11_irq_handler();
     }
+}
+
+/**
+  * @brief TIM0中断处理函数，提取imu数据
+  * @param 无
+  * @return 无
+  */
+void pit_hanlder_imu(void)
+{
+    imu660ra_get_acc();  // 获取 IMU660RA 的加速度测量数值
+    imu660ra_get_gyro(); // 获取 IMU660RA 的角速度测量数值
+    
+    //转换为实际物理值
+    
+	  imu_acc[0]=imu660ra_acc_x/imu660ra_transition_factor[0];
+	  imu_acc[1]=imu660ra_acc_y/imu660ra_transition_factor[0];
+	  imu_acc[2]=imu660ra_acc_z/imu660ra_transition_factor[0];
+	
+		imu_gyro[0]=imu660ra_gyro_x/imu660ra_transition_factor[1];
+	  imu_gyro[1]=imu660ra_gyro_y/imu660ra_transition_factor[1];
+	  imu_gyro[2]=imu660ra_gyro_z/imu660ra_transition_factor[1]; 
+}
+/**
+  * @brief TIM1中断处理函数，提取gps数据
+  * @param 无
+  * @return 无
+  */
+void pit_hanlder_gps(void)
+{
+    //获取gps数据
+    if(gps_tau1201_flag)
+    {
+      gps_tau1201_flag = 0;
+      gps_date_ready = (!gps_data_parse()) ? 1 : 0;
+    }
+    else gps_date_ready = 0;
+}
+
+void my_pit_init()
+{
+    //设置中断回调函数 5ms采样一次IMU数据
+    tim0_irq_handler = pit_hanlder_imu;	
+    pit_ms_init(PIT_IMU, 5);
+    //设置中断回调函数 1s采样一次GPS数据
+    tim1_irq_handler = pit_hanlder_GPS;	
+    pit_ms_init(PIT_GPS, 1000);
 }
 
 

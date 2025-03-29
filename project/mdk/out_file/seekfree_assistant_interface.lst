@@ -1,10 +1,10 @@
-C251 COMPILER V5.60.0,  seekfree_assistant_interface                                       24/03/25  20:07:11  PAGE 1   
+C251 COMPILER V5.60.0,  seekfree_assistant_interface                                       29/03/25  00:53:11  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE seekfree_assistant_interface
 OBJECT MODULE PLACED IN .\out_file\seekfree_assistant_interface.obj
 COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\..\libraries\zf_components\seekfree_assistant_interface.c LARGE NOALIA
-                    -S FLOAT64 WARNINGLEVEL(3) OPTIMIZE(0,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\l
+                    -S FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\l
                     -ibraries\zf_device;..\..\libraries\zf_driver;..\user;..\code) DEBUG PRINT(.\out_file\seekfree_assistant_interface.lst) T
                     -ABS(2) OBJECT(.\out_file\seekfree_assistant_interface.obj) 
 
@@ -66,7 +66,7 @@ stmt  level    source
    46   3                  seekfree_assistant_receive_callback = wireless_uart_read_buffer;
    47   3              }break;
    48   2              
-C251 COMPILER V5.60.0,  seekfree_assistant_interface                                       24/03/25  20:07:11  PAGE 2   
+C251 COMPILER V5.60.0,  seekfree_assistant_interface                                       29/03/25  00:53:11  PAGE 2   
 
    49   2      
    50   2              case SEEKFREE_ASSISTANT_BLE6A20:
