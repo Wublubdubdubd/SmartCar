@@ -216,18 +216,31 @@ void TM11_IRQHandler() interrupt 24
   */
 void pit_hanlder_imu(void)
 {
+    int i=0; 
+  
     imu660ra_get_acc();  // 获取 IMU660RA 的加速度测量数值
     imu660ra_get_gyro(); // 获取 IMU660RA 的角速度测量数值
     
     //转换为实际物理值
     
-	  imu_acc[0]=imu660ra_acc_x/imu660ra_transition_factor[0];
-	  imu_acc[1]=imu660ra_acc_y/imu660ra_transition_factor[0];
-	  imu_acc[2]=imu660ra_acc_z/imu660ra_transition_factor[0];
+	  imu_acc[0]=imu660ra_acc_transition(imu660ra_acc_x)-0.025;
+	  imu_acc[1]=imu660ra_acc_transition(imu660ra_acc_y)+0.008;
+	  imu_acc[2]=imu660ra_acc_transition(imu660ra_acc_z)+0.005;
+  
+    for(i=0;i<2;i++)
+      if(abs(imu_acc[i])<0.01)imu_acc[i]=0;
+    if(abs(imu_acc[2])-1<0.01)imu_acc[2]=1;
+ 
+    imu_gyro[0]=imu660ra_gyro_transition(imu660ra_gyro_x);
+	  imu_gyro[1]=imu660ra_gyro_transition(imu660ra_gyro_y);
+	  imu_gyro[2]=imu660ra_gyro_transition(imu660ra_gyro_z);
+  
+    for(i=0;i<3;i++)
+      if(abs(imu_gyro[i])<0.15)imu_gyro[i]=0;
 	
-		imu_gyro[0]=imu660ra_gyro_x/imu660ra_transition_factor[1];
-	  imu_gyro[1]=imu660ra_gyro_y/imu660ra_transition_factor[1];
-	  imu_gyro[2]=imu660ra_gyro_z/imu660ra_transition_factor[1]; 
+		//互补滤波
+		complementary_filter(imu_acc,imu_gyro,0.005);
+    
 }
 /**
   * @brief TIM1中断处理函数，提取gps数据
@@ -244,7 +257,25 @@ void pit_hanlder_gps(void)
     }
     else gps_date_ready = 0;
 }
-
+/**
+  * @brief TIM2中断处理函数，更新角度环
+  * @param 无
+  * @return 无
+  */
+void pit_hanlder_angle(void)
+{
+//    char str[20];
+    PidLocCtrl(&angle_pid,angle_target-yaw,0.01);
+    
+    pwm_set_duty(PWM_1,duty_up_left);
+    pwm_set_duty(PWM_2,duty_up_right);
+    pwm_set_duty(PWM_3,duty_forward_left-angle_pid.out);
+    pwm_set_duty(PWM_4,duty_forward_right+angle_pid.out);
+    
+//    func_float_to_str(str,yaw,3);
+//    ble6a20_send_string(str);
+  
+}
 void my_pit_init()
 {
     //设置中断回调函数 5ms采样一次IMU数据
@@ -253,6 +284,9 @@ void my_pit_init()
     //设置中断回调函数 1s采样一次GPS数据
     tim1_irq_handler = pit_hanlder_GPS;	
     pit_ms_init(PIT_GPS, 1000);
+    //10ms更新一次角度环
+    tim3_irq_handler = pit_hanlder_angle;
+    pit_ms_init(PIT_ANGLE, 10);
 }
 
 

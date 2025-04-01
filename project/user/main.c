@@ -32,23 +32,47 @@
 * 日期              作者           备注
 * 2024-08-01        大W            first version
 ********************************************************************************************************************/
+
+
 #include "init.h"
+
+
 
 void main()
 {
+    char command;//蓝牙控制命令 使用轮询方式获取 但应该改为中断   
     init();  
+    //ips114_show_string(0,0,"wait for calibraton.");
+    //gyro_calibration();
+    //ips114_clear(RGB565_WHITE);
+
+    // 此处编写用户代码 例如外设初始化代码等
+	
     while(1)
 		{
 #if IPS_USE     
       IPS114_Show_Info(); //显示必要信息
 #endif
-      switch(blue_tooth_read())
+      command=blue_tooth_read();
+      switch(command)
       {
         case 's':pwm_set_duty(PWM_1,550);pwm_set_duty(PWM_2,550);break;
-        case 'b':pwm_set_duty(PWM_1,500);pwm_set_duty(PWM_2,500);break;
+        case '1':duty_up_left+=50;duty_up_right+=50;break;
+        case '2':duty_up_left-=50;duty_up_right-=50;break;
+        case '3':duty_forward_left+=50;duty_forward_right+=50;break;
+        case '4':duty_forward_left-=50;duty_forward_right-=50;break;
+        case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;break;
         default :;
       }
-
+      
+			//ble6a20_send_string("working\r\n");
+			//sprintf(str_buffer,"Roll: %.2f, Pitch: %.2f", roll, pitch);
+      //ble6a20_send_string(str_buffer);
+//      ips114_show_int16(0,64,duty_up_left);
+//      ips114_show_int16(80,64,duty_up_right);
+      ips114_show_float(0,64,roll,4,4);
+      ips114_show_float(80,64,pitch,4,4);
+      ips114_show_float(160,64,yaw,4,4);
       system_delay_ms(500);
     }
 }

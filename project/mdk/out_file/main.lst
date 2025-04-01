@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  main                                                               29/03/25  00:53:11  PAGE 1   
+C251 COMPILER V5.60.0,  main                                                               31/03/25  19:50:45  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE main
@@ -45,38 +45,62 @@ stmt  level    source
    33          * 2024-08-01        大W            first version
    34          *********************************************************************************************************
              -***********/
-   35          #include "init.h"
+   35          
    36          
-   37          void main()
-   38          {
-   39   1          init();  
-   40   1          while(1)
-   41   1          {
-   42   2      #if IPS_USE     
-                     IPS114_Show_Info(); //显示必要信息
-               #endif
-   45   2            switch(blue_tooth_read())
-   46   2            {
-   47   3              case 's':pwm_set_duty(PWM_1,550);pwm_set_duty(PWM_2,550);break;
-   48   3              case 'b':pwm_set_duty(PWM_1,500);pwm_set_duty(PWM_2,500);break;
-   49   3              default :;
-   50   3            }
-   51   2      
-   52   2            system_delay_ms(500);
-   53   2          }
-   54   1      }
+   37          #include "init.h"
+   38          
+   39          
+   40          
+   41          void main()
+   42          {
+   43   1          char command;//蓝牙控制命令 使用轮询方式获取 但应该改为中断   
+   44   1          init();  
+   45   1          //ips114_show_string(0,0,"wait for calibraton.");
+   46   1          //gyro_calibration();
+   47   1          //ips114_clear(RGB565_WHITE);
+   48   1      
+   49   1          // 此处编写用户代码 例如外设初始化代码等
+   50   1        
+   51   1          while(1)
+   52   1          {
+   53   2      #if IPS_USE     
+   54   2            IPS114_Show_Info(); //显示必要信息
+   55   2      #endif
+C251 COMPILER V5.60.0,  main                                                               31/03/25  19:50:45  PAGE 2   
 
-C251 COMPILER V5.60.0,  main                                                               29/03/25  00:53:11  PAGE 2   
+   56   2            command=blue_tooth_read();
+   57   2            switch(command)
+   58   2            {
+   59   3              case 's':pwm_set_duty(PWM_1,550);pwm_set_duty(PWM_2,550);break;
+   60   3              case '1':duty_up_left+=50;duty_up_right+=50;break;
+   61   3              case '2':duty_up_left-=50;duty_up_right-=50;break;
+   62   3              case '3':duty_forward_left+=50;duty_forward_right+=50;break;
+   63   3              case '4':duty_forward_left-=50;duty_forward_right-=50;break;
+   64   3              case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;break;
+   65   3              default :;
+   66   3            }
+   67   2            
+   68   2            //ble6a20_send_string("working\r\n");
+   69   2            //sprintf(str_buffer,"Roll: %.2f, Pitch: %.2f", roll, pitch);
+   70   2            //ble6a20_send_string(str_buffer);
+   71   2      //      ips114_show_int16(0,64,duty_up_left);
+   72   2      //      ips114_show_int16(80,64,duty_up_right);
+   73   2            ips114_show_float(0,64,roll,4,4);
+   74   2            ips114_show_float(80,64,pitch,4,4);
+   75   2            ips114_show_float(160,64,yaw,4,4);
+   76   2            system_delay_ms(500);
+   77   2          }
+   78   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =        70     ------
+  code size            =       371     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =    ------     ------
+  xdata size           =         1     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------

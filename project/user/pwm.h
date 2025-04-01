@@ -13,4 +13,8 @@ extern uint16 duty[]; //四个电机的占空比
 
 void my_pwm_init(void);//初始化
 
+extern int duty_up_left,duty_up_right;
+
+extern int duty_forward_left,duty_forward_right;
+
 #endif

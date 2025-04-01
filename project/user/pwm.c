@@ -2,6 +2,10 @@
 
 uint16 duty[4]={0}; //四个电机的占空比
 
+int duty_up_left=500,duty_up_right=500;
+
+int duty_forward_left=500,duty_forward_right=500;
+
 void my_pwm_init(void)
 {
     pwm_init(PWM_1, FREQ, 0);                                                   // PWM 通道1 初始化频率 50Hz  占空比初始为 0

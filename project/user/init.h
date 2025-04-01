@@ -1,7 +1,7 @@
 #ifndef __INIT_H_
 #define __INIT_H_
 
-#define IPS_USE (0) //是否使用屏幕
+#define IPS_USE (1) //是否使用屏幕
 
 #include "zf_common_headfile.h"
 
@@ -11,6 +11,7 @@
 #include "gps.h"
 #include "bluetooth.h"
 #include "pwm.h"
+#include <stdio.h>
 
 void init(void);
 

@@ -1,13 +1,11 @@
 #include "pid.h"
 
-// 电机PID初始化参数
-float speed_KP = 50, speed_KI = 0,speed_KD = 0.0, speed_IMAX = 5000.0, speed_OUTMAX = 5000.0;
-float speed_target = 30.0;
-float speed_real = 0.0;
-float speed_pwm = 0.0;
+// 角度PID初始化参数
+float angle_KP = 10, angle_KI = 0,angle_KD = 0.0, angle_IMAX = 20, angle_OUTMAX = 100;
+float angle_target = 0;
 
-pid_param_t speed_pid_l;  // 电机PID
-pid_param_t speed_pid_r;  // 电机PID
+pid_param_t angle_pid;  // 角度PID
+
 
 /*******************************************************************************
 * 函 数 名         : My_Pid_Init
@@ -17,8 +15,7 @@ pid_param_t speed_pid_r;  // 电机PID
 *******************************************************************************/
 void My_Pid_Init(void)
 {
-    Pid_Param_Init(&speed_pid_l, speed_KP, speed_KI,speed_KD, speed_IMAX, speed_OUTMAX);
-    Pid_Param_Init(&speed_pid_r, speed_KP, speed_KI,speed_KD, speed_IMAX, speed_OUTMAX);
+    Pid_Param_Init(&angle_pid,angle_KP, angle_KI,angle_KD, angle_IMAX, angle_OUTMAX);
 }
 
 
