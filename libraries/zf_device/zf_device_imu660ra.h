@@ -122,6 +122,8 @@ typedef enum
 
 extern int16 imu660ra_gyro_x, imu660ra_gyro_y, imu660ra_gyro_z;                 // 三轴陀螺仪数据      gyro (陀螺仪)
 extern int16 imu660ra_acc_x, imu660ra_acc_y, imu660ra_acc_z;                    // 三轴加速度计数据     acc (accelerometer 加速度计)
+extern int16 imu_gyro_x_pre, imu_gyro_y_pre, imu_gyro_z_pre;            // 上一时刻值
+extern int16 imu_acc_x_pre, imu_acc_y_pre, imu_acc_z_pre;               // 上一时刻值
 extern float imu660ra_transition_factor[2];
 
 void  imu660ra_get_acc              (void);                                     // 获取 IMU660RA 加速度计数据

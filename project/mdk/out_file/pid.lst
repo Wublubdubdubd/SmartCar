@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  pid                                                                31/03/25  20:13:03  PAGE 1   
+C251 COMPILER V5.60.0,  pid                                                                05/04/25  00:11:16  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE pid
@@ -12,7 +12,7 @@ stmt  level    source
     1          #include "pid.h"
     2          
     3          // 角度PID初始化参数
-    4          float angle_KP = 10, angle_KI = 0,angle_KD = 0.0, angle_IMAX = 20, angle_OUTMAX = 100;
+    4          float angle_KP = 5, angle_KI = 0,angle_KD = 0.0, angle_IMAX = 20, angle_OUTMAX = 50;
     5          float angle_target = 0;
     6          
     7          pid_param_t angle_pid;  // 角度PID
@@ -66,7 +66,7 @@ stmt  level    source
    55   1      
    56   1          /* 误差限幅 */
    57   1          pid->out_i = constrain_float(pid->integrator, -pid->imax, pid->imax);
-C251 COMPILER V5.60.0,  pid                                                                31/03/25  20:13:03  PAGE 2   
+C251 COMPILER V5.60.0,  pid                                                                05/04/25  00:11:16  PAGE 2   
 
    58   1      
    59   1      
@@ -128,18 +128,28 @@ stmt  level    source
   115   1          return ((amt)<(low)?(low):((amt)>(high)?(high):(amt)));
   116   1      }
   117          
+  118          /*******************************************************************************
+  119          * 函 数 名         : constrain_uint32
+  120          * 函数功能         : 限幅
+  121          * 输    入         : amt,low,high
+  122          * 输    出         : uint32
+  123          *******************************************************************************/
+C251 COMPILER V5.60.0,  pid                                                                05/04/25  00:11:16  PAGE 3   
+
+  124          unsigned long constrain_uint32(float amt)
+  125          {
+  126   1          return ((amt)<(0)?(0):((amt)>(max_duty)?(max_duty):(amt)));
+  127   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =      1719     ------
+  code size            =      1793     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
-C251 COMPILER V5.60.0,  pid                                                                31/03/25  20:13:03  PAGE 3   
-
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =       142     ------
+  xdata size           =       146     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------

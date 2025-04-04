@@ -11,7 +11,7 @@
 #include "gps.h"
 #include "bluetooth.h"
 #include "pwm.h"
-#include <stdio.h>
+#include "filter.h"
 
 void init(void);
 

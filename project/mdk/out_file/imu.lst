@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  imu                                                                31/03/25  19:13:30  PAGE 1   
+C251 COMPILER V5.60.0,  imu                                                                04/04/25  21:31:33  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE imu
@@ -11,64 +11,23 @@ stmt  level    source
 
     1          #include "imu.h"
     2          
-    3          float imu_acc[6],imu_gyro[6];//acc gyro 真实物理值
+    3          float imu_acc[3],imu_gyro[3];//acc gyro 真实物理值
     4          // 初始角度
     5          float roll = 0.0f;
     6          float pitch = 0.0f;
     7          float yaw = 0.0f;
-    8          
-    9          char str_buffer[40];
-   10          
-   11          
-   12          // 陀螺仪校准（在加速度校准后进行）
-   13          #define GYRO_CALIB_SAMPLES 3000 // 30秒@100Hz
-   14          float gyro_calib[3] = {0};
-   15          
-   16          void gyro_calibration(void) 
-   17          {
-   18   1          int i=0;
-   19   1          for (i=0; i<GYRO_CALIB_SAMPLES; i++) {
-   20   2              imu660ra_get_gyro();
-   21   2              gyro_calib[0] += imu660ra_gyro_x;
-   22   2              gyro_calib[1] += imu660ra_gyro_y;
-   23   2              gyro_calib[2] += imu660ra_gyro_z;
-   24   2              system_delay_ms(10); // 100Hz采样
-   25   2          }
-   26   1          for (i=0; i<3; i++) {
-   27   2              gyro_calib[i] /= GYRO_CALIB_SAMPLES; // 零偏
-   28   2          }
-   29   1      }
-   30          
-   31          // 互补滤波函数
-   32          void complementary_filter(float acc[], float gyro[], float dt) {
-   33   1          // 从加速度计计算角度
-   34   1          float acc_roll = atan2(acc[1], acc[2]) * 180.0f / 3.14159f;
-   35   1          float acc_pitch = atan2(-acc[0], sqrt(acc[1] * acc[1] + acc[2] * acc[2])) * 180.0f / 3.14159f;
-   36   1      
-   37   1      
-   38   1          // 从陀螺仪更新角度
-   39   1          roll += ALPHA * gyro[0] * dt + (1 - ALPHA) * acc_roll;
-   40   1          pitch += ALPHA * gyro[1] * dt + (1 - ALPHA) * acc_pitch;
-   41   1          yaw += gyro[2] * dt ;
-   42   1        
-   43   1          roll=fmod(roll,360) ;
-   44   1          pitch=fmod(pitch,360) ;
-   45   1          yaw=fmod(yaw,360) ;
-   46   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       953     ------
+  code size            =    ------     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =       134     ------
+  xdata size           =        36     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
-C251 COMPILER V5.60.0,  imu                                                                31/03/25  19:13:30  PAGE 2   
-
   bit size             =    ------     ------
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
@@ -76,7 +35,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =        44     ------
+  hconst size          =        27     ------
 End of Module Information.
 
 

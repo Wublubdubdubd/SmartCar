@@ -40,13 +40,9 @@
 
 void main()
 {
-    char command;//蓝牙控制命令 使用轮询方式获取 但应该改为中断   
+    char command;//蓝牙控制命令 使用轮询方式获取 但应该改为中断 
+  
     init();  
-    //ips114_show_string(0,0,"wait for calibraton.");
-    //gyro_calibration();
-    //ips114_clear(RGB565_WHITE);
-
-    // 此处编写用户代码 例如外设初始化代码等
 	
     while(1)
 		{

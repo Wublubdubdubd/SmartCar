@@ -1,7 +1,7 @@
 #include "pid.h"
 
 // 角度PID初始化参数
-float angle_KP = 10, angle_KI = 0,angle_KD = 0.0, angle_IMAX = 20, angle_OUTMAX = 100;
+float angle_KP = 5, angle_KI = 0,angle_KD = 0.0, angle_IMAX = 20, angle_OUTMAX = 50;
 float angle_target = 0;
 
 pid_param_t angle_pid;  // 角度PID
@@ -115,3 +115,13 @@ short constrain_short(short amt, short low, short high)
     return ((amt)<(low)?(low):((amt)>(high)?(high):(amt)));
 }
 
+/*******************************************************************************
+* 函 数 名         : constrain_uint32
+* 函数功能         : 限幅
+* 输    入         : amt,low,high
+* 输    出         : uint32
+*******************************************************************************/
+unsigned long constrain_uint32(float amt)
+{
+    return ((amt)<(0)?(0):((amt)>(max_duty)?(max_duty):(amt)));
+}

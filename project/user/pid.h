@@ -3,6 +3,8 @@
 
 #include "zf_common_headfile.h"
 
+#define max_duty 1000
+
 typedef struct
 {
     float                kp;                    //P
@@ -33,7 +35,7 @@ void Pid_Param_Init(pid_param_t * pid, float kp, float ki, float kd, float imax,
 
 float constrain_float(float amt, float low, float high);
 short constrain_short(short amt, short low, short high);
-
+unsigned long constrain_uint32(float amt);
 
 float PidLocCtrl(pid_param_t * pid, float error, float t);
 float PidIncCtrl(pid_param_t * pid, float error , float t);

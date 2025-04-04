@@ -1,0 +1,69 @@
+C251 COMPILER V5.60.0,  filter                                                             04/04/25  23:47:28  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE filter
+OBJECT MODULE PLACED IN .\out_file\filter.obj
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\filter.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) B
+                    -ROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver
+                    -;..\user;..\code) DEBUG PRINT(.\out_file\filter.lst) TABS(2) OBJECT(.\out_file\filter.obj) 
+
+stmt  level    source
+
+    1          #include "filter.h"
+    2          /**
+    3            * @brief 一阶互补滤波，用于平滑数据，
+    4            * @param pData: 待滤波的数据  pPreData：前一时刻数据  alpha：滤波参数，表示对当前数据的信任程度
+    5            * @return 无
+    6            * @note 该函数并不更新PreData的数值，需自行在外部更新
+    7            */
+    8          void FOCF(int16* pData,int16* pPreData,float alpha)
+    9          {
+   10   1          *pData *= alpha ;
+   11   1          *pData += (1-alpha)*(*pPreData);
+   12   1      }
+   13          
+   14          /**
+   15            * @brief IMU数据融合获取欧拉角 范围0~360
+   16            * @param acc：加速度 gyro：角速度 dt：积分时长
+   17            * @return 无
+   18            * @note (X Y Z)->(Roll Pitch Yaw)
+   19            */
+   20          void GetEuler(float acc[], float gyro[], float dt) 
+   21          {
+   22   1          // 从加速度计计算角度
+   23   1          float acc_roll = atan2(acc[1], acc[2]) * 180.0f / 3.14159f;
+   24   1          float acc_pitch = atan2(-acc[0], sqrt(acc[1] * acc[1] + acc[2] * acc[2])) * 180.0f / 3.14159f;
+   25   1      
+   26   1          // 从陀螺仪更新角度
+   27   1          roll += ALPHA * gyro[0] * dt + (1 - ALPHA) * acc_roll;
+   28   1          pitch += ALPHA * gyro[1] * dt + (1 - ALPHA) * acc_pitch;
+   29   1          yaw += gyro[2] * dt ;
+   30   1        
+   31   1          roll=fmod(roll+360,360) ;
+   32   1          pitch=fmod(pitch+360,360) ;
+   33   1          yaw=fmod(yaw+360,360) ;
+   34   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       900     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =        32     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -216,30 +216,33 @@ void TM11_IRQHandler() interrupt 24
   */
 void pit_hanlder_imu(void)
 {
-    int i=0; 
-  
-    imu660ra_get_acc();  // 获取 IMU660RA 的加速度测量数值
-    imu660ra_get_gyro(); // 获取 IMU660RA 的角速度测量数值
+    //int i=0; 
     
-    //转换为实际物理值
-    
-	  imu_acc[0]=imu660ra_acc_transition(imu660ra_acc_x)-0.025;
-	  imu_acc[1]=imu660ra_acc_transition(imu660ra_acc_y)+0.008;
-	  imu_acc[2]=imu660ra_acc_transition(imu660ra_acc_z)+0.005;
+    //获取传感器数据
+    imu660ra_get_acc();  // 加速度
+    imu660ra_get_gyro(); // 角速度
   
-    for(i=0;i<2;i++)
-      if(abs(imu_acc[i])<0.01)imu_acc[i]=0;
-    if(abs(imu_acc[2])-1<0.01)imu_acc[2]=1;
+    //acc滤波
+    FOCF(&imu660ra_acc_x,&imu_acc_x_pre,0.1);
+    FOCF(&imu660ra_acc_y,&imu_acc_y_pre,0.1);
+    FOCF(&imu660ra_acc_z,&imu_acc_z_pre,0.1);
+  
+    //gyro滤波
+    FOCF(&imu660ra_gyro_x,&imu_gyro_x_pre,0.1);
+    FOCF(&imu660ra_gyro_y,&imu_gyro_y_pre,0.1);
+    FOCF(&imu660ra_gyro_z,&imu_gyro_z_pre,0.1);
+  
+    //转换为实际物理值，纠正零偏
+	  imu_acc[0]=imu660ra_acc_transition(imu660ra_acc_x)-0.023;
+	  imu_acc[1]=imu660ra_acc_transition(imu660ra_acc_y)+0.006;
+	  imu_acc[2]=imu660ra_acc_transition(imu660ra_acc_z)+0.007;
  
     imu_gyro[0]=imu660ra_gyro_transition(imu660ra_gyro_x);
 	  imu_gyro[1]=imu660ra_gyro_transition(imu660ra_gyro_y);
 	  imu_gyro[2]=imu660ra_gyro_transition(imu660ra_gyro_z);
-  
-    for(i=0;i<3;i++)
-      if(abs(imu_gyro[i])<0.15)imu_gyro[i]=0;
 	
-		//互补滤波
-		complementary_filter(imu_acc,imu_gyro,0.005);
+		//数据融合获取欧拉角
+		GetEuler(imu_acc,imu_gyro,0.005);
     
 }
 /**
@@ -264,17 +267,20 @@ void pit_hanlder_gps(void)
   */
 void pit_hanlder_angle(void)
 {
-//    char str[20];
+    uint32 angle_duty;
+  
+    //角度环
     PidLocCtrl(&angle_pid,angle_target-yaw,0.01);
     
     pwm_set_duty(PWM_1,duty_up_left);
     pwm_set_duty(PWM_2,duty_up_right);
-    pwm_set_duty(PWM_3,duty_forward_left-angle_pid.out);
-    pwm_set_duty(PWM_4,duty_forward_right+angle_pid.out);
-    
-//    func_float_to_str(str,yaw,3);
-//    ble6a20_send_string(str);
   
+    angle_duty = constrain_uint32(duty_forward_left-angle_pid.out);
+    pwm_set_duty(PWM_3,angle_duty);
+  
+    angle_duty = constrain_uint32(duty_forward_right-angle_pid.out);
+    pwm_set_duty(PWM_4,angle_duty);
+    
 }
 void my_pit_init()
 {

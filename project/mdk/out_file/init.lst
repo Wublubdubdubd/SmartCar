@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  init                                                               30/03/25  15:38:33  PAGE 1   
+C251 COMPILER V5.60.0,  init                                                               05/04/25  00:11:16  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE init
@@ -67,7 +67,7 @@ Module Information          Static   Overlayable
   bit size             =    ------     ------
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
-C251 COMPILER V5.60.0,  init                                                               30/03/25  15:38:33  PAGE 2   
+C251 COMPILER V5.60.0,  init                                                               05/04/25  00:11:16  PAGE 2   
 
   ebitaddressable size =    ------     ------
   far data size        =    ------     ------

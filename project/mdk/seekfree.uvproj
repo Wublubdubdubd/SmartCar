@@ -739,6 +739,16 @@
               <FileType>5</FileType>
               <FilePath>..\user\pwm.h</FilePath>
             </File>
+            <File>
+              <FileName>filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>filter.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\filter.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

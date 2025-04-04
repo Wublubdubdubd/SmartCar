@@ -68,6 +68,9 @@
 
 int16 imu660ra_gyro_x = 0, imu660ra_gyro_y = 0, imu660ra_gyro_z = 0;            // 三轴陀螺仪数据   gyro (陀螺仪)
 int16 imu660ra_acc_x = 0, imu660ra_acc_y = 0, imu660ra_acc_z = 0;               // 三轴加速度计数据 acc  (accelerometer 加速度计)
+int16 imu_gyro_x_pre = 0, imu_gyro_y_pre = 0, imu_gyro_z_pre = 0;            // 上一时刻值
+int16 imu_acc_x_pre = 0, imu_acc_y_pre = 0, imu_acc_z_pre = 0;               // 上一时刻值
+
 float imu660ra_transition_factor[2] = {4096, 16.4};
 
 #if IMU660RA_USE_SOFT_IIC
@@ -188,7 +191,11 @@ static uint8 imu660ra_self_check (void)
 void imu660ra_get_acc (void)
 {
     uint8 dat[6];
-    
+  
+    imu_acc_x_pre=imu660ra_acc_x;
+    imu_acc_y_pre=imu660ra_acc_y;
+    imu_acc_z_pre=imu660ra_acc_z;
+  
     imu660ra_read_registers(IMU660RA_ACC_ADDRESS, dat, 6);
     imu660ra_acc_x = (int16)(((uint16)dat[1] << 8 | dat[0]));
     imu660ra_acc_y = (int16)(((uint16)dat[3] << 8 | dat[2]));
@@ -205,6 +212,10 @@ void imu660ra_get_acc (void)
 void imu660ra_get_gyro (void)
 {
     uint8 dat[6];
+  
+    imu_gyro_x_pre=imu660ra_gyro_x;
+    imu_gyro_y_pre=imu660ra_gyro_y;
+    imu_gyro_z_pre=imu660ra_gyro_z;
     
     imu660ra_read_registers(IMU660RA_GYRO_ADDRESS, dat, 6);
     imu660ra_gyro_x = (int16)(((uint16)dat[1] << 8 | dat[0]));
