@@ -30,6 +30,9 @@ void init()
     ips114_clear(RGB565_WHITE);//清屏   
     IPS114_Show_Unit();//显示单位
 #endif
+    
+    //E2PROM初始化
+    iap_init();
         
     //pid初始化
     My_Pid_Init();
@@ -39,5 +42,7 @@ void init()
     
     //pwm初始化
     my_pwm_init();
-
+    
+    //状态机更新
+    StateUpdate(Event_Finish);
 }

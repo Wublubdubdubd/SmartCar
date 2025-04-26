@@ -1,10 +1,10 @@
-C251 COMPILER V5.60.0,  zf_driver_timer                                                    29/03/25  21:08:43  PAGE 1   
+C251 COMPILER V5.60.0,  zf_driver_timer                                                    19/04/25  01:09:43  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_driver_timer
 OBJECT MODULE PLACED IN .\out_file\zf_driver_timer.obj
 COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\..\libraries\zf_driver\zf_driver_timer.c LARGE NOALIAS FLOAT64 WARNING
-                    -LEVEL(3) OPTIMIZE(2,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_devic
+                    -LEVEL(3) OPTIMIZE(3,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_devic
                     -e;..\..\libraries\zf_driver;..\user;..\code) DEBUG PRINT(.\out_file\zf_driver_timer.lst) TABS(2) OBJECT(.\out_file\zf_dr
                     -iver_timer.obj) 
 
@@ -66,7 +66,7 @@ stmt  level    source
              -------------
    52          // 函数简介      TIMER 外设确认功能状态 库内部调用
    53          // 参数说明     index           TIMER 外设模块号
-C251 COMPILER V5.60.0,  zf_driver_timer                                                    29/03/25  21:08:43  PAGE 2   
+C251 COMPILER V5.60.0,  zf_driver_timer                                                    19/04/25  01:09:43  PAGE 2   
 
    54          // 参数说明     mode            需要确的功能模块
    55          // 返回参数     uint8           1-可以使用 0-不可以使用
@@ -94,12 +94,12 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       121     ------
+  code size            =        76     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        17     ------
+  xdata size           =        12     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------

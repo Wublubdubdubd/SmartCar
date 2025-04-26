@@ -1,7 +1,7 @@
 #include "pid.h"
 
 // 角度PID初始化参数
-float angle_KP = 5, angle_KI = 0,angle_KD = 0.0, angle_IMAX = 20, angle_OUTMAX = 50;
+float angle_KP = 2.5, angle_KI = 0,angle_KD = 0.0, angle_IMAX = 20, angle_OUTMAX = 50;
 float angle_target = 0;
 
 pid_param_t angle_pid;  // 角度PID

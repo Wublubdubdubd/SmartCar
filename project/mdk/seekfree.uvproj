@@ -264,7 +264,7 @@
             <uUch>0</uUch>
             <uFlt64>1</uFlt64>
             <Fuzzy>3</Fuzzy>
-            <Optim>2</Optim>
+            <Optim>3</Optim>
             <wLevel>3</wLevel>
             <SizSpd>0</SizSpd>
             <AcaOpt>0</AcaOpt>
@@ -748,6 +748,16 @@
               <FileName>filter.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\filter.h</FilePath>
+            </File>
+            <File>
+              <FileName>StateMachine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\StateMachine.c</FilePath>
+            </File>
+            <File>
+              <FileName>StateMachine.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\StateMachine.h</FilePath>
             </File>
           </Files>
         </Group>

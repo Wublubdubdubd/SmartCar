@@ -1,9 +1,9 @@
-C251 COMPILER V5.60.0,  filter                                                             04/04/25  23:47:28  PAGE 1   
+C251 COMPILER V5.60.0,  filter                                                             19/04/25  01:09:45  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE filter
 OBJECT MODULE PLACED IN .\out_file\filter.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\filter.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) B
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\filter.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(3,SIZE) B
                     -ROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver
                     -;..\user;..\code) DEBUG PRINT(.\out_file\filter.lst) TABS(2) OBJECT(.\out_file\filter.obj) 
 
@@ -23,7 +23,7 @@ stmt  level    source
    12   1      }
    13          
    14          /**
-   15            * @brief IMU数据融合获取欧拉角 范围0~360
+   15            * @brief IMU数据融合获取欧拉角 范围(-inf, inf)
    16            * @param acc：加速度 gyro：角速度 dt：积分时长
    17            * @return 无
    18            * @note (X Y Z)->(Roll Pitch Yaw)
@@ -38,21 +38,22 @@ stmt  level    source
    27   1          roll += ALPHA * gyro[0] * dt + (1 - ALPHA) * acc_roll;
    28   1          pitch += ALPHA * gyro[1] * dt + (1 - ALPHA) * acc_pitch;
    29   1          yaw += gyro[2] * dt ;
-   30   1        
-   31   1          roll=fmod(roll+360,360) ;
-   32   1          pitch=fmod(pitch+360,360) ;
-   33   1          yaw=fmod(yaw+360,360) ;
-   34   1      }
+   30   1          
+   31   1          //如果要与GPS融合 需要归一化到0~360
+   32   1          //roll=fmod(roll+360,360) ;
+   33   1          //pitch=fmod(pitch+360,360) ;
+   34   1          //yaw=fmod(yaw+360,360) ;
+   35   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       900     ------
+  code size            =       572     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        32     ------
+  xdata size           =    ------         16
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------

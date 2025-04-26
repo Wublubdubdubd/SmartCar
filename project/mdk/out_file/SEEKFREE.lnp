@@ -38,7 +38,8 @@
 ".\out_file\bluetooth.obj",
 ".\out_file\init.obj",
 ".\out_file\pwm.obj",
-".\out_file\filter.obj" 
+".\out_file\filter.obj",
+".\out_file\StateMachine.obj" 
 TO ".\out_file\SEEKFREE" 
 PRINT(".\out_file\SEEKFREE.map") CASE DISABLEWARNING (57,16) 
 REMOVEUNUSED 

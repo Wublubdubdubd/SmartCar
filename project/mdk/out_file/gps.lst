@@ -1,9 +1,9 @@
-C251 COMPILER V5.60.0,  gps                                                                29/03/25  21:08:44  PAGE 1   
+C251 COMPILER V5.60.0,  gps                                                                26/04/25  19:43:02  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE gps
 OBJECT MODULE PLACED IN .\out_file\gps.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\gps.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BROW
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\gps.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(3,SIZE) BROW
                     -SE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;..
                     -\user;..\code) DEBUG PRINT(.\out_file\gps.lst) TABS(2) OBJECT(.\out_file\gps.obj) 
 
@@ -13,6 +13,7 @@ stmt  level    source
     2          
     3          bit gps_date_ready=0;
     4          
+    5          double target_latitude = 0, target_longitude = 0;//目标点的经纬度
 
 
 Module Information          Static   Overlayable
@@ -22,7 +23,7 @@ Module Information          Static   Overlayable
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =    ------     ------
+  xdata size           =        16     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =         1     ------
@@ -32,7 +33,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =    ------     ------
+  hconst size          =        26     ------
 End of Module Information.
 
 

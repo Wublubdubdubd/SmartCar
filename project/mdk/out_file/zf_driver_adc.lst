@@ -1,10 +1,10 @@
-C251 COMPILER V5.60.0,  zf_driver_adc                                                      29/03/25  21:08:42  PAGE 1   
+C251 COMPILER V5.60.0,  zf_driver_adc                                                      19/04/25  01:09:43  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_driver_adc
 OBJECT MODULE PLACED IN .\out_file\zf_driver_adc.obj
 COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\..\libraries\zf_driver\zf_driver_adc.c LARGE NOALIAS FLOAT64 WARNINGLE
-                    -VEL(3) OPTIMIZE(2,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;
+                    -VEL(3) OPTIMIZE(3,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;
                     -..\..\libraries\zf_driver;..\user;..\code) DEBUG PRINT(.\out_file\zf_driver_adc.lst) TABS(2) OBJECT(.\out_file\zf_driver
                     -_adc.obj) 
 
@@ -66,7 +66,7 @@ stmt  level    source
    50          //-------------------------------------------------------------------------------------------------------
              -------------
    51          uint16 adc_mean_filter_convert (adc_channel_enum ch, const uint8 count)
-C251 COMPILER V5.60.0,  zf_driver_adc                                                      29/03/25  21:08:42  PAGE 2   
+C251 COMPILER V5.60.0,  zf_driver_adc                                                      19/04/25  01:09:43  PAGE 2   
 
    52          {
    53   1          uint8 i;
@@ -134,7 +134,7 @@ stmt  level    source
   111   1          
   112   1          ADC_CONTR &= (0xF0);      //清除ADC_CHS[3:0] ： ADC 模拟通道选择位
   113   1          ADC_CONTR |= ch;
-C251 COMPILER V5.60.0,  zf_driver_adc                                                      29/03/25  21:08:42  PAGE 3   
+C251 COMPILER V5.60.0,  zf_driver_adc                                                      19/04/25  01:09:43  PAGE 3   
 
   114   1          
   115   1          if((ch >> 3) == 1) //P0.0
@@ -160,12 +160,12 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       396     ------
+  code size            =       276     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        17     ------
+  xdata size           =         1          4
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------

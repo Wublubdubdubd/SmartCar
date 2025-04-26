@@ -12,7 +12,7 @@ void FOCF(int16* pData,int16* pPreData,float alpha)
 }
 
 /**
-  * @brief IMU数据融合获取欧拉角 范围0~360
+  * @brief IMU数据融合获取欧拉角 范围(-inf, inf)
   * @param acc：加速度 gyro：角速度 dt：积分时长
   * @return 无
   * @note (X Y Z)->(Roll Pitch Yaw)
@@ -27,8 +27,9 @@ void GetEuler(float acc[], float gyro[], float dt)
     roll += ALPHA * gyro[0] * dt + (1 - ALPHA) * acc_roll;
     pitch += ALPHA * gyro[1] * dt + (1 - ALPHA) * acc_pitch;
     yaw += gyro[2] * dt ;
-  
-    roll=fmod(roll+360,360) ;
-    pitch=fmod(pitch+360,360) ;
-    yaw=fmod(yaw+360,360) ;
+    
+    //如果要与GPS融合 需要归一化到0~360
+    //roll=fmod(roll+360,360) ;
+    //pitch=fmod(pitch+360,360) ;
+    //yaw=fmod(yaw+360,360) ;
 }

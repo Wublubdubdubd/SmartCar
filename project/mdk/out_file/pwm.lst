@@ -1,9 +1,9 @@
-C251 COMPILER V5.60.0,  pwm                                                                30/03/25  15:23:45  PAGE 1   
+C251 COMPILER V5.60.0,  pwm                                                                19/04/25  01:09:45  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE pwm
 OBJECT MODULE PLACED IN .\out_file\pwm.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\pwm.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BROW
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\pwm.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(3,SIZE) BROW
                     -SE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;..
                     -\user;..\code) DEBUG PRINT(.\out_file\pwm.lst) TABS(2) OBJECT(.\out_file\pwm.obj) 
 

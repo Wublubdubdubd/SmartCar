@@ -1,9 +1,9 @@
-C251 COMPILER V5.60.0,  init                                                               05/04/25  00:11:16  PAGE 1   
+C251 COMPILER V5.60.0,  init                                                               26/04/25  19:43:02  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE init
 OBJECT MODULE PLACED IN .\out_file\init.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\init.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BRO
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\init.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(3,SIZE) BRO
                     -WSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;.
                     -.\user;..\code) DEBUG PRINT(.\out_file\init.lst) TABS(2) OBJECT(.\out_file\init.obj) 
 
@@ -41,34 +41,39 @@ stmt  level    source
    30   1          ips114_clear(RGB565_WHITE);//清屏   
    31   1          IPS114_Show_Unit();//显示单位
    32   1      #endif
-   33   1              
-   34   1          //pid初始化
-   35   1          My_Pid_Init();
-   36   1          
-   37   1          //中断初始化
-   38   1          my_pit_init();
+   33   1          
+   34   1          //E2PROM初始化
+   35   1          iap_init();
+   36   1              
+   37   1          //pid初始化
+   38   1          My_Pid_Init();
    39   1          
-   40   1          //pwm初始化
-   41   1          my_pwm_init();
-   42   1      
-   43   1      }
+   40   1          //中断初始化
+   41   1          my_pit_init();
+   42   1          
+   43   1          //pwm初始化
+   44   1          my_pwm_init();
+   45   1          
+   46   1          //状态机更新
+   47   1          StateUpdate(Event_Finish);
+   48   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =        69     ------
+  code size            =        83     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
   xdata size           =    ------     ------
+C251 COMPILER V5.60.0,  init                                                               26/04/25  19:43:02  PAGE 2   
+
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
-C251 COMPILER V5.60.0,  init                                                               05/04/25  00:11:16  PAGE 2   
-
   ebitaddressable size =    ------     ------
   far data size        =    ------     ------
   huge data size       =    ------     ------

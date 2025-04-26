@@ -1,0 +1,67 @@
+C251 COMPILER V5.60.0,  StateMachine                                                       26/04/25  19:37:36  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE StateMachine
+OBJECT MODULE PLACED IN .\out_file\StateMachine.obj
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\StateMachine.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(3,S
+                    -IZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_
+                    -driver;..\user;..\code) DEBUG PRINT(.\out_file\StateMachine.lst) TABS(2) OBJECT(.\out_file\StateMachine.obj) 
+
+stmt  level    source
+
+    1          #include "StateMachine.h"
+    2          
+    3          /*当前状态与上一状态*/
+    4          int State = 0, preState = 0;
+    5          
+    6          /*状态类型定义*/
+    7          #define State_Init 0 //初始化
+    8          
+    9          #define State_Subject_1 1 //科目一
+   10          #define State_Subject_2 2 //科目二
+   11          #define State_Subject_3 3 //科目三
+   12          
+   13          #define State_Shut 4 //紧急停止
+   14          
+   15          #define State_Finish 5 //完成
+   16          
+   17          /*事件定义；-1：未定义的跳转 ；-2：回溯至上一状态*/
+   18          const int Event_Finish[]={State_Subject_1,State_Subject_2,State_Subject_3,State_Finish,-1,-1};
+   19          
+   20          const int Event_Emergency[]={-1,State_Shut,State_Shut,State_Shut,-1,State_Shut};
+   21          
+   22          const int Event_Restart[]={-1,-1,-1,-1,-2,-1};
+   23          
+   24          //状态机更新
+   25          void StateUpdate(const int * Event)
+   26          {
+   27   1          preState = State;
+   28   1        
+   29   1          State = Event[State];
+   30   1        
+   31   1          if(State == -1)State = preState;
+   32   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =        60     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =         4     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =        50     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

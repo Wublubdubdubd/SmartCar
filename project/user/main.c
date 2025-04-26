@@ -41,7 +41,8 @@
 void main()
 {
     char command;//蓝牙控制命令 使用轮询方式获取 但应该改为中断 
-  
+    char str_buffer[100];//蓝牙信息的buffer
+
     init();  
 	
     while(1)
@@ -57,7 +58,10 @@ void main()
         case '2':duty_up_left-=50;duty_up_right-=50;break;
         case '3':duty_forward_left+=50;duty_forward_right+=50;break;
         case '4':duty_forward_left-=50;duty_forward_right-=50;break;
-        case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;break;
+        case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;tim2_irq_handler=NULL;break;
+        case 'w':iap_erase_page(0);iap_write_buff(0x00, (uint8 *)&(gps_tau1201.latitude), 8);iap_write_buff(0x08, (uint8 *)&(gps_tau1201.longitude), 8);
+        case 'r':iap_read_buff(0x00, (uint8 *)&target_latitude, 8);iap_write_buff(0x08, (uint8 *)&target_longitude, 8);
+        case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf", target_latitude, target_longitude);ble6a20_send_string(str_buffer);
         default :;
       }
       

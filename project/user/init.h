@@ -12,7 +12,10 @@
 #include "bluetooth.h"
 #include "pwm.h"
 #include "filter.h"
+#include "StateMachine.h"
 
 void init(void);
+
+
 
 #endif
