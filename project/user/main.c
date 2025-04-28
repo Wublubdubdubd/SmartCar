@@ -39,17 +39,42 @@
 
 void main()
 {
+    // 变量必须先定义 再调用
     char command;//蓝牙控制命令 使用轮询方式获取 但应该改为中断 
     char str_buffer[100];//蓝牙信息的buffer
+  
+    char write_index = 0; //打点索引，测试用
+    char read_index = 0; //读点索引，测试用
+  
+    pObject = Object_one_index; //科目一开始
     
     init();  
-	
+  
     while(1)
 		{
 #if IPS_USE     
       IPS114_Show_Info(); //显示必要信息
 #endif
       command=blue_tooth_read();
+      /*
+      命令集：（ 计划废弃 s、1~4 使其自动增加到目标值 ）
+      s: 10%占空比启动抬升电机，测试接线
+      
+      1：抬升电机占空比 + 10%
+      2：抬升电机占空比 - 10%
+      3：推进电机占空比 + 10%
+      4：推进电机占空比 - 10%
+      
+      b: 刹车 四个电机占空比值 0%
+      
+      w: 向当前科目的EEPROM区写当前位置的经纬度，写满后不可再写，只有清除后可再次重新写入。何时写满取决与当前科目（未完善）
+      r: 读取当前科目下一点到目标点
+      
+      p: 打印目标点经纬度到蓝牙助手
+      
+      e：擦除EEPROM第一页，写索引值 0 
+      
+      */
       switch(command)
       {
         case 's':pwm_set_duty(PWM_1,550);pwm_set_duty(PWM_2,550);break;
@@ -59,23 +84,23 @@ void main()
         case '4':duty_forward_left-=50;duty_forward_right-=50;break;
         case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;
         sprintf(str_buffer,"Break!\r\n");ble6a20_send_string(str_buffer);break;
-        case 'w':WritePoint(0);
+        case 'w':if( write_index < 4 ){WritePoint(pObject[write_index]); write_index++;}
 				sprintf(str_buffer,"Write!\r\n");ble6a20_send_string(str_buffer);break;
-        case 'r':ReadPoint(Object_one_points, 0, 0);
+        case 'r':ReadPoint(pObject[read_index]); read_index++; read_index %= 4;
 				sprintf(str_buffer,"Read!\r\n");ble6a20_send_string(str_buffer);break;
-        case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf\r\n", Object_one_points[0], Object_one_points[1]);ble6a20_send_string(str_buffer);break;
-        case 'e':iap_erase_page(0);//第一页 512k
+        case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf\r\n", target_point[0], target_point[1]);ble6a20_send_string(str_buffer);break;
+        case 'e':iap_erase_page(0);write_index = 0;//第一页 512k
         sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);break;
         default :;
       }
       
-			//ble6a20_send_string("working\r\n");
-			//sprintf(str_buffer,"Roll: %.2f, Pitch: %.2f", roll, pitch);
-      //ble6a20_send_string(str_buffer);
-//      ips114_show_int16(0,64,duty_up_left);
-//      ips114_show_int16(80,64,duty_up_right);
-      ips114_show_float(0,64,roll,4,4);
-      ips114_show_float(80,64,pitch,4,4);
+//      ips114_show_float(0,64,roll,4,4);
+//      ips114_show_float(80,64,pitch,4,4);
+      //显示已打点数和当前所在点
+      ips114_show_char(160,0,read_index);
+      ips114_show_char(160,20,'/');
+      ips114_show_char(160,0,write_index);
+      
       ips114_show_float(160,64,yaw,4,4);
       system_delay_ms(500);
     }

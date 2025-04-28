@@ -8,14 +8,15 @@
 
 extern bit gps_date_ready;//gps数据是否解析成功 0:失败 1:成功
 
-extern double target_latitude, target_longitude;//目标点的经纬度
+extern double target_point[];//目标点的经纬度
 
-extern double Object_one_points[];//科目一的四个点
+extern uint8* pObject; //指向当前科目目标点数组的指针
+
+extern uint8 Object_one_index[];//科目一的四个点
 
 //将当前点写入eeprom
 void WritePoint(uint8 offset);
-
 //从eeprom读取点
-void ReadPoint(double target_buffer[],uint8 origin_offset,uint8 target_offset);
+void ReadPoint(uint8 offset);
   
 #endif

@@ -257,6 +257,15 @@ void pit_hanlder_gps(void)
     {
       gps_tau1201_flag = 0;
       gps_date_ready = (!gps_data_parse()) ? 1 : 0;
+      
+      //修正yaw值
+      if(gps_date_ready)
+      {
+        if(gps_tau1201.speed > 3)//移动速度大于3/3.6 m/s 可以认为gps提供的角度较为准确 直接替换yaw值
+          yaw = gps_tau1201.direction;
+        else //否则yaw仅向gps提供的方向修正一个小角度
+          yaw += (yaw>gps_tau1201.direction) ? -1 : 1 ;
+      }
     }
     else gps_date_ready = 0;
 }
@@ -270,7 +279,7 @@ void pit_hanlder_angle(void)
     uint32 angle_duty;
     
     //获取当前点到目标点的角度
-    //angle_target = get_two_points_azimuth(gps_tau1201.latitude, gps_tau1201.longitude, target_latitude, target_longitude);
+    //angle_target = get_two_points_azimuth(gps_tau1201.latitude, gps_tau1201.longitude, target_point[0], target_point[1]);
   
     //角度环
     PidLocCtrl(&angle_pid,angle_target-yaw,0.01);
@@ -285,7 +294,7 @@ void pit_hanlder_angle(void)
     angle_duty = constrain_uint32(duty_forward_left-angle_pid.out);
     pwm_set_duty(PWM_3,angle_duty);
     //右 推进电机
-    angle_duty = constrain_uint32(duty_forward_right-angle_pid.out);
+    angle_duty = constrain_uint32(duty_forward_right+angle_pid.out);
     pwm_set_duty(PWM_4,angle_duty);
     
 }

@@ -1,14 +1,23 @@
 #include "gps.h"
 
-bit gps_date_ready=0;
+bit gps_date_ready=0;//gps数据是否解析完成
 
-double target_latitude = 0, target_longitude = 0;//目标点的经纬度
+double target_point[2] = {0};//目标点的经、纬度
 
+uint8* pObject = NULL; //指向当前科目目标点数组的指针
 /*
+
 科目1 使用四个点
+
+数组保存：点在EEPROM内的偏移地址
+
+使用方法： ReadPoint(Object_xxx_index[y]); 
+
+即可获取第 y + 1 个点的经、纬度
+
 */
 
-double Object_one_points[4*2]={0};
+uint8 Object_one_index[4]={0, point_size, 2 * point_size, 3 * point_size};
 
 
 //将当前点写入eeprom
@@ -17,8 +26,8 @@ void WritePoint(uint8 offset)
   iap_write_buff(offset, (uint8 *)&gps_tau1201.latitude, point_size);
 }
 
-//从eeprom读取点
-void ReadPoint(double target_buffer[],uint8 origin_offset,uint8 target_offset)
+//从eeprom读取点作为目标点
+void ReadPoint(uint8 offset)
 {
-  iap_read_buff(target_offset, (uint8 *)(target_buffer + origin_offset), point_size);
+  iap_read_buff(offset, (uint8 *)target_point, point_size);
 }

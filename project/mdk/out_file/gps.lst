@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  gps                                                                28/04/25  17:40:10  PAGE 1   
+C251 COMPILER V5.60.0,  gps                                                                28/04/25  21:31:57  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE gps
@@ -11,38 +11,47 @@ stmt  level    source
 
     1          #include "gps.h"
     2          
-    3          bit gps_date_ready=0;
+    3          bit gps_date_ready=0;//gps数据是否解析完成
     4          
-    5          double target_latitude = 0, target_longitude = 0;//目标点的经纬度
+    5          double target_point[2] = {0};//目标点的经、纬度
     6          
-    7          /*
-    8          科目1 使用四个点
-    9          */
-   10          
-   11          double Object_one_points[4*2]={0};
-   12          
+    7          uint8* pObject = NULL; //指向当前科目目标点数组的指针
+    8          /*
+    9          
+   10          科目1 使用四个点
+   11          
+   12          数组保存：点在EEPROM内的偏移地址
    13          
-   14          //将当前点写入eeprom
-   15          void WritePoint(uint8 offset)
-   16          {
-   17   1        iap_write_buff(offset, (uint8 *)&gps_tau1201.latitude, point_size);
-   18   1      }
+   14          使用方法： ReadPoint(Object_xxx_index[y]); 
+   15          
+   16          即可获取第 y + 1 个点的经、纬度
+   17          
+   18          */
    19          
-   20          //从eeprom读取点
-   21          void ReadPoint(double target_buffer[],uint8 origin_offset,uint8 target_offset)
-   22          {
-   23   1        iap_read_buff(target_offset, (uint8 *)(target_buffer + origin_offset), point_size);
-   24   1      }
+   20          uint8 Object_one_index[4]={0, point_size, 2 * point_size, 3 * point_size};
+   21          
+   22          
+   23          //将当前点写入eeprom
+   24          void WritePoint(uint8 offset)
+   25          {
+   26   1        iap_write_buff(offset, (uint8 *)&gps_tau1201.latitude, point_size);
+   27   1      }
+   28          
+   29          //从eeprom读取点作为目标点
+   30          void ReadPoint(uint8 offset)
+   31          {
+   32   1        iap_read_buff(offset, (uint8 *)target_point, point_size);
+   33   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       100     ------
+  code size            =        70     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        87     ------
+  xdata size           =        26     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =         1     ------
@@ -52,7 +61,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =        95     ------
+  hconst size          =        39     ------
 End of Module Information.
 
 

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  pid                                                                28/04/25  17:40:10  PAGE 1   
+C251 COMPILER V5.60.0,  pid                                                                28/04/25  21:31:57  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE pid
@@ -66,7 +66,7 @@ stmt  level    source
    55   1      
    56   1          /* 误差限幅 */
    57   1          pid->out_i = constrain_float(pid->integrator, -pid->imax, pid->imax);
-C251 COMPILER V5.60.0,  pid                                                                28/04/25  17:40:10  PAGE 2   
+C251 COMPILER V5.60.0,  pid                                                                28/04/25  21:31:57  PAGE 2   
 
    58   1      
    59   1      
@@ -134,7 +134,7 @@ stmt  level    source
   121          * 输    入         : amt,low,high
   122          * 输    出         : uint32
   123          *******************************************************************************/
-C251 COMPILER V5.60.0,  pid                                                                28/04/25  17:40:10  PAGE 3   
+C251 COMPILER V5.60.0,  pid                                                                28/04/25  21:31:57  PAGE 3   
 
   124          unsigned long constrain_uint32(float amt)
   125          {
