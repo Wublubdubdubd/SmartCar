@@ -1,10 +1,10 @@
-C251 COMPILER V5.60.0,  zf_common_interrupt                                                19/04/25  01:09:42  PAGE 1   
+C251 COMPILER V5.60.0,  zf_common_interrupt                                                28/04/25  16:58:23  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_common_interrupt
 OBJECT MODULE PLACED IN .\out_file\zf_common_interrupt.obj
 COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\..\libraries\zf_common\zf_common_interrupt.c LARGE NOALIAS FLOAT64 WAR
-                    -NINGLEVEL(3) OPTIMIZE(3,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_d
+                    -NINGLEVEL(3) OPTIMIZE(2,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_d
                     -evice;..\..\libraries\zf_driver;..\user;..\code) DEBUG PRINT(.\out_file\zf_common_interrupt.lst) TABS(2) OBJECT(.\out_fi
                     -le\zf_common_interrupt.obj) 
 
@@ -66,7 +66,7 @@ stmt  level    source
    50   1          if((irqn >> 4) == 0)
    51   1          {
    52   2              IP  |= (priority & 0x01) << (irqn & 0x0F);
-C251 COMPILER V5.60.0,  zf_common_interrupt                                                19/04/25  01:09:42  PAGE 2   
+C251 COMPILER V5.60.0,  zf_common_interrupt                                                28/04/25  16:58:23  PAGE 2   
 
    53   2              IPH |= ((priority >> 1) & 0x01) << (irqn & 0x0F);
    54   2          }
@@ -116,12 +116,12 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       192     ------
+  code size            =       270     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =    ------     ------
+  xdata size           =         3     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------

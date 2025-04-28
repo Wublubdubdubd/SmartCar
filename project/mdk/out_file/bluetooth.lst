@@ -1,9 +1,9 @@
-C251 COMPILER V5.60.0,  bluetooth                                                          19/04/25  01:09:45  PAGE 1   
+C251 COMPILER V5.60.0,  bluetooth                                                          28/04/25  16:58:25  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE bluetooth
 OBJECT MODULE PLACED IN .\out_file\bluetooth.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\bluetooth.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(3,SIZE
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\bluetooth.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE
                     -) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_dri
                     -ver;..\user;..\code) DEBUG PRINT(.\out_file\bluetooth.lst) TABS(2) OBJECT(.\out_file\bluetooth.obj) 
 

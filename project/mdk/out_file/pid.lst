@@ -1,9 +1,9 @@
-C251 COMPILER V5.60.0,  pid                                                                26/04/25  19:43:02  PAGE 1   
+C251 COMPILER V5.60.0,  pid                                                                28/04/25  17:40:10  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE pid
 OBJECT MODULE PLACED IN .\out_file\pid.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\pid.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(3,SIZE) BROW
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\pid.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BROW
                     -SE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;..
                     -\user;..\code) DEBUG PRINT(.\out_file\pid.lst) TABS(2) OBJECT(.\out_file\pid.obj) 
 
@@ -66,7 +66,7 @@ stmt  level    source
    55   1      
    56   1          /* 误差限幅 */
    57   1          pid->out_i = constrain_float(pid->integrator, -pid->imax, pid->imax);
-C251 COMPILER V5.60.0,  pid                                                                26/04/25  19:43:02  PAGE 2   
+C251 COMPILER V5.60.0,  pid                                                                28/04/25  17:40:10  PAGE 2   
 
    58   1      
    59   1      
@@ -134,7 +134,7 @@ stmt  level    source
   121          * 输    入         : amt,low,high
   122          * 输    出         : uint32
   123          *******************************************************************************/
-C251 COMPILER V5.60.0,  pid                                                                26/04/25  19:43:02  PAGE 3   
+C251 COMPILER V5.60.0,  pid                                                                28/04/25  17:40:10  PAGE 3   
 
   124          unsigned long constrain_uint32(float amt)
   125          {
@@ -144,12 +144,12 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =      1001     ------
+  code size            =      1793     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        76         32
+  xdata size           =       146     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------

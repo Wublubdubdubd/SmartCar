@@ -270,7 +270,7 @@ void pit_hanlder_angle(void)
     uint32 angle_duty;
     
     //获取当前点到目标点的角度
-    angle_target = get_two_points_azimuth(gps_tau1201.latitude, gps_tau1201.longitude, target_latitude, target_longitude);
+    //angle_target = get_two_points_azimuth(gps_tau1201.latitude, gps_tau1201.longitude, target_latitude, target_longitude);
   
     //角度环
     PidLocCtrl(&angle_pid,angle_target-yaw,0.01);

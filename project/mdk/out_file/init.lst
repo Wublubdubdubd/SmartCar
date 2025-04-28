@@ -1,9 +1,9 @@
-C251 COMPILER V5.60.0,  init                                                               26/04/25  19:43:02  PAGE 1   
+C251 COMPILER V5.60.0,  init                                                               28/04/25  17:40:10  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE init
 OBJECT MODULE PLACED IN .\out_file\init.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\init.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(3,SIZE) BRO
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\init.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BRO
                     -WSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;.
                     -.\user;..\code) DEBUG PRINT(.\out_file\init.lst) TABS(2) OBJECT(.\out_file\init.obj) 
 
@@ -67,7 +67,7 @@ Module Information          Static   Overlayable
   idata size           =    ------     ------
   pdata size           =    ------     ------
   xdata size           =    ------     ------
-C251 COMPILER V5.60.0,  init                                                               26/04/25  19:43:02  PAGE 2   
+C251 COMPILER V5.60.0,  init                                                               28/04/25  17:40:10  PAGE 2   
 
   xdata-const size     =    ------     ------
   edata size           =    ------     ------

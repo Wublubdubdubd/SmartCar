@@ -1,9 +1,9 @@
-C251 COMPILER V5.60.0,  ips114                                                             26/04/25  19:43:02  PAGE 1   
+C251 COMPILER V5.60.0,  ips114                                                             28/04/25  17:40:10  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE ips114
 OBJECT MODULE PLACED IN .\out_file\ips114.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\ips114.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(3,SIZE) B
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\ips114.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) B
                     -ROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver
                     -;..\user;..\code) DEBUG PRINT(.\out_file\ips114.lst) TABS(2) OBJECT(.\out_file\ips114.obj) 
 
@@ -66,7 +66,7 @@ stmt  level    source
    55   2            //显示GPS位置信息
    56   2            ips114_show_uint8(15, 16*5, gps_tau1201.state);
    57   2            ips114_show_uint8(70, 16*5, gps_tau1201.satellite_used);
-C251 COMPILER V5.60.0,  ips114                                                             26/04/25  19:43:02  PAGE 2   
+C251 COMPILER V5.60.0,  ips114                                                             28/04/25  17:40:10  PAGE 2   
 
    58   2            ips114_show_float(160, 16*5, gps_tau1201.height, 4, 6);
    59   2              
@@ -80,12 +80,12 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       701     ------
+  code size            =       735     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =    ------     ------
+  xdata size           =         1     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------

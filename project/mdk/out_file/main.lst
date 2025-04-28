@@ -1,9 +1,9 @@
-C251 COMPILER V5.60.0,  main                                                               26/04/25  19:45:15  PAGE 1   
+C251 COMPILER V5.60.0,  main                                                               28/04/25  17:45:46  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE main
 OBJECT MODULE PLACED IN .\out_file\main.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\main.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(3,SIZE) BRO
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\main.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BRO
                     -WSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;.
                     -.\user;..\code) DEBUG PRINT(.\out_file\main.lst) TABS(2) OBJECT(.\out_file\main.obj) 
 
@@ -50,61 +50,62 @@ stmt  level    source
    37          #include "init.h"
    38          
    39          
-   40          
-   41          void main()
-   42          {
-   43   1          char command;//蓝牙控制命令 使用轮询方式获取 但应该改为中断 
-   44   1          char str_buffer[100];//蓝牙信息的buffer
-   45   1      
-   46   1          init();  
-   47   1        
-   48   1          while(1)
-   49   1          {
-   50   2      #if IPS_USE     
-   51   2            IPS114_Show_Info(); //显示必要信息
-   52   2      #endif
-   53   2            command=blue_tooth_read();
-   54   2            switch(command)
-   55   2            {
-C251 COMPILER V5.60.0,  main                                                               26/04/25  19:45:15  PAGE 2   
+   40          void main()
+   41          {
+   42   1          char command;//蓝牙控制命令 使用轮询方式获取 但应该改为中断 
+   43   1          char str_buffer[100];//蓝牙信息的buffer
+   44   1          
+   45   1          init();  
+   46   1        
+   47   1          while(1)
+   48   1          {
+   49   2      #if IPS_USE     
+   50   2            IPS114_Show_Info(); //显示必要信息
+   51   2      #endif
+   52   2            command=blue_tooth_read();
+   53   2            switch(command)
+   54   2            {
+   55   3              case 's':pwm_set_duty(PWM_1,550);pwm_set_duty(PWM_2,550);break;
+C251 COMPILER V5.60.0,  main                                                               28/04/25  17:45:46  PAGE 2   
 
-   56   3              case 's':pwm_set_duty(PWM_1,550);pwm_set_duty(PWM_2,550);break;
-   57   3              case '1':duty_up_left+=50;duty_up_right+=50;break;
-   58   3              case '2':duty_up_left-=50;duty_up_right-=50;break;
-   59   3              case '3':duty_forward_left+=50;duty_forward_right+=50;break;
-   60   3              case '4':duty_forward_left-=50;duty_forward_right-=50;break;
-   61   3              case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;tim2_irq
-             -_handler=NULL;break;
-   62   3              case 'w':iap_erase_page(0);iap_write_buff(0x00, (uint8 *)&(gps_tau1201.latitude), 8);iap_write_bu
-             -ff(0x08, (uint8 *)&(gps_tau1201.longitude), 8);
-   63   3              case 'r':iap_read_buff(0x00, (uint8 *)&target_latitude, 8);iap_write_buff(0x08, (uint8 *)&target_
-             -longitude, 8);
-   64   3              case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf", target_latitude, target_longitude);ble6a20_send
-             -_string(str_buffer);
-   65   3              default :;
-   66   3            }
-   67   2            
-   68   2            //ble6a20_send_string("working\r\n");
-   69   2            //sprintf(str_buffer,"Roll: %.2f, Pitch: %.2f", roll, pitch);
-   70   2            //ble6a20_send_string(str_buffer);
-   71   2      //      ips114_show_int16(0,64,duty_up_left);
-   72   2      //      ips114_show_int16(80,64,duty_up_right);
-   73   2            ips114_show_float(0,64,roll,4,4);
-   74   2            ips114_show_float(80,64,pitch,4,4);
-   75   2            ips114_show_float(160,64,yaw,4,4);
-   76   2            system_delay_ms(500);
-   77   2          }
-   78   1      }
+   56   3              case '1':duty_up_left+=50;duty_up_right+=50;break;
+   57   3              case '2':duty_up_left-=50;duty_up_right-=50;break;
+   58   3              case '3':duty_forward_left+=50;duty_forward_right+=50;break;
+   59   3              case '4':duty_forward_left-=50;duty_forward_right-=50;break;
+   60   3              case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;
+   61   3              sprintf(str_buffer,"Break!\r\n");ble6a20_send_string(str_buffer);break;
+   62   3              case 'w':WritePoint(0);
+   63   3              sprintf(str_buffer,"Write!\r\n");ble6a20_send_string(str_buffer);break;
+   64   3              case 'r':ReadPoint(Object_one_points, 0, 0);
+   65   3              sprintf(str_buffer,"Read!\r\n");ble6a20_send_string(str_buffer);break;
+   66   3              case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf\r\n", Object_one_points[0], Object_one_points[1])
+             -;ble6a20_send_string(str_buffer);break;
+   67   3              case 'e':iap_erase_page(0);//第一页 512k
+   68   3              sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);break;
+   69   3              default :;
+   70   3            }
+   71   2            
+   72   2            //ble6a20_send_string("working\r\n");
+   73   2            //sprintf(str_buffer,"Roll: %.2f, Pitch: %.2f", roll, pitch);
+   74   2            //ble6a20_send_string(str_buffer);
+   75   2      //      ips114_show_int16(0,64,duty_up_left);
+   76   2      //      ips114_show_int16(80,64,duty_up_right);
+   77   2            ips114_show_float(0,64,roll,4,4);
+   78   2            ips114_show_float(80,64,pitch,4,4);
+   79   2            ips114_show_float(160,64,yaw,4,4);
+   80   2            system_delay_ms(500);
+   81   2          }
+   82   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       786     ------
+  code size            =       835     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =    ------        100
+  xdata size           =       101     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
@@ -114,7 +115,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =        17     ------
+  hconst size          =        55     ------
 End of Module Information.
 
 
