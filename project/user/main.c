@@ -36,11 +36,13 @@
 
 #include "init.h"
 
+BYTE buf[4096];
+BYTE write_buf[4096]={1,1};
 
 void main()
 {
     // 变量必须先定义 再调用
-    char command;//蓝牙控制命令 使用轮询方式获取 但应该改为中断 
+    char command[2];//蓝牙控制命令 使用轮询方式获取 但应该改为中断 
     char str_buffer[100];//蓝牙信息的buffer
   
     char write_index = 0; //打点索引，测试用
@@ -55,7 +57,7 @@ void main()
 #if IPS_USE     
       IPS114_Show_Info(); //显示必要信息
 #endif
-      command=blue_tooth_read();
+			blue_tooth_read(command);
       /*
       命令集：（ 计划废弃 s、1~4 使其自动增加到目标值 ）
       s: 10%占空比启动抬升电机，测试接线
@@ -75,7 +77,7 @@ void main()
       e：擦除EEPROM第一页，写索引值 0 
       
       */
-      switch(command)
+      switch(command[0])
       {
         case 's':pwm_set_duty(PWM_1,550);pwm_set_duty(PWM_2,550);break;
         case '1':duty_up_left+=50;duty_up_right+=50;break;
@@ -84,12 +86,12 @@ void main()
         case '4':duty_forward_left-=50;duty_forward_right-=50;break;
         case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;
         sprintf(str_buffer,"Break!\r\n");ble6a20_send_string(str_buffer);break;
-        case 'w':if( write_index < 4 ){WritePoint(pObject[write_index]); write_index++;}
+        case 'w':W25Q_PageProgram_32(0, write_buf, 2);//if( write_index < 4 ){WritePoint(pObject[write_index]); write_index++;}
 				sprintf(str_buffer,"Write!\r\n");ble6a20_send_string(str_buffer);break;
-        case 'r':ReadPoint(pObject[read_index]); read_index++; read_index %= 4;
+        case 'r':W25Q_FastRead_6B(0, buf, 256);//ReadPoint(pObject[read_index]); read_index++; read_index %= 4;
 				sprintf(str_buffer,"Read!\r\n");ble6a20_send_string(str_buffer);break;
-        case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf\r\n", target_point[0], target_point[1]);ble6a20_send_string(str_buffer);break;
-        case 'e':iap_erase_page(0);write_index = 0;//第一页 512k
+        case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf\r\n", buf[0], buf[1]);ble6a20_send_string(str_buffer);break;
+        case 'e':W25Q_Erase4K_20(0, TRUE);//iap_erase_page(0);write_index = 0;//第一页 512k
         sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);break;
         default :;
       }
@@ -100,7 +102,7 @@ void main()
       ips114_show_char(160,0,read_index);
       ips114_show_char(160,20,'/');
       ips114_show_char(160,0,write_index);
-      
+
       ips114_show_float(160,64,yaw,4,4);
       system_delay_ms(500);
     }

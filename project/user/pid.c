@@ -2,10 +2,25 @@
 
 // 角度PID初始化参数
 float angle_KP = 2.5, angle_KI = 0,angle_KD = 0.0, angle_IMAX = 20, angle_OUTMAX = 50;
-float angle_target = 0;
 
-pid_param_t angle_pid;  // 角度PID
+pid_param_t angle_pid; //角度PID
+float angle_target = 0;//角度输入
+float angle_error = 0; //角度误差
 
+float Angle_Pid_fun()
+{  
+    //获取当前点到目标点的角度
+    angle_target = get_two_points_azimuth(gps_tau1201.latitude, gps_tau1201.longitude, target_point[0], target_point[1]);
+		angle_target -= 180; //修正到yaw的范围  yaw : -180 ~ 180 
+		angle_error = angle_target-yaw;// error :-360 ~ 360
+		//误差修正到 -180~180，即最小的旋转角度
+		if(angle_error > 180) angle_error -= 360;
+		else if(angle_error < -180) angle_error += 360;
+    //角度环
+    PidLocCtrl(&angle_pid,angle_error,0.01);
+	
+		return angle_pid.out;
+}
 
 /*******************************************************************************
 * 函 数 名         : My_Pid_Init

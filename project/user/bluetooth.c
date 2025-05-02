@@ -1,5 +1,6 @@
 #include "bluetooth.h"
 #define buffer_size 64
+#define command_size 2*sizeof(char)
 
 uint8 data_buffer[buffer_size];
 uint8 data_len;
@@ -20,12 +21,10 @@ void blue_tooth_read_loop(void)
     }
 }
 
-uint8 blue_tooth_read(void)//读取数据
+void blue_tooth_read(char* buffer)//读取数据
 {
     if(ble6a20_read_buffer(data_buffer, buffer_size))                          // 查看是否有消息 默认缓冲区是BLE6A20_BUFFER_SIZE 总共 64 字节
     {
-      return data_buffer[0];
+			memcpy(buffer, data_buffer, command_size);
     }
-    else
-      return 'n';
 }

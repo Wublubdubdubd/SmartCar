@@ -1,11 +1,11 @@
-C251 COMPILER V5.60.0,  isr                                                                28/04/25  21:31:57  PAGE 1   
+C251 COMPILER V5.60.0,  isr                                                                02/05/25  11:30:37  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE isr
 OBJECT MODULE PLACED IN .\out_file\isr.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\isr.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BROW
-                    -SE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;..
-                    -\user;..\code) DEBUG PRINT(.\out_file\isr.lst) TABS(2) OBJECT(.\out_file\isr.obj) 
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE ..\user\isr.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) B
+                    -ROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver
+                    -;..\user;..\code) DEBUG PRINT(.\out_file\isr.lst) TABS(2) OBJECT(.\out_file\isr.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    53   2              else
    54   2              {
    55   3                  dwon_count = 0;
-C251 COMPILER V5.60.0,  isr                                                                28/04/25  21:31:57  PAGE 2   
+C251 COMPILER V5.60.0,  isr                                                                02/05/25  11:30:37  PAGE 2   
 
    56   3              }
    57   2              
@@ -134,7 +134,7 @@ stmt  level    source
   119   2              DMA_UR3R_STA &= ~0x02;    //清标志位
   120   2              uart_rx_start_buff(UART_3); // 设置下一次接收，务必保留
   121   2              // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
-C251 COMPILER V5.60.0,  isr                                                                28/04/25  21:31:57  PAGE 3   
+C251 COMPILER V5.60.0,  isr                                                                02/05/25  11:30:37  PAGE 3   
 
   122   2              // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
   123   2              // 如果进入了这个中断，则代表UART的数据在没有取走之前被覆盖!
@@ -202,7 +202,7 @@ stmt  level    source
   185   1          
   186   1          if(tim3_irq_handler != NULL)
   187   1          {
-C251 COMPILER V5.60.0,  isr                                                                28/04/25  21:31:57  PAGE 4   
+C251 COMPILER V5.60.0,  isr                                                                02/05/25  11:30:37  PAGE 4   
 
   188   2              tim3_irq_handler();
   189   2          }
@@ -270,7 +270,7 @@ stmt  level    source
   251            * @return 无
   252            */
   253          void pit_hanlder_gps(void)
-C251 COMPILER V5.60.0,  isr                                                                28/04/25  21:31:57  PAGE 5   
+C251 COMPILER V5.60.0,  isr                                                                02/05/25  11:30:37  PAGE 5   
 
   254          {
   255   1          //获取gps数据
@@ -298,121 +298,117 @@ stmt  level    source
   277          void pit_hanlder_angle(void)
   278          {
   279   1          uint32 angle_duty;
-  280   1          
-  281   1          //获取当前点到目标点的角度
-  282   1          //angle_target = get_two_points_azimuth(gps_tau1201.latitude, gps_tau1201.longitude, target_point[0],
-             - target_point[1]);
-  283   1        
-  284   1          //角度环
-  285   1          PidLocCtrl(&angle_pid,angle_target-yaw,0.01);
-  286   1          
-  287   1          //左 抬升电机
-  288   1          angle_duty = constrain_uint32(duty_up_left);
-  289   1          pwm_set_duty(PWM_1,angle_duty);
-  290   1          //右 抬升电机
-  291   1          angle_duty = constrain_uint32(duty_up_right);
-  292   1          pwm_set_duty(PWM_2,angle_duty);
-  293   1          //左 推进电机
-  294   1          angle_duty = constrain_uint32(duty_forward_left-angle_pid.out);
-  295   1          pwm_set_duty(PWM_3,angle_duty);
-  296   1          //右 推进电机
-  297   1          angle_duty = constrain_uint32(duty_forward_right+angle_pid.out);
-  298   1          pwm_set_duty(PWM_4,angle_duty);
-  299   1          
-  300   1      }
-  301          void my_pit_init()
-  302          {
-  303   1          //设置中断回调函数 5ms采样一次IMU数据
-  304   1          tim0_irq_handler = pit_hanlder_imu; 
-  305   1          pit_ms_init(PIT_IMU, 5);
-  306   1          //设置中断回调函数 1s采样一次GPS数据
-  307   1          tim1_irq_handler = pit_hanlder_GPS; 
-  308   1          pit_ms_init(PIT_GPS, 1000);
-  309   1          //10ms更新一次角度环
-  310   1          tim3_irq_handler = pit_hanlder_angle;
-  311   1          pit_ms_init(PIT_ANGLE, 10);
-  312   1      }
-  313          
-  314          
-  315          //#define     INT0_VECTOR             0       //0003H
-  316          //#define     TMR0_VECTOR             1       //000BH
-  317          //#define     INT1_VECTOR             2       //0013H
-  318          //#define     TMR1_VECTOR             3       //001BH
-C251 COMPILER V5.60.0,  isr                                                                28/04/25  21:31:57  PAGE 6   
+  280   1          float angle_u = 0 ;//控制量
+  281   1          // 角度环
+  282   1          angle_u = Angle_Pid_fun();
+  283   1          
+  284   1          //左 抬升电机
+  285   1          angle_duty = constrain_uint32(duty_up_left);
+  286   1          pwm_set_duty(PWM_1,angle_duty);
+  287   1          //右 抬升电机
+  288   1          angle_duty = constrain_uint32(duty_up_right);
+  289   1          pwm_set_duty(PWM_2,angle_duty);
+  290   1          //左 推进电机
+  291   1          angle_duty = constrain_uint32(duty_forward_left - angle_u);
+  292   1          pwm_set_duty(PWM_3,angle_duty);
+  293   1          //右 推进电机
+  294   1          angle_duty = constrain_uint32(duty_forward_right + angle_u);
+  295   1          pwm_set_duty(PWM_4,angle_duty);
+  296   1          
+  297   1      }
+  298          void my_pit_init()
+  299          {
+  300   1          //设置中断回调函数 5ms采样一次IMU数据
+  301   1          tim0_irq_handler = pit_hanlder_imu; 
+  302   1          pit_ms_init(PIT_IMU, 5);
+  303   1          //设置中断回调函数 1s采样一次GPS数据
+  304   1          tim1_irq_handler = pit_hanlder_GPS; 
+  305   1          pit_ms_init(PIT_GPS, 1000);
+  306   1          //10ms更新一次角度环
+  307   1          tim3_irq_handler = pit_hanlder_angle;
+  308   1          pit_ms_init(PIT_ANGLE, 10);
+  309   1      }
+  310          
+  311          
+  312          //#define     INT0_VECTOR             0       //0003H
+  313          //#define     TMR0_VECTOR             1       //000BH
+  314          //#define     INT1_VECTOR             2       //0013H
+  315          //#define     TMR1_VECTOR             3       //001BH
+  316          //#define     UART1_VECTOR            4       //0023H
+  317          //#define     ADC_VECTOR              5       //002BH
+  318          //#define     LVD_VECTOR              6       //0033H
+  319          //#define     PCA_VECTOR              7       //003BH
+C251 COMPILER V5.60.0,  isr                                                                02/05/25  11:30:37  PAGE 6   
 
-  319          //#define     UART1_VECTOR            4       //0023H
-  320          //#define     ADC_VECTOR              5       //002BH
-  321          //#define     LVD_VECTOR              6       //0033H
-  322          //#define     PCA_VECTOR              7       //003BH
-  323          //#define     UART2_VECTOR            8       //0043H
-  324          //#define     SPI_VECTOR              9       //004BH
-  325          //#define     INT2_VECTOR             10      //0053H
-  326          //#define     INT3_VECTOR             11      //005BH
-  327          //#define     TMR2_VECTOR             12      //0063H
-  328          //#define     USER_VECTOR             13      //006BH
-  329          //#define     INT4_VECTOR             16      //0083H
-  330          //#define     UART3_VECTOR            17      //008BH
-  331          //#define     UART4_VECTOR            18      //0093H
-  332          //#define     TMR3_VECTOR             19      //009BH
-  333          //#define     TMR4_VECTOR             20      //00A3H
-  334          //#define     CMP_VECTOR              21      //00ABH
-  335          //#define     I2C_VECTOR              24      //00C3H
-  336          //#define     USB_VECTOR              25      //00CBH
-  337          //#define     PWMA_VECTOR             26      //00D3H
-  338          //#define     PWMB_VECTOR             27      //00DBH
-  339          
-  340          //#define     RTC_VECTOR              36      //0123H
-  341          //#define     P0INT_VECTOR            37      //012BH
-  342          //#define     P1INT_VECTOR            38      //0133H
-  343          //#define     P2INT_VECTOR            39      //013BH
-  344          //#define     P3INT_VECTOR            40      //0143H
-  345          //#define     P4INT_VECTOR            41      //014BH
-  346          //#define     P5INT_VECTOR            42      //0153H
-  347          //#define     P6INT_VECTOR            43      //015BH
-  348          //#define     P7INT_VECTOR            44      //0163H
-  349          //#define     DMA_M2M_VECTOR          47      //017BH
-  350          //#define     DMA_ADC_VECTOR          48      //0183H
-  351          //#define     DMA_SPI_VECTOR          49      //018BH
-  352          //#define     DMA_UR1T_VECTOR         50      //0193H
-  353          //#define     DMA_UR1R_VECTOR         51      //019BH
-  354          //#define     DMA_UR2T_VECTOR         52      //01A3H
-  355          //#define     DMA_UR2R_VECTOR         53      //01ABH
-  356          //#define     DMA_UR3T_VECTOR         54      //01B3H
-  357          //#define     DMA_UR3R_VECTOR         55      //01BBH
-  358          //#define     DMA_UR4T_VECTOR         56      //01C3H
-  359          //#define     DMA_UR4R_VECTOR         57      //01CBH
-  360          //#define     DMA_LCM_VECTOR          58      //01D3H
-  361          //#define     LCM_VECTOR              59      //01DBH
-  362          //#define     DMA_I2CT_VECTOR         60      //01E3H
-  363          //#define     DMA_I2CR_VECTOR         61      //01EBH
-  364          //#define     I2S_VECTOR              62      //01F3H
-  365          //#define     DMA_I2ST_VECTOR         63      //01FBH
-  366          //#define     DMA_I2SR_VECTOR         64      //0203H
-  367          //#define     DMA_QSPI_VECTOR         65      //020BH
-  368          //#define     QSPI_VECTOR             66      //0213H
-  369          //#define     TMR11_VECTOR            67      //021BH
-  370          //#define     DMA_PWMAT_VECTOR        72      //0243H
-  371          //#define     DMA_PWMAR_VECTOR        73      //024BH
+  320          //#define     UART2_VECTOR            8       //0043H
+  321          //#define     SPI_VECTOR              9       //004BH
+  322          //#define     INT2_VECTOR             10      //0053H
+  323          //#define     INT3_VECTOR             11      //005BH
+  324          //#define     TMR2_VECTOR             12      //0063H
+  325          //#define     USER_VECTOR             13      //006BH
+  326          //#define     INT4_VECTOR             16      //0083H
+  327          //#define     UART3_VECTOR            17      //008BH
+  328          //#define     UART4_VECTOR            18      //0093H
+  329          //#define     TMR3_VECTOR             19      //009BH
+  330          //#define     TMR4_VECTOR             20      //00A3H
+  331          //#define     CMP_VECTOR              21      //00ABH
+  332          //#define     I2C_VECTOR              24      //00C3H
+  333          //#define     USB_VECTOR              25      //00CBH
+  334          //#define     PWMA_VECTOR             26      //00D3H
+  335          //#define     PWMB_VECTOR             27      //00DBH
+  336          
+  337          //#define     RTC_VECTOR              36      //0123H
+  338          //#define     P0INT_VECTOR            37      //012BH
+  339          //#define     P1INT_VECTOR            38      //0133H
+  340          //#define     P2INT_VECTOR            39      //013BH
+  341          //#define     P3INT_VECTOR            40      //0143H
+  342          //#define     P4INT_VECTOR            41      //014BH
+  343          //#define     P5INT_VECTOR            42      //0153H
+  344          //#define     P6INT_VECTOR            43      //015BH
+  345          //#define     P7INT_VECTOR            44      //0163H
+  346          //#define     DMA_M2M_VECTOR          47      //017BH
+  347          //#define     DMA_ADC_VECTOR          48      //0183H
+  348          //#define     DMA_SPI_VECTOR          49      //018BH
+  349          //#define     DMA_UR1T_VECTOR         50      //0193H
+  350          //#define     DMA_UR1R_VECTOR         51      //019BH
+  351          //#define     DMA_UR2T_VECTOR         52      //01A3H
+  352          //#define     DMA_UR2R_VECTOR         53      //01ABH
+  353          //#define     DMA_UR3T_VECTOR         54      //01B3H
+  354          //#define     DMA_UR3R_VECTOR         55      //01BBH
+  355          //#define     DMA_UR4T_VECTOR         56      //01C3H
+  356          //#define     DMA_UR4R_VECTOR         57      //01CBH
+  357          //#define     DMA_LCM_VECTOR          58      //01D3H
+  358          //#define     LCM_VECTOR              59      //01DBH
+  359          //#define     DMA_I2CT_VECTOR         60      //01E3H
+  360          //#define     DMA_I2CR_VECTOR         61      //01EBH
+  361          //#define     I2S_VECTOR              62      //01F3H
+  362          //#define     DMA_I2ST_VECTOR         63      //01FBH
+  363          //#define     DMA_I2SR_VECTOR         64      //0203H
+  364          //#define     DMA_QSPI_VECTOR         65      //020BH
+  365          //#define     QSPI_VECTOR             66      //0213H
+  366          //#define     TMR11_VECTOR            67      //021BH
+  367          //#define     DMA_PWMAT_VECTOR        72      //0243H
+  368          //#define     DMA_PWMAR_VECTOR        73      //024BH
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =      2056     ------
+  code size            =      2025     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =         5     ------
+  xdata size           =         9     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
   ebit size            =    ------     ------
-C251 COMPILER V5.60.0,  isr                                                                28/04/25  21:31:57  PAGE 7   
-
   bitaddressable size  =    ------     ------
   ebitaddressable size =    ------     ------
   far data size        =    ------     ------
   huge data size       =    ------     ------
+C251 COMPILER V5.60.0,  isr                                                                02/05/25  11:30:37  PAGE 7   
+
   const size           =    ------     ------
   hconst size          =         6     ------
 End of Module Information.

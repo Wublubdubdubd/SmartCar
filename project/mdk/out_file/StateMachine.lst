@@ -1,11 +1,11 @@
-C251 COMPILER V5.60.0,  StateMachine                                                       28/04/25  21:31:42  PAGE 1   
+C251 COMPILER V5.60.0,  StateMachine                                                       01/05/25  19:09:31  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE StateMachine
 OBJECT MODULE PLACED IN .\out_file\StateMachine.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\StateMachine.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,S
-                    -IZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_
-                    -driver;..\user;..\code) DEBUG PRINT(.\out_file\StateMachine.lst) TABS(2) OBJECT(.\out_file\StateMachine.obj) 
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE ..\user\StateMachine.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(
+                    -2,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\
+                    -zf_driver;..\user;..\code) DEBUG PRINT(.\out_file\StateMachine.lst) TABS(2) OBJECT(.\out_file\StateMachine.obj) 
 
 stmt  level    source
 

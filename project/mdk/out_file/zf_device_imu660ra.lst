@@ -1,12 +1,12 @@
-C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 28/04/25  16:58:24  PAGE 1   
+C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 02/05/25  11:27:03  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_device_imu660ra
 OBJECT MODULE PLACED IN .\out_file\zf_device_imu660ra.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\..\libraries\zf_device\zf_device_imu660ra.c LARGE NOALIAS FLOAT64 WARN
-                    -INGLEVEL(3) OPTIMIZE(2,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_de
-                    -vice;..\..\libraries\zf_driver;..\user;..\code) DEBUG PRINT(.\out_file\zf_device_imu660ra.lst) TABS(2) OBJECT(.\out_file
-                    -\zf_device_imu660ra.obj) 
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE ..\..\libraries\zf_device\zf_device_imu660ra.c LARGE NOALIAS FLOAT64 W
+                    -ARNINGLEVEL(3) OPTIMIZE(2,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf
+                    -_device;..\..\libraries\zf_driver;..\user;..\code) DEBUG PRINT(.\out_file\zf_device_imu660ra.lst) TABS(2) OBJECT(.\out_f
+                    -ile\zf_device_imu660ra.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    47          *
    48          *                   // 软件 IIC 引脚
    49          *                   SCL/SPC           查看 zf_device_imu660ra.h 中 IMU660RA_SCL_PIN 宏定义
-C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 28/04/25  16:58:24  PAGE 2   
+C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 02/05/25  11:27:03  PAGE 2   
 
    50          *                   SDA/DSI           查看 zf_device_imu660ra.h 中 IMU660RA_SDA_PIN 宏定义
    51          *                   VCC               3.3V电源
@@ -134,7 +134,7 @@ stmt  level    source
   102          // 参数说明     dat            数据
   103          // 返回参数     void
   104          // 使用示例     imu660ra_write_registers(IMU660RA_INIT_DATA, imu660ra_config_file, sizeof(imu660ra_co
-C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 28/04/25  16:58:24  PAGE 3   
+C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 02/05/25  11:27:03  PAGE 3   
 
              -nfig_file));
   105          // 备注信息     内部调用
@@ -202,7 +202,7 @@ stmt  level    source
              -------------
   161          static uint8 imu660ra_self_check (void)
   162          {
-C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 28/04/25  16:58:24  PAGE 4   
+C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 02/05/25  11:27:03  PAGE 4   
 
   163   1          uint8 dat = 0, return_state = 0;
   164   1          uint16 timeout_count = 0;
@@ -270,7 +270,7 @@ stmt  level    source
   218   1          imu_gyro_z_pre=imu660ra_gyro_z;
   219   1          
   220   1          imu660ra_read_registers(IMU660RA_GYRO_ADDRESS, dat, 6);
-C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 28/04/25  16:58:24  PAGE 5   
+C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 02/05/25  11:27:03  PAGE 5   
 
   221   1          imu660ra_gyro_x = (int16)(((uint16)dat[1] << 8 | dat[0]));
   222   1          imu660ra_gyro_y = (int16)(((uint16)dat[3] << 8 | dat[2]));
@@ -338,7 +338,7 @@ stmt  level    source
   274   2              
   275   2              imu660ra_write_register(IMU660RA_PWR_CTRL, 0x0E);                       // 开启性能模式  �
              -�能陀螺仪、加速度、温度传感器
-C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 28/04/25  16:58:24  PAGE 6   
+C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 02/05/25  11:27:03  PAGE 6   
 
   276   2              imu660ra_write_register(IMU660RA_ACC_CONF, 0xA7);                       // 加速度采集配置 
              -性能模式 正常采集 50Hz  采样频率
@@ -406,7 +406,7 @@ stmt  level    source
              -��转化为带物理单位的数据 单位为 °/s
   331   2              // 设置为 0x01 陀螺仪量程为 ±1000 dps    获取到的陀螺仪数据除以 32.8    可�
              -��转化为带物理单位的数据 单位为 °/s
-C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 28/04/25  16:58:24  PAGE 7   
+C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 02/05/25  11:27:03  PAGE 7   
 
   332   2              // 设置为 0x00 陀螺仪量程为 ±2000 dps    获取到的陀螺仪数据除以 16.4    可�
              -��转化为带物理单位的数据 单位为 °/s
@@ -475,7 +475,7 @@ Module Information          Static   Overlayable
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 28/04/25  16:58:24  PAGE 8   
+C251 COMPILER V5.60.0,  zf_device_imu660ra                                                 02/05/25  11:27:03  PAGE 8   
 
   xdata size           =        82     ------
   xdata-const size     =    ------     ------

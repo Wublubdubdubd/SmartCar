@@ -6,7 +6,7 @@
 
 void blue_tooth_read_loop(void);//回环检测
 
-uint8 blue_tooth_read(void);//读取数据
+void blue_tooth_read(char* buffer);//读取数据
 
 
 

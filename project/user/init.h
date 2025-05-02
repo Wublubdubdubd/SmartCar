@@ -13,6 +13,8 @@
 #include "pwm.h"
 #include "filter.h"
 #include "StateMachine.h"
+#include "qspi.h"
+#include "w25qxx.h"
 
 void init(void);
 

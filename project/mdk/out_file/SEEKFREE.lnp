@@ -39,7 +39,9 @@
 ".\out_file\init.obj",
 ".\out_file\pwm.obj",
 ".\out_file\filter.obj",
-".\out_file\StateMachine.obj" 
+".\out_file\StateMachine.obj",
+".\out_file\qspi.obj",
+".\out_file\w25qxx.obj" 
 TO ".\out_file\SEEKFREE" 
 PRINT(".\out_file\SEEKFREE.map") CASE DISABLEWARNING (57,16) 
 REMOVEUNUSED 

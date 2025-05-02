@@ -1,11 +1,11 @@
-C251 COMPILER V5.60.0,  imu                                                                28/04/25  16:58:25  PAGE 1   
+C251 COMPILER V5.60.0,  imu                                                                02/05/25  11:27:05  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE imu
 OBJECT MODULE PLACED IN .\out_file\imu.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\imu.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BROW
-                    -SE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;..
-                    -\user;..\code) DEBUG PRINT(.\out_file\imu.lst) TABS(2) OBJECT(.\out_file\imu.obj) 
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE ..\user\imu.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) B
+                    -ROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver
+                    -;..\user;..\code) DEBUG PRINT(.\out_file\imu.lst) TABS(2) OBJECT(.\out_file\imu.obj) 
 
 stmt  level    source
 

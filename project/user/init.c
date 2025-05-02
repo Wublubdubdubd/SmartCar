@@ -32,7 +32,10 @@ void init()
 #endif
     
     //E2PROM初始化
-    iap_init();
+    //iap_init();
+		
+//		QSPI_Init();
+//    W25Q_Enable_QE();
         
     //pid初始化
     My_Pid_Init();

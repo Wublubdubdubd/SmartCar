@@ -277,12 +277,9 @@ void pit_hanlder_gps(void)
 void pit_hanlder_angle(void)
 {
     uint32 angle_duty;
-    
-    //获取当前点到目标点的角度
-    //angle_target = get_two_points_azimuth(gps_tau1201.latitude, gps_tau1201.longitude, target_point[0], target_point[1]);
-  
-    //角度环
-    PidLocCtrl(&angle_pid,angle_target-yaw,0.01);
+		float angle_u = 0 ;//控制量
+	  // 角度环
+		angle_u = Angle_Pid_fun();
     
     //左 抬升电机
 	  angle_duty = constrain_uint32(duty_up_left);
@@ -291,10 +288,10 @@ void pit_hanlder_angle(void)
 	  angle_duty = constrain_uint32(duty_up_right);
     pwm_set_duty(PWM_2,angle_duty);
     //左 推进电机
-    angle_duty = constrain_uint32(duty_forward_left-angle_pid.out);
+    angle_duty = constrain_uint32(duty_forward_left - angle_u);
     pwm_set_duty(PWM_3,angle_duty);
     //右 推进电机
-    angle_duty = constrain_uint32(duty_forward_right+angle_pid.out);
+    angle_duty = constrain_uint32(duty_forward_right + angle_u);
     pwm_set_duty(PWM_4,angle_duty);
     
 }

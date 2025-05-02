@@ -1,0 +1,1147 @@
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE w25qxx
+OBJECT MODULE PLACED IN .\out_file\w25qxx.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE ..\user\w25qxx.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE
+                    -) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_dri
+                    -ver;..\user;..\code) DEBUG PRINT(.\out_file\w25qxx.lst) TABS(2) OBJECT(.\out_file\w25qxx.obj) 
+
+stmt  level    source
+
+    1          #include "config.h"
+    2          #include "qspi.h"
+    3          #include "w25qxx.h"
+    4          
+    5          
+    6          void W25Q_WriteEnable_06()
+    7          {
+    8   1          QSPI_WRITE_INSTR(0x06);
+    9   1      }
+   10          
+   11          void W25Q_QPI_WriteEnable_06()
+   12          {
+   13   1          QSPI_WRITE_QINSTR(0x06);
+   14   1      }
+   15          
+   16          void W25Q_WriteEnableVSR_50()
+   17          {
+   18   1          QSPI_WRITE_INSTR(0x50);
+   19   1      }
+   20          
+   21          void W25Q_QPI_WriteEnableVSR_50()
+   22          {
+   23   1          QSPI_WRITE_QINSTR(0x50);
+   24   1      }
+   25          
+   26          void W25Q_WriteDisable_04()
+   27          {
+   28   1          QSPI_WRITE_INSTR(0x04);
+   29   1      }
+   30          
+   31          void W25Q_QPI_WriteDisable_04()
+   32          {
+   33   1          QSPI_WRITE_QINSTR(0x04);
+   34   1      }
+   35          
+   36          BYTE W25Q_ReadSR1_05()
+   37          {
+   38   1          BYTE dat;
+   39   1          
+   40   1          QSPI_READ_INSTR_SDATA(0x05, (BYTE *)&dat, 1);
+   41   1      
+   42   1          return dat;
+   43   1      }
+   44          
+   45          void W25Q_WaitBusy(int n)       //自动轮询周期时间单位: us
+   46          {
+   47   1          while (W25Q_ReadSR1_05() & 0x01);
+   48   1      
+   49   1          if (n);
+   50   1      //    QSPI_POLLING_READ_INSTR_SDATA(0x05, 0x01, 0x00, 12*n);
+   51   1      }
+   52          
+   53          BYTE W25Q_QPI_ReadSR1_05()
+   54          {
+   55   1          BYTE dat;
+   56   1          
+   57   1          QSPI_READ_QINSTR_QDATA(0x05, (BYTE *)&dat, 1);
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 2   
+
+   58   1      
+   59   1          return dat;
+   60   1      }
+   61          
+   62          void W25Q_QPI_WaitBusy(int n)
+   63          {
+   64   1          QSPI_POLLING_READ_QINSTR_QDATA(0x05, 0x01, 0x00, 12*n);
+   65   1      }
+   66          
+   67          BYTE W25Q_ReadSR2_35()
+   68          {
+   69   1          BYTE dat;
+   70   1          
+   71   1          QSPI_READ_INSTR_SDATA(0x35, (BYTE *)&dat, 1);
+   72   1      
+   73   1          return dat;
+   74   1      }
+   75          
+   76          BYTE W25Q_QPI_ReadSR2_35()
+   77          {
+   78   1          BYTE dat;
+   79   1          
+   80   1          QSPI_READ_QINSTR_QDATA(0x35, (BYTE *)&dat, 1);
+   81   1      
+   82   1          return dat;
+   83   1      }
+   84          
+   85          BYTE W25Q_ReadSR3_15()
+   86          {
+   87   1          BYTE dat;
+   88   1          
+   89   1          QSPI_READ_INSTR_SDATA(0x15, (BYTE *)&dat, 1);
+   90   1      
+   91   1          return dat;
+   92   1      }
+   93          
+   94          BYTE W25Q_QPI_ReadSR3_15()
+   95          {
+   96   1          BYTE dat;
+   97   1          
+   98   1          QSPI_READ_QINSTR_QDATA(0x15, (BYTE *)&dat, 1);
+   99   1      
+  100   1          return dat;
+  101   1      }
+  102          
+  103          void W25Q_WriteSR1_01(BYTE dat)
+  104          {
+  105   1          QSPI_WRITE_INSTR_SADDR8(0x01, dat);
+  106   1      }
+  107          
+  108          void W25Q_WriteSR12_01(WORD dat)
+  109          {
+  110   1          QSPI_WRITE_INSTR_SADDR16(0x01, dat);    //SR1+SR2合并为16位地址
+  111   1      }
+  112          
+  113          void W25Q_QPI_WriteSR1_01(BYTE dat)
+  114          {
+  115   1          QSPI_WRITE_QINSTR_QADDR8(0x01, dat);
+  116   1      }
+  117          
+  118          void W25Q_WriteSR2_31(BYTE dat)
+  119          {
+  120   1          QSPI_WRITE_INSTR_SADDR8(0x31, dat);
+  121   1          W25Q_WaitBusy(100);
+  122   1      }
+  123          
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 3   
+
+  124          void W25Q_QPI_WriteSR2_31(BYTE dat)
+  125          {
+  126   1          QSPI_WRITE_QINSTR_QADDR8(0x31, dat);
+  127   1      }
+  128          
+  129          void W25Q_WriteSR3_11(BYTE dat)
+  130          {
+  131   1          QSPI_WRITE_INSTR_SADDR8(0x11, dat);
+  132   1      }
+  133          
+  134          void W25Q_QPI_WriteSR3_11(BYTE dat)
+  135          {
+  136   1          QSPI_WRITE_QINSTR_QADDR8(0x11, dat);
+  137   1      }
+  138          
+  139          BYTE W25Q_ReadEAR_C8()
+  140          {
+  141   1          BYTE dat;
+  142   1          
+  143   1          QSPI_READ_INSTR_SDATA(0xc8, (BYTE *)&dat, 1);
+  144   1      
+  145   1          return dat;
+  146   1      }
+  147          
+  148          void W25Q_WriteEAR_C5(BYTE dat)
+  149          {
+  150   1          QSPI_WRITE_INSTR_SADDR8(0xc5, dat);
+  151   1      }
+  152          
+  153          void W25Q_EnterAddr32Mode_B7()
+  154          {
+  155   1          QSPI_WRITE_INSTR(0xb7);
+  156   1      }
+  157          
+  158          void W25Q_ExitAddr32Mode_E9()
+  159          {
+  160   1          QSPI_WRITE_INSTR(0xe9);
+  161   1      }
+  162          
+  163          void W25Q_ReadData_03(DWORD addr, BYTE *pdat, WORD datalen)
+  164          {
+  165   1          BYTE cnt;
+  166   1          
+  167   1          while (datalen > 0)
+  168   1          {
+  169   2              cnt = 32;
+  170   2              if (datalen < 32)
+  171   2                  cnt = datalen;
+  172   2                  
+  173   2              QSPI_READ_INSTR_SADDR24_SDATA(0x03, addr, pdat, cnt);
+  174   2              
+  175   2              datalen -= cnt;
+  176   2              addr += cnt;
+  177   2              pdat += cnt;
+  178   2          }
+  179   1      }
+  180          
+  181          void W25Q_DMA_ReadData_03(DWORD addr, BYTE *pdat, WORD datalen)
+  182          {
+  183   1          QSPI_DMA_READ_INSTR_SADDR24_SDATA(0x03, addr, pdat, datalen);
+  184   1      }
+  185          
+  186          void W25Q_ReadData_Addr32_13(DWORD addr, BYTE *pdat, WORD datalen)
+  187          {
+  188   1          BYTE cnt;
+  189   1          
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 4   
+
+  190   1          while (datalen > 0)
+  191   1          {
+  192   2              cnt = 32;
+  193   2              if (datalen < 32)
+  194   2                  cnt = datalen;
+  195   2                  
+  196   2              QSPI_READ_INSTR_SADDR32_SDATA(0x13, addr, pdat, cnt);
+  197   2              
+  198   2              datalen -= cnt;
+  199   2              addr += cnt;
+  200   2              pdat += cnt;
+  201   2          }
+  202   1      }
+  203          
+  204          void W25Q_DMA_ReadData_Addr32_13(DWORD addr, BYTE *pdat, WORD datalen)
+  205          {
+  206   1          QSPI_DMA_READ_INSTR_SADDR32_SDATA(0x13, addr, pdat, datalen);
+  207   1      }
+  208          
+  209          void W25Q_FastRead_0B(DWORD addr, BYTE *pdat, WORD datalen)
+  210          {
+  211   1          BYTE cnt;
+  212   1          
+  213   1          while (datalen > 0)
+  214   1          {
+  215   2              cnt = 32;
+  216   2              if (datalen < 32)
+  217   2                  cnt = datalen;
+  218   2                  
+  219   2              QSPI_READ_INSTR_SADDR24_DUMMY_SDATA(0x0b, addr, 8, pdat, cnt);
+  220   2              
+  221   2              datalen -= cnt;
+  222   2              addr += cnt;
+  223   2              pdat += cnt;
+  224   2          }
+  225   1      }
+  226          
+  227          void W25Q_DMA_FastRead_0B(DWORD addr, BYTE *pdat, WORD datalen)
+  228          {
+  229   1          QSPI_DMA_READ_INSTR_SADDR24_DUMMY_SDATA(0x0b, addr, 8, pdat, datalen);
+  230   1      }
+  231          
+  232          void W25Q_QPI_FastRead_0B(DWORD addr, BYTE *pdat, WORD datalen)
+  233          {
+  234   1          BYTE cnt;
+  235   1          
+  236   1          while (datalen > 0)
+  237   1          {
+  238   2              cnt = 32;
+  239   2              if (datalen < 32)
+  240   2                  cnt = datalen;
+  241   2                  
+  242   2              QSPI_READ_QINSTR_QADDR24_DUMMY_QDATA(0x0b, addr, 2, pdat, cnt);
+  243   2              
+  244   2              datalen -= cnt;
+  245   2              addr += cnt;
+  246   2              pdat += cnt;
+  247   2          }
+  248   1      }
+  249          
+  250          void W25Q_QPI_DMA_FastRead_0B(DWORD addr, BYTE *pdat, WORD datalen)
+  251          {
+  252   1          QSPI_DMA_READ_QINSTR_QADDR24_DUMMY_QDATA(0x0b, addr, 2, pdat, datalen);
+  253   1      }
+  254          
+  255          void W25Q_FastRead_Addr32_0C(DWORD addr, BYTE *pdat, WORD datalen)
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 5   
+
+  256          {
+  257   1          BYTE cnt;
+  258   1          
+  259   1          while (datalen > 0)
+  260   1          {
+  261   2              cnt = 32;
+  262   2              if (datalen < 32)
+  263   2                  cnt = datalen;
+  264   2                  
+  265   2              QSPI_READ_INSTR_SADDR32_DUMMY_SDATA(0x0C, addr, 8, pdat, cnt);
+  266   2              
+  267   2              datalen -= cnt;
+  268   2              addr += cnt;
+  269   2              pdat += cnt;
+  270   2          }
+  271   1      }
+  272          
+  273          void W25Q_DMA_FastRead_Addr32_0C(DWORD addr, BYTE *pdat, WORD datalen)
+  274          {
+  275   1          QSPI_DMA_READ_INSTR_SADDR32_DUMMY_SDATA(0x0C, addr, 8, pdat, datalen);
+  276   1      }
+  277          
+  278          void W25Q_FastRead_3B(DWORD addr, BYTE *pdat, WORD datalen)
+  279          {
+  280   1          BYTE cnt;
+  281   1          
+  282   1          while (datalen > 0)
+  283   1          {
+  284   2              cnt = 32;
+  285   2              if (datalen < 32)
+  286   2                  cnt = datalen;
+  287   2                  
+  288   2              QSPI_READ_INSTR_SADDR24_DUMMY_DDATA(0x3b, addr, 8, pdat, cnt);
+  289   2              
+  290   2              datalen -= cnt;
+  291   2              addr += cnt;
+  292   2              pdat += cnt;
+  293   2          }
+  294   1      }
+  295          
+  296          void W25Q_DMA_FastRead_3B(DWORD addr, BYTE *pdat, WORD datalen)
+  297          {
+  298   1          QSPI_DMA_READ_INSTR_SADDR24_DUMMY_DDATA(0x3b, addr, 8, pdat, datalen);
+  299   1      }
+  300          
+  301          void W25Q_FastRead_Addr32_3C(DWORD addr, BYTE *pdat, WORD datalen)
+  302          {
+  303   1          BYTE cnt;
+  304   1          
+  305   1          while (datalen > 0)
+  306   1          {
+  307   2              cnt = 32;
+  308   2              if (datalen < 32)
+  309   2                  cnt = datalen;
+  310   2                  
+  311   2              QSPI_READ_INSTR_SADDR32_DUMMY_DDATA(0x3c, addr, 8, pdat, cnt);
+  312   2              
+  313   2              datalen -= cnt;
+  314   2              addr += cnt;
+  315   2              pdat += cnt;
+  316   2          }
+  317   1      }
+  318          
+  319          void W25Q_DMA_FastRead_Addr32_3C(DWORD addr, BYTE *pdat, WORD datalen)
+  320          {
+  321   1          QSPI_DMA_READ_INSTR_SADDR32_DUMMY_DDATA(0x3c, addr, 8, pdat, datalen);
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 6   
+
+  322   1      }
+  323          
+  324          void W25Q_FastRead_6B(DWORD addr, BYTE *pdat, WORD datalen)
+  325          {
+  326   1          BYTE cnt;
+  327   1          
+  328   1          while (datalen > 0)
+  329   1          {
+  330   2              cnt = 32;
+  331   2              if (datalen < 32)
+  332   2                  cnt = datalen;
+  333   2                  
+  334   2              QSPI_READ_INSTR_SADDR24_DUMMY_QDATA(0x6b, addr, 8, pdat, cnt);
+  335   2              
+  336   2              datalen -= cnt;
+  337   2              addr += cnt;
+  338   2              pdat += cnt;
+  339   2          }
+  340   1      }
+  341          
+  342          void W25Q_DMA_FastRead_6B(DWORD addr, BYTE *pdat, WORD datalen)
+  343          {
+  344   1          QSPI_DMA_READ_INSTR_SADDR24_DUMMY_QDATA(0x6b, addr, 8, pdat, datalen);
+  345   1      }
+  346          
+  347          void W25Q_FastRead_Addr32_6C(DWORD addr, BYTE *pdat, WORD datalen)
+  348          {
+  349   1          BYTE cnt;
+  350   1          
+  351   1          while (datalen > 0)
+  352   1          {
+  353   2              cnt = 32;
+  354   2              if (datalen < 32)
+  355   2                  cnt = datalen;
+  356   2                  
+  357   2              QSPI_READ_INSTR_SADDR32_DUMMY_QDATA(0x6c, addr, 8, pdat, cnt);
+  358   2              
+  359   2              datalen -= cnt;
+  360   2              addr += cnt;
+  361   2              pdat += cnt;
+  362   2          }
+  363   1      }
+  364          
+  365          void W25Q_DMA_FastRead_Addr32_6C(DWORD addr, BYTE *pdat, WORD datalen)
+  366          {
+  367   1          QSPI_DMA_READ_INSTR_SADDR32_DUMMY_QDATA(0x6c, addr, 8, pdat, datalen);
+  368   1      }
+  369          
+  370          void W25Q_FastRead_BB(DWORD addr, BYTE *pdat, WORD datalen)
+  371          {
+  372   1          BYTE cnt;
+  373   1          
+  374   1          while (datalen > 0)
+  375   1          {
+  376   2              cnt = 32;
+  377   2              if (datalen < 32)
+  378   2                  cnt = datalen;
+  379   2                  
+  380   2              QSPI_READ_INSTR_DADDR24_DALT8_DDATA(0xbb, addr, 0x00, pdat, cnt);
+  381   2              
+  382   2              datalen -= cnt;
+  383   2              addr += cnt;
+  384   2              pdat += cnt;
+  385   2          }
+  386   1      }
+  387          
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 7   
+
+  388          void W25Q_DMA_FastRead_BB(DWORD addr, BYTE *pdat, WORD datalen)
+  389          {
+  390   1          QSPI_DMA_READ_INSTR_DADDR24_DALT8_DDATA(0xbb, addr, 0x00, pdat, datalen);
+  391   1      }
+  392          
+  393          void W25Q_FastRead_Addr32_BC(DWORD addr, BYTE *pdat, WORD datalen)
+  394          {
+  395   1          BYTE cnt;
+  396   1          
+  397   1          while (datalen > 0)
+  398   1          {
+  399   2              cnt = 32;
+  400   2              if (datalen < 32)
+  401   2                  cnt = datalen;
+  402   2                  
+  403   2              QSPI_READ_INSTR_DADDR32_DALT8_DDATA(0xbc, addr, 0x00, pdat, cnt);
+  404   2              
+  405   2              datalen -= cnt;
+  406   2              addr += cnt;
+  407   2              pdat += cnt;
+  408   2          }
+  409   1      }
+  410          
+  411          void W25Q_DMA_FastRead_Addr32_BC(DWORD addr, BYTE *pdat, WORD datalen)
+  412          {
+  413   1          QSPI_DMA_READ_INSTR_DADDR32_DALT8_DDATA(0xbc, addr, 0x00, pdat, datalen);
+  414   1      }
+  415          
+  416          void W25Q_FastRead_EB(DWORD addr, BYTE *pdat, WORD datalen)
+  417          {
+  418   1          BYTE cnt;
+  419   1          
+  420   1          while (datalen > 0)
+  421   1          {
+  422   2              cnt = 32;
+  423   2              if (datalen < 32)
+  424   2                  cnt = datalen;
+  425   2                  
+  426   2              QSPI_READ_INSTR_QADDR24_QALT8_DUMMY_QDATA(0xeb, addr, 0x00, 4, pdat, cnt);
+  427   2              
+  428   2              datalen -= cnt;
+  429   2              addr += cnt;
+  430   2              pdat += cnt;
+  431   2          }
+  432   1      }
+  433          
+  434          void W25Q_DMA_FastRead_EB(DWORD addr, BYTE *pdat, WORD datalen)
+  435          {
+  436   1          QSPI_DMA_READ_INSTR_QADDR24_QALT8_DUMMY_QDATA(0xeb, addr, 0x00, 4, pdat, datalen);
+  437   1      }
+  438          
+  439          void W25Q_QPI_FastRead_EB(DWORD addr, BYTE *pdat, WORD datalen)
+  440          {
+  441   1          BYTE cnt;
+  442   1          
+  443   1          while (datalen > 0)
+  444   1          {
+  445   2              cnt = 32;
+  446   2              if (datalen < 32)
+  447   2                  cnt = datalen;
+  448   2                  
+  449   2              QSPI_READ_QINSTR_QADDR24_QALT8_DUMMY_QDATA(0xeb, addr, 0x00, 0, pdat, cnt);
+  450   2              
+  451   2              datalen -= cnt;
+  452   2              addr += cnt;
+  453   2              pdat += cnt;
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 8   
+
+  454   2          }
+  455   1      }
+  456          
+  457          void W25Q_QPI_DMA_FastRead_EB(DWORD addr, BYTE *pdat, WORD datalen)
+  458          {
+  459   1          QSPI_DMA_READ_QINSTR_QADDR24_QALT8_DUMMY_QDATA(0xeb, addr, 0x00, 0, pdat, datalen);
+  460   1      }
+  461          
+  462          void W25Q_FastRead_Addr32_EC(DWORD addr, BYTE *pdat, WORD datalen)
+  463          {
+  464   1          BYTE cnt;
+  465   1          
+  466   1          while (datalen > 0)
+  467   1          {
+  468   2              cnt = 32;
+  469   2              if (datalen < 32)
+  470   2                  cnt = datalen;
+  471   2                  
+  472   2              QSPI_READ_INSTR_QADDR32_QALT8_DUMMY_QDATA(0xec, addr, 0x00, 4, pdat, cnt);
+  473   2              
+  474   2              datalen -= cnt;
+  475   2              addr += cnt;
+  476   2              pdat += cnt;
+  477   2          }
+  478   1      }
+  479          
+  480          void W25Q_DMA_FastRead_Addr32_EC(DWORD addr, BYTE *pdat, WORD datalen)
+  481          {
+  482   1          QSPI_DMA_READ_INSTR_QADDR32_QALT8_DUMMY_QDATA(0xec, addr, 0x00, 4, pdat, datalen);
+  483   1      }
+  484          
+  485          void W25Q_WordRead_E7(DWORD addr, BYTE *pdat, WORD datalen)
+  486          {
+  487   1          BYTE cnt;
+  488   1          
+  489   1          while (datalen > 0)
+  490   1          {
+  491   2              cnt = 32;
+  492   2              if (datalen < 32)
+  493   2                  cnt = datalen;
+  494   2                  
+  495   2              QSPI_READ_INSTR_QADDR24_QALT8_DUMMY_QDATA(0xe7, addr, 0x00, 2, pdat, cnt);
+  496   2              
+  497   2              datalen -= cnt;
+  498   2              addr += cnt;
+  499   2              pdat += cnt;
+  500   2          }
+  501   1      }
+  502          
+  503          void W25Q_DMA_WordRead_E7(DWORD addr, BYTE *pdat, WORD datalen)
+  504          {
+  505   1          QSPI_DMA_READ_INSTR_QADDR24_QALT8_DUMMY_QDATA(0xe7, addr, 0x00, 2, pdat, datalen);
+  506   1      }
+  507          
+  508          void W25Q_OctalWordRead_E3(DWORD addr, BYTE *pdat, WORD datalen)
+  509          {
+  510   1          BYTE cnt;
+  511   1          
+  512   1          while (datalen > 0)
+  513   1          {
+  514   2              cnt = 32;
+  515   2              if (datalen < 32)
+  516   2                  cnt = datalen;
+  517   2                  
+  518   2              QSPI_READ_INSTR_QADDR24_QALT8_DUMMY_QDATA(0xe3, addr, 0x00, 0, pdat, cnt);
+  519   2              
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 9   
+
+  520   2              datalen -= cnt;
+  521   2              addr += cnt;
+  522   2              pdat += cnt;
+  523   2          }
+  524   1      }
+  525          
+  526          void W25Q_DMA_OctalWordRead_E3(DWORD addr, BYTE *pdat, WORD datalen)
+  527          {
+  528   1          QSPI_DMA_READ_INSTR_QADDR24_QALT8_DUMMY_QDATA(0xe3, addr, 0x00, 0, pdat, datalen);
+  529   1      }
+  530          
+  531          void W25Q_SetBurstWrap_77(BYTE wrap)
+  532          {
+  533   1          QSPI_WRITE_INSTR_QADDR32(0x77, wrap);
+  534   1      }
+  535          
+  536          void W25Q_PageProgram_02(DWORD addr, BYTE *pdat, WORD datalen)
+  537          {
+  538   1          BYTE cnt;
+  539   1          
+  540   1          W25Q_WriteEnable_06();
+  541   1          while (datalen > 0)
+  542   1          {
+  543   2              cnt = 32;
+  544   2              if (datalen < 32)
+  545   2                  cnt = datalen;
+  546   2                  
+  547   2              if (cnt + (addr & 0xff) >= 0x100)
+  548   2                  cnt = 0x100 - (addr & 0xff);
+  549   2                  
+  550   2              QSPI_WRITE_INSTR_SADDR24_SDATA(0x02, addr, pdat, cnt);
+  551   2              
+  552   2              datalen -= cnt;
+  553   2              addr += cnt;
+  554   2              pdat += cnt;
+  555   2              
+  556   2              if (datalen > 0)
+  557   2              {
+  558   3                  W25Q_WaitBusy(100);
+  559   3                  W25Q_WriteEnable_06();
+  560   3              }
+  561   2          }
+  562   1          W25Q_WaitBusy(100);
+  563   1      }
+  564          
+  565          void W25Q_DMA_PageProgram_02(DWORD addr, BYTE *pdat, WORD datalen)
+  566          {
+  567   1          W25Q_WriteEnable_06();
+  568   1          QSPI_DMA_WRITE_INSTR_SADDR24_SDATA(0x02, addr, pdat, datalen);
+  569   1          W25Q_WaitBusy(100);
+  570   1      }
+  571          
+  572          void W25Q_PageProgram_Addr32_12(DWORD addr, BYTE *pdat, WORD datalen)
+  573          {
+  574   1          BYTE cnt;
+  575   1          
+  576   1          W25Q_WriteEnable_06();
+  577   1          while (datalen > 0)
+  578   1          {
+  579   2              cnt = 32;
+  580   2              if (datalen < 32)
+  581   2                  cnt = datalen;
+  582   2                  
+  583   2              if (cnt + (addr & 0xff) >= 0x100)
+  584   2                  cnt = 0x100 - (addr & 0xff);
+  585   2                  
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 10  
+
+  586   2              QSPI_WRITE_INSTR_SADDR32_SDATA(0x12, addr, pdat, cnt);
+  587   2              
+  588   2              datalen -= cnt;
+  589   2              addr += cnt;
+  590   2              pdat += cnt;
+  591   2              
+  592   2              if (datalen > 0)
+  593   2              {
+  594   3                  W25Q_WaitBusy(100);
+  595   3                  W25Q_WriteEnable_06();
+  596   3              }
+  597   2          }
+  598   1          W25Q_WaitBusy(100);
+  599   1      }
+  600          
+  601          void W25Q_DMA_PageProgram_Addr32_12(DWORD addr, BYTE *pdat, WORD datalen)
+  602          {
+  603   1          W25Q_WriteEnable_06();
+  604   1          QSPI_DMA_WRITE_INSTR_SADDR32_SDATA(0x12, addr, pdat, datalen);
+  605   1          W25Q_WaitBusy(100);
+  606   1      }
+  607          
+  608          void W25Q_PageProgram_32(DWORD addr, BYTE *pdat, WORD datalen)
+  609          {
+  610   1          BYTE cnt;
+  611   1          
+  612   1          W25Q_WriteEnable_06();
+  613   1          while (datalen > 0)
+  614   1          {
+  615   2              cnt = 32;
+  616   2              if (datalen < 32)
+  617   2                  cnt = datalen;
+  618   2                  
+  619   2              if (cnt + (addr & 0xff) >= 0x100)
+  620   2                  cnt = 0x100 - (addr & 0xff);
+  621   2                  
+  622   2              QSPI_WRITE_INSTR_SADDR24_QDATA(0x32, addr, pdat, cnt);
+  623   2              
+  624   2              datalen -= cnt;
+  625   2              addr += cnt;
+  626   2              pdat += cnt;
+  627   2              
+  628   2              if (datalen > 0)
+  629   2              {
+  630   3                  W25Q_WaitBusy(100);
+  631   3                  W25Q_WriteEnable_06();
+  632   3              }
+  633   2          }
+  634   1          W25Q_WaitBusy(100);
+  635   1      }
+  636          
+  637          void W25Q_DMA_PageProgram_32(DWORD addr, BYTE *pdat, WORD datalen)
+  638          {
+  639   1          W25Q_WriteEnable_06();
+  640   1          QSPI_DMA_WRITE_INSTR_SADDR24_QDATA(0x32, addr, pdat, datalen);
+  641   1          W25Q_WaitBusy(100);
+  642   1      }
+  643          
+  644          void W25Q_PageProgram_Addr32_34(DWORD addr, BYTE *pdat, WORD datalen)
+  645          {
+  646   1          BYTE cnt;
+  647   1          
+  648   1          W25Q_WriteEnable_06();
+  649   1          while (datalen > 0)
+  650   1          {
+  651   2              cnt = 32;
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 11  
+
+  652   2              if (datalen < 32)
+  653   2                  cnt = datalen;
+  654   2                  
+  655   2              if (cnt + (addr & 0xff) >= 0x100)
+  656   2                  cnt = 0x100 - (addr & 0xff);
+  657   2                  
+  658   2              QSPI_WRITE_INSTR_SADDR32_QDATA(0x34, addr, pdat, cnt);
+  659   2              
+  660   2              datalen -= cnt;
+  661   2              addr += cnt;
+  662   2              pdat += cnt;
+  663   2              
+  664   2              if (datalen > 0)
+  665   2              {
+  666   3                  W25Q_WaitBusy(100);
+  667   3                  W25Q_WriteEnable_06();
+  668   3              }
+  669   2          }
+  670   1          W25Q_WaitBusy(100);
+  671   1      }
+  672          
+  673          void W25Q_DMA_PageProgram_Addr32_34(DWORD addr, BYTE *pdat, WORD datalen)
+  674          {
+  675   1          W25Q_WriteEnable_06();
+  676   1          QSPI_DMA_WRITE_INSTR_SADDR32_QDATA(0x34, addr, pdat, datalen);
+  677   1          W25Q_WaitBusy(100);
+  678   1      }
+  679          
+  680          void W25Q_Erase4K_20(DWORD addr, BOOL wait)
+  681          {
+  682   1          W25Q_WriteEnable_06();
+  683   1          QSPI_WRITE_INSTR_SADDR24(0x20, addr);
+  684   1          if (wait)
+  685   1              W25Q_WaitBusy(100);
+  686   1      }
+  687          
+  688          void W25Q_QPI_Erase4K_20(DWORD addr, BOOL wait)
+  689          {
+  690   1          W25Q_QPI_WriteEnable_06();
+  691   1          QSPI_WRITE_QINSTR_QADDR24(0x20, addr);
+  692   1          if (wait)
+  693   1              W25Q_WaitBusy(100);
+  694   1      }
+  695          
+  696          void W25Q_Erase4K_Addr32_21(DWORD addr, BOOL wait)
+  697          {
+  698   1          W25Q_WriteEnable_06();
+  699   1          QSPI_WRITE_INSTR_SADDR32(0x21, addr);
+  700   1          if (wait)
+  701   1              W25Q_WaitBusy(100);
+  702   1      }
+  703          
+  704          void W25Q_Erase32K_52(DWORD addr, BOOL wait)
+  705          {
+  706   1          W25Q_WriteEnable_06();
+  707   1          QSPI_WRITE_INSTR_SADDR24(0x52, addr);
+  708   1          if (wait)
+  709   1              W25Q_WaitBusy(100);
+  710   1      }
+  711          
+  712          void W25Q_QPI_Erase32K_52(DWORD addr, BOOL wait)
+  713          {
+  714   1          W25Q_QPI_WriteEnable_06();
+  715   1          QSPI_WRITE_QINSTR_QADDR24(0x52, addr);
+  716   1          if (wait)
+  717   1              W25Q_WaitBusy(100);
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 12  
+
+  718   1      }
+  719          
+  720          void W25Q_Erase64K_D8(DWORD addr, BOOL wait)
+  721          {
+  722   1          W25Q_WriteEnable_06();
+  723   1          QSPI_WRITE_INSTR_SADDR24(0xd8, addr);
+  724   1          if (wait)
+  725   1              W25Q_WaitBusy(100);
+  726   1      }
+  727          
+  728          void W25Q_QPI_Erase64K_D8(DWORD addr, BOOL wait)
+  729          {
+  730   1          W25Q_QPI_WriteEnable_06();
+  731   1          QSPI_WRITE_QINSTR_QADDR24(0xd8, addr);
+  732   1          if (wait)
+  733   1              W25Q_WaitBusy(100);
+  734   1      }
+  735          
+  736          void W25Q_Erase64K_Addr32_DC(DWORD addr, BOOL wait)
+  737          {
+  738   1          W25Q_WriteEnable_06();
+  739   1          QSPI_WRITE_INSTR_SADDR32(0xdc, addr);
+  740   1          if (wait)
+  741   1              W25Q_WaitBusy(100);
+  742   1      }
+  743          
+  744          void W25Q_EraseChip_C7(BOOL wait)
+  745          {
+  746   1          W25Q_WriteEnable_06();
+  747   1          QSPI_WRITE_INSTR(0xc7);
+  748   1          if (wait)
+  749   1              W25Q_WaitBusy(100);
+  750   1      }
+  751          
+  752          void W25Q_QPI_EraseChip_C7(BOOL wait)
+  753          {
+  754   1          W25Q_QPI_WriteEnable_06();
+  755   1          QSPI_WRITE_QINSTR(0xc7);
+  756   1          W25Q_QPI_WaitBusy(100);
+  757   1          if (wait)
+  758   1              W25Q_WaitBusy(100);
+  759   1      }
+  760          
+  761          void W25Q_EraseSuspend_75()
+  762          {
+  763   1          QSPI_WRITE_INSTR(0x75);
+  764   1      }
+  765          
+  766          void W25Q_QPI_EraseSuspend_75()
+  767          {
+  768   1          QSPI_WRITE_QINSTR(0x75);
+  769   1      }
+  770          
+  771          void W25Q_EraseResume_7A()
+  772          {
+  773   1          QSPI_WRITE_INSTR(0x7a);
+  774   1      }
+  775          
+  776          void W25Q_QPI_EraseResume_7A()
+  777          {
+  778   1          QSPI_WRITE_QINSTR(0x7a);
+  779   1      }
+  780          
+  781          void W25Q_ProgramSuspend_75()
+  782          {
+  783   1          W25Q_EraseSuspend_75();
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 13  
+
+  784   1      }
+  785          
+  786          void W25Q_QPI_ProgramSuspend_75()
+  787          {
+  788   1          W25Q_QPI_EraseSuspend_75();
+  789   1      }
+  790          
+  791          void W25Q_ProgramResume_7A()
+  792          {
+  793   1          W25Q_EraseResume_7A();
+  794   1      }
+  795          
+  796          void W25Q_QPI_ProgramResume_7A()
+  797          {
+  798   1          W25Q_QPI_EraseResume_7A();
+  799   1      }
+  800          
+  801          void W25Q_PowerDown_B9()
+  802          {
+  803   1          QSPI_WRITE_INSTR(0xb9);
+  804   1      }
+  805          
+  806          void W25Q_QPI_PowerDown_B9()
+  807          {
+  808   1          QSPI_WRITE_QINSTR(0xb9);
+  809   1      }
+  810          
+  811          void W25Q_ReleasePowerDown_AB()
+  812          {
+  813   1          QSPI_WRITE_INSTR(0xab);
+  814   1      }
+  815          
+  816          void W25Q_QPI_ReleasePowerDown_AB()
+  817          {
+  818   1          QSPI_WRITE_QINSTR(0xab);
+  819   1      }
+  820          
+  821          BYTE W25Q_ReadDeviceID_AB()
+  822          {
+  823   1          BYTE dat;
+  824   1      
+  825   1          QSPI_READ_INSTR_SADDR24_SDATA(0xab, 0x000000, &dat, 1);
+  826   1          
+  827   1          return dat;
+  828   1      }
+  829          
+  830          BYTE W25Q_QPI_ReadDeviceID_AB()
+  831          {
+  832   1          BYTE dat;
+  833   1      
+  834   1          QSPI_READ_QINSTR_QADDR24_QDATA(0xab, 0x000000, &dat, 1);
+  835   1          
+  836   1          return dat;
+  837   1      }
+  838          
+  839          WORD W25Q_ReadID_90()
+  840          {
+  841   1          WORD dat;
+  842   1          
+  843   1          QSPI_READ_INSTR_SADDR24_SDATA(0x90, 0x000000, (BYTE *)&dat, 2);
+  844   1      
+  845   1          return dat;
+  846   1      }
+  847          
+  848          WORD W25Q_ReadID_92()
+  849          {
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 14  
+
+  850   1          WORD dat;
+  851   1          
+  852   1          QSPI_READ_INSTR_DADDR24_DALT8_DDATA(0x92, 0x000000, 0x00, (BYTE *)&dat, 2);
+  853   1      
+  854   1          return dat;
+  855   1      }
+  856          
+  857          WORD W25Q_ReadID_94()
+  858          {
+  859   1          WORD dat;
+  860   1          
+  861   1          QSPI_READ_INSTR_QADDR24_QALT8_DUMMY_QDATA(0x94, 0x000000, 0x00, 4, (BYTE *)&dat, 2);
+  862   1      
+  863   1          return dat;
+  864   1      }
+  865          
+  866          void W25Q_ReadUniqueID_4B(BYTE *pdat)
+  867          {
+  868   1          QSPI_READ_INSTR_SADDR32_SDATA(0x4b, 0x00000000, pdat, 8);
+  869   1      }
+  870          
+  871          DWORD W25Q_ReadJEDECID_9F()
+  872          {
+  873   1          DWORD dat;
+  874   1          
+  875   1          dat = 0;
+  876   1          QSPI_READ_INSTR_SDATA(0x9f, (BYTE *)&dat+1, 3);
+  877   1      
+  878   1          return dat;
+  879   1      }
+  880          
+  881          DWORD W25Q_QPI_ReadJEDECID_9F()
+  882          {
+  883   1          DWORD dat;
+  884   1          
+  885   1          dat = 0;
+  886   1          QSPI_READ_QINSTR_QDATA(0x9f, (BYTE *)&dat+1, 3);
+  887   1      
+  888   1          return dat;
+  889   1      }
+  890          
+  891          void W25Q_ReadSFDP_5A(BYTE addr, BYTE *pdat, WORD datalen)
+  892          {
+  893   1          BYTE cnt;
+  894   1          
+  895   1          while (datalen > 0)
+  896   1          {
+  897   2              cnt = 32;
+  898   2              if (datalen < 32)
+  899   2                  cnt = datalen;
+  900   2                  
+  901   2              QSPI_READ_INSTR_SADDR24_DUMMY_SDATA(0x5a, addr, 8, pdat, cnt);
+  902   2              
+  903   2              datalen -= cnt;
+  904   2              addr += cnt;
+  905   2              pdat += cnt;
+  906   2          }
+  907   1      }
+  908          
+  909          void W25Q_EraseSecurityReg_44(DWORD addr)
+  910          {
+  911   1          QSPI_WRITE_INSTR_SADDR24(0x44, addr);
+  912   1      }
+  913          
+  914          void W25Q_ProgramSecurityReg_42(DWORD addr, BYTE *pdat, WORD datalen)
+  915          {
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 15  
+
+  916   1          BYTE cnt;
+  917   1          
+  918   1          W25Q_WriteEnable_06();
+  919   1          while (datalen > 0)
+  920   1          {
+  921   2              cnt = 32;
+  922   2              if (datalen < 32)
+  923   2                  cnt = datalen;
+  924   2                  
+  925   2              QSPI_WRITE_INSTR_SADDR24_SDATA(0x42, addr, pdat, cnt);
+  926   2              
+  927   2              datalen -= cnt;
+  928   2              addr += cnt;
+  929   2              pdat += cnt;
+  930   2              
+  931   2              if (datalen > 0)
+  932   2              {
+  933   3                  W25Q_WaitBusy(100);
+  934   3                  W25Q_WriteEnable_06();
+  935   3              }
+  936   2          }
+  937   1          W25Q_WaitBusy(100);
+  938   1      }
+  939          
+  940          void W25Q_ReadSecurityReg_48(DWORD addr, BYTE *pdat, WORD datalen)
+  941          {
+  942   1          BYTE cnt;
+  943   1          
+  944   1          while (datalen > 0)
+  945   1          {
+  946   2              cnt = 32;
+  947   2              if (datalen < 32)
+  948   2                  cnt = datalen;
+  949   2                  
+  950   2              QSPI_READ_INSTR_SADDR24_DUMMY_SDATA(0x48, addr, 8, pdat, cnt);
+  951   2              
+  952   2              datalen -= cnt;
+  953   2              addr += cnt;
+  954   2              pdat += cnt;
+  955   2          }
+  956   1      }
+  957          
+  958          void W25Q_QPI_SetReadParam_C0(BYTE dat)
+  959          {
+  960   1          QSPI_WRITE_QINSTR_QADDR8(0xc0, dat);
+  961   1      }
+  962          
+  963          void W25Q_QPI_BurstReadWithWrap_0C(DWORD addr, BYTE *pdat, WORD datalen)
+  964          {
+  965   1          BYTE cnt;
+  966   1          
+  967   1          while (datalen > 0)
+  968   1          {
+  969   2              cnt = 32;
+  970   2              if (datalen < 32)
+  971   2                  cnt = datalen;
+  972   2                  
+  973   2              QSPI_READ_QINSTR_QADDR24_DUMMY_QDATA(0x0c, addr, 2, pdat, cnt);
+  974   2              
+  975   2              datalen -= cnt;
+  976   2              addr += cnt;
+  977   2              pdat += cnt;
+  978   2          }
+  979   1      }
+  980          
+  981          void W25Q_EnterQPIMode_38()
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 16  
+
+  982          {
+  983   1          QSPI_WRITE_INSTR(0x38);
+  984   1      }
+  985          
+  986          void W25Q_QPI_ExitQPIMode_FF()
+  987          {
+  988   1          QSPI_WRITE_QINSTR(0xFF);
+  989   1      }
+  990          
+  991          void W25Q_LockSector_36(DWORD addr)
+  992          {
+  993   1          QSPI_WRITE_INSTR_SADDR24(0x36, addr);
+  994   1      }
+  995          
+  996          void W25Q_QPI_LockSector_36(DWORD addr)
+  997          {
+  998   1          QSPI_WRITE_QINSTR_QADDR24(0x36, addr);
+  999   1      }
+ 1000          
+ 1001          void W25Q_UnlockSector_39(DWORD addr)
+ 1002          {
+ 1003   1          QSPI_WRITE_INSTR_SADDR24(0x39, addr);
+ 1004   1      }
+ 1005          
+ 1006          void W25Q_QPI_UnlockSector_39(DWORD addr)
+ 1007          {
+ 1008   1          QSPI_WRITE_QINSTR_QADDR24(0x39, addr);
+ 1009   1      }
+ 1010          
+ 1011          BYTE W25Q_ReadLockSector_3D(DWORD addr)
+ 1012          {
+ 1013   1          BYTE dat;
+ 1014   1      
+ 1015   1          QSPI_READ_INSTR_SADDR24_SDATA(0x3d, addr, &dat, 1);
+ 1016   1          
+ 1017   1          return dat;
+ 1018   1      }
+ 1019          
+ 1020          BYTE W25Q_QPI_ReadLockSector_3D(DWORD addr)
+ 1021          {
+ 1022   1          BYTE dat;
+ 1023   1      
+ 1024   1          QSPI_READ_QINSTR_QADDR24_QDATA(0x3d, addr, &dat, 1);
+ 1025   1          
+ 1026   1          return dat;
+ 1027   1      }
+ 1028          
+ 1029          void W25Q_LockGlobal_7E()
+ 1030          {
+ 1031   1          QSPI_WRITE_INSTR(0x7e);
+ 1032   1      }
+ 1033          
+ 1034          void W25Q_QPI_LockGlobal_7E()
+ 1035          {
+ 1036   1          QSPI_WRITE_QINSTR(0x7e);
+ 1037   1      }
+ 1038          
+ 1039          void W25Q_UnlockGlobal_98()
+ 1040          {
+ 1041   1          QSPI_WRITE_INSTR(0x98);
+ 1042   1      }
+ 1043          
+ 1044          void W25Q_QPI_UnlockGlobal_98()
+ 1045          {
+ 1046   1          QSPI_WRITE_QINSTR(0x98);
+ 1047   1      }
+C251 COMPILER V5.60.0,  w25qxx                                                             02/05/25  11:30:39  PAGE 17  
+
+ 1048          
+ 1049          void W25Q_ResetDevice_66_99()
+ 1050          {
+ 1051   1          QSPI_WRITE_INSTR(0x66);
+ 1052   1          QSPI_WRITE_INSTR(0x99);
+ 1053   1      }
+ 1054          
+ 1055          void W25Q_QPI_ResetDevice_66_99()
+ 1056          {
+ 1057   1          QSPI_WRITE_QINSTR(0x66);
+ 1058   1          QSPI_WRITE_QINSTR(0x99);
+ 1059   1      }
+ 1060          
+ 1061          void W25Q_Enable_QE()
+ 1062          {
+ 1063   1          if ((W25Q_ReadJEDECID_9F() & 0xffff00) == 0xef4000)
+ 1064   1          {
+ 1065   2              if ((W25Q_ReadSR2_35() & 0x02) == 0)
+ 1066   2              {
+ 1067   3                  W25Q_WriteEnableVSR_50();
+ 1068   3                  if ((W25Q_ReadJEDECID_9F() & 0xffff) == 0x4014)
+ 1069   3                  {
+ 1070   4                      W25Q_WriteSR12_01(0x0002);
+ 1071   4                  }
+ 1072   3                  else
+ 1073   3                  {
+ 1074   4                      W25Q_WriteSR2_31(0x02);
+ 1075   4                  }
+ 1076   3              }
+ 1077   2          }
+ 1078   1      }
+ 1079          
+ 1080          
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =      7456     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =       563     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =        10     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,11 +1,11 @@
-C251 COMPILER V5.60.0,  ips114                                                             28/04/25  21:31:57  PAGE 1   
+C251 COMPILER V5.60.0,  ips114                                                             02/05/25  11:27:05  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE ips114
 OBJECT MODULE PLACED IN .\out_file\ips114.obj
-COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\ips114.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) B
-                    -ROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver
-                    -;..\user;..\code) DEBUG PRINT(.\out_file\ips114.lst) TABS(2) OBJECT(.\out_file\ips114.obj) 
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE ..\user\ips114.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE
+                    -) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_dri
+                    -ver;..\user;..\code) DEBUG PRINT(.\out_file\ips114.lst) TABS(2) OBJECT(.\out_file\ips114.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    55   2            //显示GPS位置信息
    56   2            ips114_show_uint8(15, 16*5, gps_tau1201.state);
    57   2            ips114_show_uint8(70, 16*5, gps_tau1201.satellite_used);
-C251 COMPILER V5.60.0,  ips114                                                             28/04/25  21:31:57  PAGE 2   
+C251 COMPILER V5.60.0,  ips114                                                             02/05/25  11:27:05  PAGE 2   
 
    58   2            ips114_show_float(160, 16*5, gps_tau1201.height, 4, 6);
    59   2              

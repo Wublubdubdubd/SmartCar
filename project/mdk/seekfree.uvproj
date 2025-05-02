@@ -149,7 +149,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>1</TargetSelection>
+          <TargetSelection>-1</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -758,6 +758,26 @@
               <FileName>StateMachine.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\StateMachine.h</FilePath>
+            </File>
+            <File>
+              <FileName>qspi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\qspi.c</FilePath>
+            </File>
+            <File>
+              <FileName>w25qxx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\w25qxx.c</FilePath>
+            </File>
+            <File>
+              <FileName>qspi.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\qspi.h</FilePath>
+            </File>
+            <File>
+              <FileName>w25qxx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\w25qxx.h</FilePath>
             </File>
           </Files>
         </Group>

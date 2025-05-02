@@ -2,6 +2,7 @@
 #define _PID_H
 
 #include "zf_common_headfile.h"
+#include "gps.h"
 
 #define max_duty 1000
 
@@ -29,6 +30,8 @@ extern float angle_KP, angle_KI,angle_KD, angle_IMAX, angle_OUTMAX;
 extern float angle_target;
 
 extern pid_param_t angle_pid;  // 角度PID
+
+float Angle_Pid_fun(); //角度环
 
 void My_Pid_Init(void);
 void Pid_Param_Init(pid_param_t * pid, float kp, float ki, float kd, float imax, float outmax);

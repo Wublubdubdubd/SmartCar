@@ -566,6 +566,15 @@ sbit    P54RST      =           RSTCFG^4;
 #define     P5PD                    (*(unsigned char volatile far *)0x7efe45)
 #define     P6PD                    (*(unsigned char volatile far *)0x7efe46)
 #define     P7PD                    (*(unsigned char volatile far *)0x7efe47)
+#define     P0BP                    (*(unsigned char volatile far *)0x7efe48)
+#define     P1BP                    (*(unsigned char volatile far *)0x7efe49)
+#define     P2BP                    (*(unsigned char volatile far *)0x7efe4a)
+#define     P3BP                    (*(unsigned char volatile far *)0x7efe4b)
+#define     P4BP                    (*(unsigned char volatile far *)0x7efe4c)
+#define     P5BP                    (*(unsigned char volatile far *)0x7efe4d)
+#define     P6BP                    (*(unsigned char volatile far *)0x7efe4e)
+#define     P7BP                    (*(unsigned char volatile far *)0x7efe4f)
+
 
 #define     LCMIFCFG                (*(unsigned char volatile far *)0x7efe50)
 #define     LCMIFCFG2               (*(unsigned char volatile far *)0x7efe51)
