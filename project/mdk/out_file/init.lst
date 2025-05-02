@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  init                                                               02/05/25  11:30:38  PAGE 1   
+C251 COMPILER V5.60.0,  init                                                               02/05/25  18:53:36  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE init
@@ -16,37 +16,37 @@ stmt  level    source
     5   1          clock_init(SYSTEM_CLOCK_40M); // 务必保留
     6   1          debug_init(); // 务必保留
     7   1        
-    8   1      #if IPS_USE     
-    9   1          //屏幕初始化
-   10   1          ips114_init();
-   11   1      #endif
-   12   1          
-   13   1          //GPS初始化
-   14   1          gps_init();
-   15   1        
-   16   1          //蓝牙初始化
-   17   1          while(ble6a20_init());
-   18   1      
-   19   1          //IMU初始化
-   20   1          while(imu660ra_init()!=0)
-   21   1          {
-   22   2      #if IPS_USE      
-   23   2              ips114_show_string(0, 16*1, "IMU660RA init error.");// IMU660RA 初始化失败
-   24   2      #else
+    8   1          //E2PROM初始化
+    9   1          QSPI_Init();
+   10   1          W25Q_Enable_QE();
+   11   1        
+   12   1      #if IPS_USE     
+   13   1          //屏幕初始化
+   14   1          ips114_init();
+   15   1      #endif
+   16   1          
+   17   1          //GPS初始化
+   18   1          gps_init();
+   19   1        
+   20   1          //蓝牙初始化
+   21   1          while(ble6a20_init());
+   22   1      
+   23   1          //IMU初始化
+   24   1          while(imu660ra_init()!=0)
+   25   1          {
+   26   2      #if IPS_USE      
+   27   2              ips114_show_string(0, 16*1, "IMU660RA init error.");// IMU660RA 初始化失败
+   28   2      #else
                        ble6a20_send_string("IMU660RA init error.\r\n"); 
                #endif
-   27   2          }
-   28   1      
-   29   1      #if IPS_USE     
-   30   1          ips114_clear(RGB565_WHITE);//清屏   
-   31   1          IPS114_Show_Unit();//显示单位
-   32   1      #endif
-   33   1          
-   34   1          //E2PROM初始化
-   35   1          //iap_init();
-   36   1          
-   37   1      //    QSPI_Init();
-   38   1      //    W25Q_Enable_QE();
+   31   2          }
+   32   1      
+   33   1      #if IPS_USE     
+   34   1          ips114_clear(RGB565_WHITE);//清屏   
+   35   1          IPS114_Show_Unit();//显示单位
+   36   1      #endif
+   37   1          
+   38   1      
    39   1              
    40   1          //pid初始化
    41   1          My_Pid_Init();
@@ -64,10 +64,10 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =        80     ------
+  code size            =        86     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
-C251 COMPILER V5.60.0,  init                                                               02/05/25  11:30:38  PAGE 2   
+C251 COMPILER V5.60.0,  init                                                               02/05/25  18:53:36  PAGE 2   
 
   idata size           =    ------     ------
   pdata size           =    ------     ------

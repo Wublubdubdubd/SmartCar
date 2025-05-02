@@ -49,8 +49,9 @@ void main()
     char read_index = 0; //读点索引，测试用
   
     pObject = Object_one_index; //科目一开始
-    
+			
     init();  
+	
   
     while(1)
 		{
@@ -79,30 +80,36 @@ void main()
       */
       switch(command[0])
       {
-        case 's':pwm_set_duty(PWM_1,550);pwm_set_duty(PWM_2,550);break;
+        case 's':;break;
         case '1':duty_up_left+=50;duty_up_right+=50;break;
         case '2':duty_up_left-=50;duty_up_right-=50;break;
         case '3':duty_forward_left+=50;duty_forward_right+=50;break;
         case '4':duty_forward_left-=50;duty_forward_right-=50;break;
         case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;
-        sprintf(str_buffer,"Break!\r\n");ble6a20_send_string(str_buffer);break;
-        case 'w':W25Q_PageProgram_32(0, write_buf, 2);//if( write_index < 4 ){WritePoint(pObject[write_index]); write_index++;}
+        sprintf(str_buffer,"Break!\r \n");ble6a20_send_string(str_buffer);break;
+        case 'w':if( write_index < 4 ){WritePoint(pObject[write_index]); write_index++;}//W25Q_PageProgram_32(0, write_buf, 2);//
 				sprintf(str_buffer,"Write!\r\n");ble6a20_send_string(str_buffer);break;
-        case 'r':W25Q_FastRead_6B(0, buf, 256);//ReadPoint(pObject[read_index]); read_index++; read_index %= 4;
+        case 'r':ReadPoint(pObject[read_index]); read_index++; read_index %= 4;//W25Q_FastRead_6B(0, buf, 256);//
 				sprintf(str_buffer,"Read!\r\n");ble6a20_send_string(str_buffer);break;
-        case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf\r\n", buf[0], buf[1]);ble6a20_send_string(str_buffer);break;
-        case 'e':W25Q_Erase4K_20(0, TRUE);//iap_erase_page(0);write_index = 0;//第一页 512k
+        case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf\r\n", target_point[0], target_point[1]);ble6a20_send_string(str_buffer);break;
+        case 'e':W25Q_Erase4K_20(0, 1);//iap_erase_page(0);write_index = 0;//第一页 512k
         sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);break;
         default :;
       }
-      
+      command[0] = 0 ; //清空
+			command[1] = 0 ; 
 //      ips114_show_float(0,64,roll,4,4);
 //      ips114_show_float(80,64,pitch,4,4);
       //显示已打点数和当前所在点
-      ips114_show_char(160,0,read_index);
-      ips114_show_char(160,20,'/');
-      ips114_show_char(160,0,write_index);
-
+			
+			read_index += '1';
+			write_index += '0';
+      ips114_show_char(0,64,read_index);
+      ips114_show_char(20,64,'/');
+      ips114_show_char(40,64,write_index);
+			read_index -= '1';
+			write_index -= '0';
+			
       ips114_show_float(160,64,yaw,4,4);
       system_delay_ms(500);
     }

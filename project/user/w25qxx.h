@@ -1,6 +1,6 @@
 #ifndef     __W25Q512_H__
 #define     __W25Q512_H__
-
+#include "config.h"
 void W25Q_WaitBusy(int n);
 void W25Q_QPI_WaitBusy(int n);
 void W25Q_Enable_QE();

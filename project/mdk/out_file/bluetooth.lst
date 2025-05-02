@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  bluetooth                                                          02/05/25  11:27:05  PAGE 1   
+C251 COMPILER V5.60.0,  bluetooth                                                          02/05/25  16:15:10  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE bluetooth
@@ -39,14 +39,17 @@ stmt  level    source
    26   1          if(ble6a20_read_buffer(data_buffer, buffer_size))                          // 查看是否有消息 默认缓冲
              -区是BLE6A20_BUFFER_SIZE 总共 64 字节
    27   1          {
-   28   2            memcpy(buffer, data_buffer, command_size);
-   29   2          }
-   30   1      }
+   28   2            ble6a20_send_string("Recived: ");
+   29   2            ble6a20_send_byte(data_buffer[0]);
+   30   2            ble6a20_send_string("\r\n");
+   31   2            memcpy(buffer, data_buffer, command_size);
+   32   2          }
+   33   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       198     ------
+  code size            =       227     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
@@ -61,7 +64,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =        17     ------
+  hconst size          =        27     ------
 End of Module Information.
 
 

@@ -31,5 +31,11 @@ void GetEuler(float acc[], float gyro[], float dt)
     //如果要与GPS融合 需要归一化到0~360
     //roll=fmod(roll+360,360) ;
     //pitch=fmod(pitch+360,360) ;
-    //yaw=fmod(yaw+360,360) ;
+		if(yaw > 0)
+			yaw=fmod(yaw+180,180) ;
+		else
+			yaw=fmod(yaw-180,-180) ;
+		
+		x_v += acc[0] * dt;
+		x_p += x_v * dt;
 }

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  pid                                                                02/05/25  11:30:38  PAGE 1   
+C251 COMPILER V5.60.0,  pid                                                                02/05/25  18:53:35  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE pid
@@ -21,141 +21,142 @@ stmt  level    source
    10          float Angle_Pid_fun()
    11          {  
    12   1          //获取当前点到目标点的角度
-   13   1          angle_target = get_two_points_azimuth(gps_tau1201.latitude, gps_tau1201.longitude, target_point[0], t
-             -arget_point[1]);
+   13   1          angle_target = get_two_points_azimuth(gps_tau1201.latitude, gps_tau1201.longitude, target_point[0], tar
+             -get_point[1]);
    14   1          angle_target -= 180; //修正到yaw的范围  yaw : -180 ~ 180 
-   15   1          angle_error = angle_target-yaw;// error :-360 ~ 360
+   15   1          angle_error = angle_target - yaw;// error :-360 ~ 360
    16   1          //误差修正到 -180~180，即最小的旋转角度
    17   1          if(angle_error > 180) angle_error -= 360;
    18   1          else if(angle_error < -180) angle_error += 360;
-   19   1          //角度环
-   20   1          PidLocCtrl(&angle_pid,angle_error,0.01);
-   21   1        
-   22   1          return angle_pid.out;
-   23   1      }
-   24          
-   25          /*******************************************************************************
-   26          * 函 数 名         : My_Pid_Init
-   27          * 函数功能         : PID初始化 
-   28          * 输    入         : 无
-   29          * 输    出         : 无
-   30          *******************************************************************************/
-   31          void My_Pid_Init(void)
-   32          {
-   33   1          Pid_Param_Init(&angle_pid,angle_KP, angle_KI,angle_KD, angle_IMAX, angle_OUTMAX);
-   34   1      }
-   35          
+   19   1          
+   20   1          //角度环
+   21   1          PidLocCtrl(&angle_pid,angle_error,0.01);
+   22   1        
+   23   1          return angle_pid.out;
+   24   1      }
+   25          
+   26          /*******************************************************************************
+   27          * 函 数 名         : My_Pid_Init
+   28          * 函数功能         : PID初始化 
+   29          * 输    入         : 无
+   30          * 输    出         : 无
+   31          *******************************************************************************/
+   32          void My_Pid_Init(void)
+   33          {
+   34   1          Pid_Param_Init(&angle_pid,angle_KP, angle_KI,angle_KD, angle_IMAX, angle_OUTMAX);
+   35   1      }
    36          
-   37          /*******************************************************************************
-   38          * 函 数 名         : Pid_Param_Init
-   39          * 函数功能         : PID参数初始化 
-   40          * 输    入         : imax:积分项最大值
-   41          * 输    出         : 无
-   42          *******************************************************************************/
-   43          void Pid_Param_Init(pid_param_t * pid, float kp, float ki, float kd, float imax, float outmax)
-   44          {
-   45   1          pid->kp        = kp;
-   46   1          pid->ki        = ki;
-   47   1          pid->kd        = kd;
-   48   1          pid->imax      = imax;
-   49   1          pid->out_p     = 0;
-   50   1          pid->out_i     = 0;
-   51   1          pid->out_d     = 0;
-   52   1          pid->out       = 0;
-   53   1          pid->outmax    = outmax;
-   54   1          pid->integrator= 0;
-   55   1          pid->last_error= 0;
-   56   1          pid->last_derivative   = 0;
-C251 COMPILER V5.60.0,  pid                                                                02/05/25  11:30:38  PAGE 2   
+   37          
+   38          /*******************************************************************************
+   39          * 函 数 名         : Pid_Param_Init
+   40          * 函数功能         : PID参数初始化 
+   41          * 输    入         : imax:积分项最大值
+   42          * 输    出         : 无
+   43          *******************************************************************************/
+   44          void Pid_Param_Init(pid_param_t * pid, float kp, float ki, float kd, float imax, float outmax)
+   45          {
+   46   1          pid->kp        = kp;
+   47   1          pid->ki        = ki;
+   48   1          pid->kd        = kd;
+   49   1          pid->imax      = imax;
+   50   1          pid->out_p     = 0;
+   51   1          pid->out_i     = 0;
+   52   1          pid->out_d     = 0;
+   53   1          pid->out       = 0;
+   54   1          pid->outmax    = outmax;
+   55   1          pid->integrator= 0;
+   56   1          pid->last_error= 0;
+C251 COMPILER V5.60.0,  pid                                                                02/05/25  18:53:35  PAGE 2   
 
-   57   1          pid->last_t    = 0;
-   58   1      }
-   59          
-   60          /*******************************************************************************
-   61          * 函 数 名         : PidLocCtrl
-   62          * 函数功能     : 位置式PID控制
-   63          * 输    入         : pid, error, t
-   64          * 输    出         : float
-   65          *******************************************************************************/
-   66          float PidLocCtrl(pid_param_t * pid, float error, float t)
-   67          {
-   68   1          /* 累积误差 */
-   69   1          pid->integrator += error;
-   70   1      
-   71   1          /* 误差限幅 */
-   72   1          pid->out_i = constrain_float(pid->integrator, -pid->imax, pid->imax);
-   73   1      
+   57   1          pid->last_derivative   = 0;
+   58   1          pid->last_t    = 0;
+   59   1      }
+   60          
+   61          /*******************************************************************************
+   62          * 函 数 名         : PidLocCtrl
+   63          * 函数功能     : 位置式PID控制
+   64          * 输    入         : pid, error, t
+   65          * 输    出         : float
+   66          *******************************************************************************/
+   67          float PidLocCtrl(pid_param_t * pid, float error, float t)
+   68          {
+   69   1          /* 累积误差 */
+   70   1          pid->integrator += error;
+   71   1      
+   72   1          /* 误差限幅 */
+   73   1          pid->out_i = constrain_float(pid->integrator, -pid->imax, pid->imax);
    74   1      
-   75   1          pid->out_p = pid->kp * error;
-   76   1          pid->out_i = pid->ki * t * pid->integrator;
-   77   1          pid->out_d = pid->kd/t * (error - pid->last_error);
-   78   1      
-   79   1          pid->last_error = error;
-   80   1      
-   81   1          pid->out = pid->out_p + pid->out_i + pid->out_d;
-   82   1      
-   83   1          pid->out = constrain_float(pid->out, -pid->outmax, pid->outmax);
-   84   1      
-   85   1          return pid->out;
-   86   1      }
-   87          
+   75   1      
+   76   1          pid->out_p = pid->kp * error;
+   77   1          pid->out_i = pid->ki * t * pid->integrator;
+   78   1          pid->out_d = pid->kd/t * (error - pid->last_error);
+   79   1      
+   80   1          pid->last_error = error;
+   81   1      
+   82   1          pid->out = pid->out_p + pid->out_i + pid->out_d;
+   83   1      
+   84   1          pid->out = constrain_float(pid->out, -pid->outmax, pid->outmax);
+   85   1      
+   86   1          return pid->out;
+   87   1      }
    88          
-   89          /*******************************************************************************
-   90          * 函 数 名         : PidIncCtrl
-   91          * 函数功能     : 增量式PID控制
-   92          * 输    入         : pid, error, t
-   93          * 输    出         : float
-   94          *******************************************************************************/
-   95          float PidIncCtrl(pid_param_t * pid, float error, float t)
-   96          {
-   97   1      
-   98   1          pid->out_p = pid->kp * (error - pid->last_error);
-   99   1          pid->out_i = pid->ki * error * t ;
-  100   1          pid->out_d = pid->kd/t * ((error - pid->last_error) - pid->last_derivative);
-  101   1      
-  102   1          pid->last_derivative = error - pid->last_error;
-  103   1          pid->last_error = error;
-  104   1      
-  105   1          pid->out += pid->out_p + pid->out_i + pid->out_d;
-  106   1      
-  107   1          pid->out = constrain_float(pid->out, -pid->outmax, pid->outmax);
-  108   1          return pid->out;
-  109   1      }
-  110          
-  111          /*******************************************************************************
-  112          * 函 数 名         : constrain_float
-  113          * 函数功能         : 浮点型数限幅
-  114          * 输    入         : amt,low,high
-  115          * 输    出         : float
-  116          *******************************************************************************/
-  117          float constrain_float(float amt, float low, float high)
-  118          {
-  119   1          return ((amt)<(low)?(low):((amt)>(high)?(high):(amt)));
-  120   1      }
-  121          
-  122          /*******************************************************************************
-C251 COMPILER V5.60.0,  pid                                                                02/05/25  11:30:38  PAGE 3   
+   89          
+   90          /*******************************************************************************
+   91          * 函 数 名         : PidIncCtrl
+   92          * 函数功能     : 增量式PID控制
+   93          * 输    入         : pid, error, t
+   94          * 输    出         : float
+   95          *******************************************************************************/
+   96          float PidIncCtrl(pid_param_t * pid, float error, float t)
+   97          {
+   98   1      
+   99   1          pid->out_p = pid->kp * (error - pid->last_error);
+  100   1          pid->out_i = pid->ki * error * t ;
+  101   1          pid->out_d = pid->kd/t * ((error - pid->last_error) - pid->last_derivative);
+  102   1      
+  103   1          pid->last_derivative = error - pid->last_error;
+  104   1          pid->last_error = error;
+  105   1      
+  106   1          pid->out += pid->out_p + pid->out_i + pid->out_d;
+  107   1      
+  108   1          pid->out = constrain_float(pid->out, -pid->outmax, pid->outmax);
+  109   1          return pid->out;
+  110   1      }
+  111          
+  112          /*******************************************************************************
+  113          * 函 数 名         : constrain_float
+  114          * 函数功能         : 浮点型数限幅
+  115          * 输    入         : amt,low,high
+  116          * 输    出         : float
+  117          *******************************************************************************/
+  118          float constrain_float(float amt, float low, float high)
+  119          {
+  120   1          return ((amt)<(low)?(low):((amt)>(high)?(high):(amt)));
+  121   1      }
+  122          
+C251 COMPILER V5.60.0,  pid                                                                02/05/25  18:53:35  PAGE 3   
 
-  123          * 函 数 名         : constrain_short
-  124          * 函数功能         : 短整型数限幅
-  125          * 输    入         : amt,low,high
-  126          * 输    出         : short
-  127          *******************************************************************************/
-  128          short constrain_short(short amt, short low, short high)
-  129          {
-  130   1          return ((amt)<(low)?(low):((amt)>(high)?(high):(amt)));
-  131   1      }
-  132          
-  133          /*******************************************************************************
-  134          * 函 数 名         : constrain_uint32
-  135          * 函数功能         : 限幅
-  136          * 输    入         : amt,low,high
-  137          * 输    出         : uint32
-  138          *******************************************************************************/
-  139          unsigned long constrain_uint32(float amt)
-  140          {
-  141   1          return ((amt)<(0)?(0):((amt)>(max_duty)?(max_duty):(amt)));
-  142   1      }
+  123          /*******************************************************************************
+  124          * 函 数 名         : constrain_short
+  125          * 函数功能         : 短整型数限幅
+  126          * 输    入         : amt,low,high
+  127          * 输    出         : short
+  128          *******************************************************************************/
+  129          short constrain_short(short amt, short low, short high)
+  130          {
+  131   1          return ((amt)<(low)?(low):((amt)>(high)?(high):(amt)));
+  132   1      }
+  133          
+  134          /*******************************************************************************
+  135          * 函 数 名         : constrain_uint32
+  136          * 函数功能         : 限幅
+  137          * 输    入         : amt,low,high
+  138          * 输    出         : uint32
+  139          *******************************************************************************/
+  140          unsigned long constrain_uint32(float amt)
+  141          {
+  142   1          return ((amt)<(0)?(0):((amt)>(max_duty)?(max_duty):(amt)));
+  143   1      }
 
 
 Module Information          Static   Overlayable

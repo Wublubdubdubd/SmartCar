@@ -44,6 +44,8 @@ void IPS114_Show_Info(void)
     //循环变量
     unsigned char index=0;  
     //IMU
+		ips114_show_float(100,0,x_v,2,3);
+		ips114_show_float(180,0,x_p,2,3);
     for(index=0;index<3;index++)
     {
       ips114_show_float(80*index, 16*1 ,imu_acc[index],2,3);//加速度信息 字符8x16

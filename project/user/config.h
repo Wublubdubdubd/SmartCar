@@ -4,6 +4,7 @@
 #define FOSC              40000000UL
 
 #include "AI8051u_32bit.h"
+#include "bluetooth.h"
 
 #include <stdio.h>
 #include <stdarg.h>

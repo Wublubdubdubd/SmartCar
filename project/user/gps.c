@@ -23,11 +23,13 @@ uint8 Object_one_index[4]={0, point_size, 2 * point_size, 3 * point_size};
 //将当前点写入eeprom
 void WritePoint(uint8 offset)
 {
-  iap_write_buff(offset, (uint8 *)&gps_tau1201.latitude, point_size);
+  //iap_write_buff(offset, (uint8 *)&gps_tau1201.latitude, point_size);
+	W25Q_PageProgram_32(offset, (uint8 *)&gps_tau1201.latitude, point_size);
 }
 
 //从eeprom读取点作为目标点
 void ReadPoint(uint8 offset)
 {
-  iap_read_buff(offset, (uint8 *)target_point, point_size);
+  //iap_read_buff(offset, (uint8 *)target_point, point_size);
+	W25Q_FastRead_6B(offset, (uint8 *)target_point, point_size);
 }

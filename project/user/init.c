@@ -4,6 +4,10 @@ void init()
 {
     clock_init(SYSTEM_CLOCK_40M); // 务必保留
 		debug_init(); // 务必保留
+	
+		//E2PROM初始化
+		QSPI_Init();
+    W25Q_Enable_QE();
   
 #if IPS_USE     
     //屏幕初始化
@@ -12,7 +16,7 @@ void init()
     
     //GPS初始化
     gps_init();
-  
+	
     //蓝牙初始化
     while(ble6a20_init());
 
@@ -31,11 +35,7 @@ void init()
     IPS114_Show_Unit();//显示单位
 #endif
     
-    //E2PROM初始化
-    //iap_init();
-		
-//		QSPI_Init();
-//    W25Q_Enable_QE();
+
         
     //pid初始化
     My_Pid_Init();

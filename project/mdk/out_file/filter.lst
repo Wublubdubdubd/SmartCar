@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  filter                                                             02/05/25  11:27:06  PAGE 1   
+C251 COMPILER V5.60.0,  filter                                                             02/05/25  18:53:36  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE filter
@@ -42,13 +42,19 @@ stmt  level    source
    31   1          //如果要与GPS融合 需要归一化到0~360
    32   1          //roll=fmod(roll+360,360) ;
    33   1          //pitch=fmod(pitch+360,360) ;
-   34   1          //yaw=fmod(yaw+360,360) ;
-   35   1      }
+   34   1          if(yaw > 0)
+   35   1            yaw=fmod(yaw+180,180) ;
+   36   1          else
+   37   1            yaw=fmod(yaw-180,-180) ;
+   38   1          
+   39   1          x_v += acc[0] * dt;
+   40   1          x_p += x_v * dt;
+   41   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       732     ------
+  code size            =       956     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
@@ -61,6 +67,8 @@ Module Information          Static   Overlayable
   bitaddressable size  =    ------     ------
   ebitaddressable size =    ------     ------
   far data size        =    ------     ------
+C251 COMPILER V5.60.0,  filter                                                             02/05/25  18:53:36  PAGE 2   
+
   huge data size       =    ------     ------
   const size           =    ------     ------
   hconst size          =    ------     ------

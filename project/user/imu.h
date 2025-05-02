@@ -17,6 +17,16 @@ extern float roll;
 extern float pitch;
 extern float yaw;
 
+// 初始速度
+extern float x_v;
+extern float y_v;
+extern float z_v;
+
+// 初始位置
+extern float x_p;
+extern float y_p;
+extern float z_p;
+
 
 //extern char str_buffer[];
 #endif

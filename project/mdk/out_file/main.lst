@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  main                                                               02/05/25  11:30:38  PAGE 1   
+C251 COMPILER V5.60.0,  main                                                               02/05/25  18:53:34  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE main
@@ -62,81 +62,88 @@ stmt  level    source
    49   1          char read_index = 0; //读点索引，测试用
    50   1        
    51   1          pObject = Object_one_index; //科目一开始
-   52   1          
+   52   1            
    53   1          init();  
    54   1        
-   55   1          while(1)
-C251 COMPILER V5.60.0,  main                                                               02/05/25  11:30:38  PAGE 2   
+   55   1        
+C251 COMPILER V5.60.0,  main                                                               02/05/25  18:53:34  PAGE 2   
 
-   56   1          {
-   57   2      #if IPS_USE     
-   58   2            IPS114_Show_Info(); //显示必要信息
-   59   2      #endif
-   60   2            blue_tooth_read(command);
-   61   2            /*
-   62   2            命令集：（ 计划废弃 s、1~4 使其自动增加到目标值 ）
-   63   2            s: 10%占空比启动抬升电机，测试接线
-   64   2            
-   65   2            1：抬升电机占空比 + 10%
-   66   2            2：抬升电机占空比 - 10%
-   67   2            3：推进电机占空比 + 10%
-   68   2            4：推进电机占空比 - 10%
-   69   2            
-   70   2            b: 刹车 四个电机占空比值 0%
-   71   2            
-   72   2            w: 向当前科目的EEPROM区写当前位置的经纬度，写满后不可再写，只有清除后可再次重新写入。何时写满取决与
+   56   1          while(1)
+   57   1          {
+   58   2      #if IPS_USE     
+   59   2            IPS114_Show_Info(); //显示必要信息
+   60   2      #endif
+   61   2            blue_tooth_read(command);
+   62   2            /*
+   63   2            命令集：（ 计划废弃 s、1~4 使其自动增加到目标值 ）
+   64   2            s: 10%占空比启动抬升电机，测试接线
+   65   2            
+   66   2            1：抬升电机占空比 + 10%
+   67   2            2：抬升电机占空比 - 10%
+   68   2            3：推进电机占空比 + 10%
+   69   2            4：推进电机占空比 - 10%
+   70   2            
+   71   2            b: 刹车 四个电机占空比值 0%
+   72   2            
+   73   2            w: 向当前科目的EEPROM区写当前位置的经纬度，写满后不可再写，只有清除后可再次重新写入。何时写满取决与
              -当前科目（未完善）
-   73   2            r: 读取当前科目下一点到目标点
-   74   2            
-   75   2            p: 打印目标点经纬度到蓝牙助手
-   76   2            
-   77   2            e：擦除EEPROM第一页，写索引值 0 
-   78   2            
-   79   2            */
-   80   2            switch(command[0])
-   81   2            {
-   82   3              case 's':pwm_set_duty(PWM_1,550);pwm_set_duty(PWM_2,550);break;
-   83   3              case '1':duty_up_left+=50;duty_up_right+=50;break;
-   84   3              case '2':duty_up_left-=50;duty_up_right-=50;break;
-   85   3              case '3':duty_forward_left+=50;duty_forward_right+=50;break;
-   86   3              case '4':duty_forward_left-=50;duty_forward_right-=50;break;
-   87   3              case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;
-   88   3              sprintf(str_buffer,"Break!\r\n");ble6a20_send_string(str_buffer);break;
-   89   3              case 'w':W25Q_PageProgram_32(0, write_buf, 2);//if( write_index < 4 ){WritePoint(pObject[write_in
-             -dex]); write_index++;}
-   90   3              sprintf(str_buffer,"Write!\r\n");ble6a20_send_string(str_buffer);break;
-   91   3              case 'r':W25Q_FastRead_6B(0, buf, 256);//ReadPoint(pObject[read_index]); read_index++; read_index
-             - %= 4;
-   92   3              sprintf(str_buffer,"Read!\r\n");ble6a20_send_string(str_buffer);break;
-   93   3              case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf\r\n", buf[0], buf[1]);ble6a20_send_string(str_buf
-             -fer);break;
-   94   3              case 'e':W25Q_Erase4K_20(0, TRUE);//iap_erase_page(0);write_index = 0;//第一页 512k
-   95   3              sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);break;
-   96   3              default :;
-   97   3            }
-   98   2            
-   99   2      //      ips114_show_float(0,64,roll,4,4);
-  100   2      //      ips114_show_float(80,64,pitch,4,4);
-  101   2            //显示已打点数和当前所在点
-  102   2            ips114_show_char(160,0,read_index);
-  103   2            ips114_show_char(160,20,'/');
-  104   2            ips114_show_char(160,0,write_index);
-  105   2      
-  106   2            ips114_show_float(160,64,yaw,4,4);
-  107   2            system_delay_ms(500);
-  108   2          }
-  109   1      }
+   74   2            r: 读取当前科目下一点到目标点
+   75   2            
+   76   2            p: 打印目标点经纬度到蓝牙助手
+   77   2            
+   78   2            e：擦除EEPROM第一页，写索引值 0 
+   79   2            
+   80   2            */
+   81   2            switch(command[0])
+   82   2            {
+   83   3              case 's':;break;
+   84   3              case '1':duty_up_left+=50;duty_up_right+=50;break;
+   85   3              case '2':duty_up_left-=50;duty_up_right-=50;break;
+   86   3              case '3':duty_forward_left+=50;duty_forward_right+=50;break;
+   87   3              case '4':duty_forward_left-=50;duty_forward_right-=50;break;
+   88   3              case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;
+   89   3              sprintf(str_buffer,"Break!\r \n");ble6a20_send_string(str_buffer);break;
+   90   3              case 'w':if( write_index < 4 ){WritePoint(pObject[write_index]); write_index++;}//W25Q_PageProgra
+             -m_32(0, write_buf, 2);//
+   91   3              sprintf(str_buffer,"Write!\r\n");ble6a20_send_string(str_buffer);break;
+   92   3              case 'r':ReadPoint(pObject[read_index]); read_index++; read_index %= 4;//W25Q_FastRead_6B(0, buf,
+             - 256);//
+   93   3              sprintf(str_buffer,"Read!\r\n");ble6a20_send_string(str_buffer);break;
+   94   3              case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf\r\n", target_point[0], target_point[1]);ble6a20_s
+             -end_string(str_buffer);break;
+   95   3              case 'e':W25Q_Erase4K_20(0, 1);//iap_erase_page(0);write_index = 0;//第一页 512k
+   96   3              sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);break;
+   97   3              default :;
+   98   3            }
+   99   2            command[0] = 0 ; //清空
+  100   2            command[1] = 0 ; 
+  101   2      //      ips114_show_float(0,64,roll,4,4);
+  102   2      //      ips114_show_float(80,64,pitch,4,4);
+  103   2            //显示已打点数和当前所在点
+  104   2            
+  105   2            read_index += '1';
+  106   2            write_index += '0';
+  107   2            ips114_show_char(0,64,read_index);
+  108   2            ips114_show_char(20,64,'/');
+  109   2            ips114_show_char(40,64,write_index);
+  110   2            read_index -= '1';
+  111   2            write_index -= '0';
+  112   2            
+  113   2            ips114_show_float(160,64,yaw,4,4);
+  114   2            system_delay_ms(500);
+  115   2          }
+  116   1      }
+
+C251 COMPILER V5.60.0,  main                                                               02/05/25  18:53:34  PAGE 3   
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       795     ------
+  code size            =       898     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-C251 COMPILER V5.60.0,  main                                                               02/05/25  11:30:38  PAGE 3   
-
   xdata size           =      8296     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
@@ -147,7 +154,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =      4156     ------
+  hconst size          =      4157     ------
 End of Module Information.
 
 

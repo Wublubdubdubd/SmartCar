@@ -223,7 +223,7 @@ void pit_hanlder_imu(void)
     imu660ra_get_gyro(); // 角速度
   
     //acc滤波
-    FOCF(&imu660ra_acc_x,&imu_acc_x_pre,0.1);
+    FOCF(&imu660ra_acc_x,&imu_acc_x_pre,0.05);
     FOCF(&imu660ra_acc_y,&imu_acc_y_pre,0.1);
     FOCF(&imu660ra_acc_z,&imu_acc_z_pre,0.1);
   
@@ -233,9 +233,9 @@ void pit_hanlder_imu(void)
     FOCF(&imu660ra_gyro_z,&imu_gyro_z_pre,0.1);
   
     //转换为实际物理值，纠正零偏
-	  imu_acc[0]=imu660ra_acc_transition(imu660ra_acc_x)-0.023;
-	  imu_acc[1]=imu660ra_acc_transition(imu660ra_acc_y)+0.006;
-	  imu_acc[2]=imu660ra_acc_transition(imu660ra_acc_z)+0.007;
+	  imu_acc[0]=imu660ra_acc_transition(imu660ra_acc_x);
+	  imu_acc[1]=imu660ra_acc_transition(imu660ra_acc_y)+0.017;
+	  imu_acc[2]=imu660ra_acc_transition(imu660ra_acc_z);
  
     imu_gyro[0]=imu660ra_gyro_transition(imu660ra_gyro_x);
 	  imu_gyro[1]=imu660ra_gyro_transition(imu660ra_gyro_y);
@@ -264,7 +264,7 @@ void pit_hanlder_gps(void)
         if(gps_tau1201.speed > 3)//移动速度大于3/3.6 m/s 可以认为gps提供的角度较为准确 直接替换yaw值
           yaw = gps_tau1201.direction;
         else //否则yaw仅向gps提供的方向修正一个小角度
-          yaw += (yaw>gps_tau1201.direction) ? -1 : 1 ;
+          yaw += (yaw>gps_tau1201.direction) ? -0.5 : 0.5 ;
       }
     }
     else gps_date_ready = 0;

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  ips114                                                             02/05/25  11:27:05  PAGE 1   
+C251 COMPILER V5.60.0,  ips114                                                             02/05/25  18:58:57  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE ips114
@@ -55,32 +55,34 @@ stmt  level    source
    44   1          //循环变量
    45   1          unsigned char index=0;  
    46   1          //IMU
-   47   1          for(index=0;index<3;index++)
-   48   1          {
-   49   2            ips114_show_float(80*index, 16*1 ,imu_acc[index],2,3);//加速度信息 字符8x16
-   50   2            ips114_show_float(80*index, 16*3 ,imu_gyro[index],2,3);//角速度信息
-   51   2          }
-   52   1          //GPS
-   53   1          if(gps_date_ready)
-   54   1          {
-   55   2            //显示GPS位置信息
-   56   2            ips114_show_uint8(15, 16*5, gps_tau1201.state);
-   57   2            ips114_show_uint8(70, 16*5, gps_tau1201.satellite_used);
-C251 COMPILER V5.60.0,  ips114                                                             02/05/25  11:27:05  PAGE 2   
+   47   1          ips114_show_float(100,0,x_v,2,3);
+   48   1          ips114_show_float(180,0,x_p,2,3);
+   49   1          for(index=0;index<3;index++)
+   50   1          {
+   51   2            ips114_show_float(80*index, 16*1 ,imu_acc[index],2,3);//加速度信息 字符8x16
+   52   2            ips114_show_float(80*index, 16*3 ,imu_gyro[index],2,3);//角速度信息
+   53   2          }
+   54   1          //GPS
+   55   1          if(gps_date_ready)
+   56   1          {
+   57   2            //显示GPS位置信息
+C251 COMPILER V5.60.0,  ips114                                                             02/05/25  18:58:57  PAGE 2   
 
-   58   2            ips114_show_float(160, 16*5, gps_tau1201.height, 4, 6);
-   59   2              
-   60   2            ips114_show_float(30, 16*6, gps_tau1201.latitude, 4, 6);
-   61   2            ips114_show_float(160, 16*6, gps_tau1201.longitude, 4, 6);
-   62   2            ips114_show_float(30, 16*7, gps_tau1201.speed, 4, 6);
-   63   2            ips114_show_float(160, 16*7, gps_tau1201.direction, 4, 6);
-   64   2          }
-   65   1      }
+   58   2            ips114_show_uint8(15, 16*5, gps_tau1201.state);
+   59   2            ips114_show_uint8(70, 16*5, gps_tau1201.satellite_used);
+   60   2            ips114_show_float(160, 16*5, gps_tau1201.height, 4, 6);
+   61   2              
+   62   2            ips114_show_float(30, 16*6, gps_tau1201.latitude, 4, 6);
+   63   2            ips114_show_float(160, 16*6, gps_tau1201.longitude, 4, 6);
+   64   2            ips114_show_float(30, 16*7, gps_tau1201.speed, 4, 6);
+   65   2            ips114_show_float(160, 16*7, gps_tau1201.direction, 4, 6);
+   66   2          }
+   67   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       735     ------
+  code size            =       825     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------

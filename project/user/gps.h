@@ -2,7 +2,7 @@
 #define __GPS_H_
 
 #include "zf_device_gps_tau1201.h"
-#include "zf_driver_eeprom.h"
+#include "w25qxx.h"
 
 #define point_size 2*sizeof(double)
 

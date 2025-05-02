@@ -25,6 +25,9 @@ void blue_tooth_read(char* buffer)//读取数据
 {
     if(ble6a20_read_buffer(data_buffer, buffer_size))                          // 查看是否有消息 默认缓冲区是BLE6A20_BUFFER_SIZE 总共 64 字节
     {
+			ble6a20_send_string("Recived: ");
+			ble6a20_send_byte(data_buffer[0]);
+			ble6a20_send_string("\r\n");
 			memcpy(buffer, data_buffer, command_size);
     }
 }

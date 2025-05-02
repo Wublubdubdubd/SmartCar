@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  gps                                                                02/05/25  11:27:05  PAGE 1   
+C251 COMPILER V5.60.0,  gps                                                                02/05/25  16:32:45  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE gps
@@ -34,14 +34,16 @@ stmt  level    source
    23          //将当前点写入eeprom
    24          void WritePoint(uint8 offset)
    25          {
-   26   1        iap_write_buff(offset, (uint8 *)&gps_tau1201.latitude, point_size);
-   27   1      }
-   28          
-   29          //从eeprom读取点作为目标点
-   30          void ReadPoint(uint8 offset)
-   31          {
-   32   1        iap_read_buff(offset, (uint8 *)target_point, point_size);
-   33   1      }
+   26   1        //iap_write_buff(offset, (uint8 *)&gps_tau1201.latitude, point_size);
+   27   1        W25Q_PageProgram_32(offset, (uint8 *)&gps_tau1201.latitude, point_size);
+   28   1      }
+   29          
+   30          //从eeprom读取点作为目标点
+   31          void ReadPoint(uint8 offset)
+   32          {
+   33   1        //iap_read_buff(offset, (uint8 *)target_point, point_size);
+   34   1        W25Q_FastRead_6B(offset, (uint8 *)target_point, point_size);
+   35   1      }
 
 
 Module Information          Static   Overlayable

@@ -1,6 +1,7 @@
 #include "config.h"
 #include "qspi.h"
 #include "w25qxx.h"
+#include "bluetooth.h"
 
 
 void W25Q_WriteEnable_06()
@@ -610,6 +611,7 @@ void W25Q_PageProgram_32(DWORD addr, BYTE *pdat, WORD datalen)
     BYTE cnt;
     
     W25Q_WriteEnable_06();
+
     while (datalen > 0)
     {
         cnt = 32;

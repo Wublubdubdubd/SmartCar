@@ -1,7 +1,8 @@
 #include "config.h"
 #include "qspi.h"
 
-#define QSPI_SW     2
+
+#define QSPI_SW     0
 
 #if (QSPI_SW == 2)
     sbit    CS          =   P4^0;
@@ -20,7 +21,7 @@
 #endif
 
 
-void QSPI_init()
+void QSPI_Init()
 {
 #if (QSPI_SW == 2)
     P4M0 |= 0x09;               //设置CS,SCK为强推挽模式
@@ -83,7 +84,7 @@ void QSPI_WRITE_INSTR(BYTE cmd)
 void QSPI_READ_INSTR_SDATA(BYTE cmd, BYTE *pdat, WORD datalen)
 {
     while (QSPI_CheckBusy());       //检测忙状态
-
+		
     QSPI_SetReadMode();             //读模式
     QSPI_SetDataLength(datalen-1);  //设置数据长度
     QSPI_SetDummyCycles(0);         //设置DUMMY时钟
