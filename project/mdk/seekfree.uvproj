@@ -440,16 +440,6 @@
               <FilePath>..\..\libraries\zf_driver\zf_driver_delay.h</FilePath>
             </File>
             <File>
-              <FileName>zf_driver_eeprom.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\libraries\zf_driver\zf_driver_eeprom.c</FilePath>
-            </File>
-            <File>
-              <FileName>zf_driver_eeprom.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\libraries\zf_driver\zf_driver_eeprom.h</FilePath>
-            </File>
-            <File>
               <FileName>zf_driver_encoder.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\libraries\zf_driver\zf_driver_encoder.c</FilePath>
@@ -614,42 +604,10 @@
               <FileType>5</FileType>
               <FilePath>..\..\libraries\zf_device\zf_device_type.h</FilePath>
             </File>
-            <File>
-              <FileName>zf_device_wireless_uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_wireless_uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>zf_device_wireless_uart.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\libraries\zf_device\zf_device_wireless_uart.h</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>zf_components</GroupName>
-          <Files>
-            <File>
-              <FileName>seekfree_assistant.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\libraries\zf_components\seekfree_assistant.c</FilePath>
-            </File>
-            <File>
-              <FileName>seekfree_assistant.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\libraries\zf_components\seekfree_assistant.h</FilePath>
-            </File>
-            <File>
-              <FileName>seekfree_assistant_interface.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\libraries\zf_components\seekfree_assistant_interface.c</FilePath>
-            </File>
-            <File>
-              <FileName>seekfree_assistant_interface.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\libraries\zf_components\seekfree_assistant_interface.h</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>user</GroupName>

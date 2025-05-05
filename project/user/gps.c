@@ -17,7 +17,8 @@ uint8* pObject = NULL; //指向当前科目目标点数组的指针
 
 */
 
-uint8 Object_one_index[4]={0, point_size, 2 * point_size, 3 * point_size};
+uint8 Object_one_index[4] = {0, point_size, 2 * point_size, 3 * point_size};
+uint8 PID_param_index[3] = {4 * point_size, 5 * point_size, 6 * point_size};
 
 
 //将当前点写入eeprom

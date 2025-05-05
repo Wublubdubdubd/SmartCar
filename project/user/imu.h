@@ -27,6 +27,8 @@ extern float x_p;
 extern float y_p;
 extern float z_p;
 
+// 四元数
+extern float q0, q1, q2, q3; // 四元数
+extern float integralFBx, integralFBy, integralFBz; // 积分项
 
-//extern char str_buffer[];
 #endif

@@ -32,18 +32,13 @@
 * 日期              作者           备注
 * 2024-08-01        大W            first version
 ********************************************************************************************************************/
-
-
 #include "init.h"
-
-BYTE buf[4096];
-BYTE write_buf[4096]={1,1};
 
 void main()
 {
     // 变量必须先定义 再调用
     char command[2];//蓝牙控制命令 使用轮询方式获取 但应该改为中断 
-    char str_buffer[100];//蓝牙信息的buffer
+    char str_buffer[50];//蓝牙信息的buffer
   
     char write_index = 0; //打点索引，测试用
     char read_index = 0; //读点索引，测试用
@@ -80,12 +75,12 @@ void main()
       */
       switch(command[0])
       {
-        case 's':;break;
+        case 's':pid_enable = 1;break;
         case '1':duty_up_left+=50;duty_up_right+=50;break;
         case '2':duty_up_left-=50;duty_up_right-=50;break;
         case '3':duty_forward_left+=50;duty_forward_right+=50;break;
         case '4':duty_forward_left-=50;duty_forward_right-=50;break;
-        case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;
+        case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;pid_enable=0;
         sprintf(str_buffer,"Break!\r \n");ble6a20_send_string(str_buffer);break;
         case 'w':if( write_index < 4 ){WritePoint(pObject[write_index]); write_index++;}//W25Q_PageProgram_32(0, write_buf, 2);//
 				sprintf(str_buffer,"Write!\r\n");ble6a20_send_string(str_buffer);break;
@@ -98,19 +93,18 @@ void main()
       }
       command[0] = 0 ; //清空
 			command[1] = 0 ; 
-//      ips114_show_float(0,64,roll,4,4);
-//      ips114_show_float(80,64,pitch,4,4);
-      //显示已打点数和当前所在点
+      ips114_show_float(0,64,roll,4,4);
+      ips114_show_float(80,64,pitch,4,4);
 			
-			read_index += '1';
-			write_index += '0';
-      ips114_show_char(0,64,read_index);
-      ips114_show_char(20,64,'/');
-      ips114_show_char(40,64,write_index);
-			read_index -= '1';
-			write_index -= '0';
+//      //显示已打点数和当前所在点
+//			read_index += '1';
+//			write_index += '0';
+//      ips114_show_char(0,64,read_index);
+//      ips114_show_char(20,64,'/');
+//      ips114_show_char(40,64,write_index);
+//			read_index -= '1';
+//			write_index -= '0';
 			
       ips114_show_float(160,64,yaw,4,4);
-      system_delay_ms(500);
     }
 }

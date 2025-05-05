@@ -215,15 +215,14 @@ void TM11_IRQHandler() interrupt 24
   * @return 无
   */
 void pit_hanlder_imu(void)
-{
-    //int i=0; 
+{ 
     
     //获取传感器数据
     imu660ra_get_acc();  // 加速度
     imu660ra_get_gyro(); // 角速度
   
     //acc滤波
-    FOCF(&imu660ra_acc_x,&imu_acc_x_pre,0.05);
+    FOCF(&imu660ra_acc_x,&imu_acc_x_pre,0.1);
     FOCF(&imu660ra_acc_y,&imu_acc_y_pre,0.1);
     FOCF(&imu660ra_acc_z,&imu_acc_z_pre,0.1);
   
@@ -236,13 +235,15 @@ void pit_hanlder_imu(void)
 	  imu_acc[0]=imu660ra_acc_transition(imu660ra_acc_x);
 	  imu_acc[1]=imu660ra_acc_transition(imu660ra_acc_y)+0.017;
 	  imu_acc[2]=imu660ra_acc_transition(imu660ra_acc_z);
+	
+		x_v += (imu_acc[0] * 0.005);
  
     imu_gyro[0]=imu660ra_gyro_transition(imu660ra_gyro_x);
 	  imu_gyro[1]=imu660ra_gyro_transition(imu660ra_gyro_y);
 	  imu_gyro[2]=imu660ra_gyro_transition(imu660ra_gyro_z);
 	
 		//数据融合获取欧拉角
-		GetEuler(imu_acc,imu_gyro,0.005);
+		GetEuler(imu_gyro,0.005);
     
 }
 /**
@@ -257,15 +258,6 @@ void pit_hanlder_gps(void)
     {
       gps_tau1201_flag = 0;
       gps_date_ready = (!gps_data_parse()) ? 1 : 0;
-      
-      //修正yaw值
-      if(gps_date_ready)
-      {
-        if(gps_tau1201.speed > 3)//移动速度大于3/3.6 m/s 可以认为gps提供的角度较为准确 直接替换yaw值
-          yaw = gps_tau1201.direction;
-        else //否则yaw仅向gps提供的方向修正一个小角度
-          yaw += (yaw>gps_tau1201.direction) ? -0.5 : 0.5 ;
-      }
     }
     else gps_date_ready = 0;
 }
@@ -274,13 +266,19 @@ void pit_hanlder_gps(void)
   * @param 无
   * @return 无
   */
+bit pid_enable = 0; // pid 使能
 void pit_hanlder_angle(void)
 {
     uint32 angle_duty;
-		float angle_u = 0 ;//控制量
-	  // 角度环
-		angle_u = Angle_Pid_fun();
-    
+		float angle_u = 0 ;//角度环控制量
+	  float velocity_u = 0;//速度环控制量
+		if(pid_enable)
+		{
+			// 角度环
+			angle_u = Angle_Pid_fun(0.01);
+			// 速度环
+			velocity_u = Velocity_Pid_fun(0.01);
+		}
     //左 抬升电机
 	  angle_duty = constrain_uint32(duty_up_left);
     pwm_set_duty(PWM_1,angle_duty);
@@ -288,10 +286,10 @@ void pit_hanlder_angle(void)
 	  angle_duty = constrain_uint32(duty_up_right);
     pwm_set_duty(PWM_2,angle_duty);
     //左 推进电机
-    angle_duty = constrain_uint32(duty_forward_left - angle_u);
+    angle_duty = constrain_uint32(duty_forward_left - angle_u + velocity_u);
     pwm_set_duty(PWM_3,angle_duty);
     //右 推进电机
-    angle_duty = constrain_uint32(duty_forward_right + angle_u);
+    angle_duty = constrain_uint32(duty_forward_right + angle_u + velocity_u);
     pwm_set_duty(PWM_4,angle_duty);
     
 }

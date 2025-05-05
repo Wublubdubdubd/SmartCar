@@ -28,10 +28,15 @@ typedef struct
 // 角度PID初始化参数
 extern float angle_KP, angle_KI,angle_KD, angle_IMAX, angle_OUTMAX;
 extern float angle_target;
-
 extern pid_param_t angle_pid;  // 角度PID
 
-float Angle_Pid_fun(); //角度环
+// 角度PID初始化参数
+extern float velocity_KP, velocity_KI,velocity_KD, velocity_IMAX, velocity_OUTMAX;
+extern float velocity_target;
+extern pid_param_t velocity_pid;  // 速度PID
+
+float Angle_Pid_fun(float dt); //角度环
+float Velocity_Pid_fun(float dt); //速度环
 
 void My_Pid_Init(void);
 void Pid_Param_Init(pid_param_t * pid, float kp, float ki, float kd, float imax, float outmax);

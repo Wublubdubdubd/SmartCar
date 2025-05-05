@@ -1,26 +1,36 @@
 #include "pid.h"
 
 // 角度PID初始化参数
-float angle_KP = 2.5, angle_KI = 0,angle_KD = 0.0, angle_IMAX = 20, angle_OUTMAX = 50;
+float angle_KP = 1.0, angle_KI = 0.5,angle_KD = 1.0, angle_IMAX = 20, angle_OUTMAX = 100;
 
 pid_param_t angle_pid; //角度PID
 float angle_target = 0;//角度输入
 float angle_error = 0; //角度误差
 
-float Angle_Pid_fun()
+// 速度PID初始化参数
+float velocity_KP = 10.0, velocity_KI = 0,velocity_KD = 0, velocity_IMAX = 0, velocity_OUTMAX = 100;
+
+pid_param_t velocity_pid; //角度PID
+float velocity_target = 1;//角度输入
+float velocity_error = 0; //角度误差
+
+
+float Angle_Pid_fun(float dt)
 {  
-    //获取当前点到目标点的角度
-		angle_target = get_two_points_azimuth(gps_tau1201.latitude, gps_tau1201.longitude, target_point[0], target_point[1]);
-		angle_target -= 180; //修正到yaw的范围  yaw : -180 ~ 180 
-		angle_error = angle_target - yaw;// error :-360 ~ 360
-		//误差修正到 -180~180，即最小的旋转角度
-		if(angle_error > 180) angle_error -= 360;
-		else if(angle_error < -180) angle_error += 360;
-		
+		angle_error = angle_target - yaw;
     //角度环
-    PidLocCtrl(&angle_pid,angle_error,0.01);
+    PidLocCtrl(&angle_pid,angle_error, dt);
 	
 		return angle_pid.out;
+}
+
+float Velocity_Pid_fun(float dt)
+{  
+		velocity_error = velocity_target - x_v;
+    //角度环
+    PidLocCtrl(&velocity_pid,velocity_error, dt);
+	
+		return velocity_pid.out;
 }
 
 /*******************************************************************************
@@ -32,6 +42,7 @@ float Angle_Pid_fun()
 void My_Pid_Init(void)
 {
     Pid_Param_Init(&angle_pid,angle_KP, angle_KI,angle_KD, angle_IMAX, angle_OUTMAX);
+	  Pid_Param_Init(&velocity_pid,velocity_KP, velocity_KI,velocity_KD, velocity_IMAX, velocity_OUTMAX);
 }
 
 
@@ -139,5 +150,5 @@ short constrain_short(short amt, short low, short high)
 *******************************************************************************/
 unsigned long constrain_uint32(float amt)
 {
-    return ((amt)<(0)?(0):((amt)>(max_duty)?(max_duty):(amt)));
+    return ((amt)<(500)?(500):((amt)>(max_duty)?(max_duty):(amt)));
 }

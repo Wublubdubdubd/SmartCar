@@ -62,7 +62,6 @@
 
 #include "zf_driver_exti.h"
 #include "zf_driver_delay.h"
-#include "zf_driver_eeprom.h"
 #include "zf_driver_pit.h"
 #include "zf_driver_encoder.h"
 
@@ -71,13 +70,13 @@
 #include "zf_device_type.h"
 
 #include "zf_device_tsl1401.h"
-#include "zf_device_wireless_uart.h"
+//#include "zf_device_wireless_uart.h"
 #include "zf_device_ble6a20.h"
 
-//------逐飞科技产品组件层文件
-#include "seekfree_assistant.h"
+////------逐飞科技产品组件层文件
+//#include "seekfree_assistant.h"
 
-#include "seekfree_assistant_interface.h"
+//#include "seekfree_assistant_interface.h"
 
 
 #endif

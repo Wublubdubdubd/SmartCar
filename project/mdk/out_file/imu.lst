@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  imu                                                                02/05/25  18:53:35  PAGE 1   
+C251 COMPILER V5.60.0,  imu                                                                05/05/25  15:15:25  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE imu
@@ -24,6 +24,10 @@ stmt  level    source
    13          float x_p = 0.0f;
    14          float y_p = 0.0f;
    15          float z_p = 0.0f;
+   16          
+   17          // 四元数
+   18          float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f; // 四元数
+   19          float integralFBx = 0.0f, integralFBy = 0.0f, integralFBz = 0.0f; // 积分项
 
 
 Module Information          Static   Overlayable
@@ -33,7 +37,7 @@ Module Information          Static   Overlayable
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        60     ------
+  xdata size           =        88     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
@@ -43,7 +47,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =        81     ------
+  hconst size          =       144     ------
 End of Module Information.
 
 
