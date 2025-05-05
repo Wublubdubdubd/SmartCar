@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  filter                                                             05/05/25  15:46:42  PAGE 1   
+C251 COMPILER V5.60.0,  filter                                                             05/05/25  20:58:33  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE filter
@@ -45,7 +45,7 @@ stmt  level    source
    34   3              return theta; // 第一象限和第四象限
    35   3         // 处理x < 0的情况
    36   3          } else {
-   37   3              if (y >= 0) {
+   37   3              if (y > 0) {
    38   4                  return theta + M_PI; // 第二象限或x轴负半轴
    39   4              } else {
    40   4                  return theta - M_PI; // 第三象限
@@ -66,7 +66,7 @@ stmt  level    source
    55   1          float gx = gyro[0] * 0.0174533f; // °/s -> rad/s
    56   1          float gy = gyro[1] * 0.0174533f;
    57   1          float gz = gyro[2] * 0.0174533f;
-C251 COMPILER V5.60.0,  filter                                                             05/05/25  15:46:42  PAGE 2   
+C251 COMPILER V5.60.0,  filter                                                             05/05/25  20:58:33  PAGE 2   
 
    58   1      
    59   1          // 四元数更新（仅陀螺仪积分）

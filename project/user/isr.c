@@ -236,15 +236,17 @@ void pit_hanlder_imu(void)
 	  imu_acc[1]=imu660ra_acc_transition(imu660ra_acc_y)+0.017;
 	  imu_acc[2]=imu660ra_acc_transition(imu660ra_acc_z);
 	
-		x_v += (imu_acc[0] * 0.005);
- 
+
     imu_gyro[0]=imu660ra_gyro_transition(imu660ra_gyro_x);
 	  imu_gyro[1]=imu660ra_gyro_transition(imu660ra_gyro_y);
 	  imu_gyro[2]=imu660ra_gyro_transition(imu660ra_gyro_z);
 	
 		//数据融合获取欧拉角
 		GetEuler(imu_gyro,0.005);
-    
+		
+//		imu_acc[0] -= (2*(q1*q3 - q0*q2));
+//		if(fabs(imu_acc[0])<0.05)imu_acc[0]=0;
+//		x_v += (imu_acc[0] * 0.005);
 }
 /**
   * @brief TIM1中断处理函数，提取gps数据
@@ -277,7 +279,7 @@ void pit_hanlder_angle(void)
 			// 角度环
 			angle_u = Angle_Pid_fun(0.01);
 			// 速度环
-			velocity_u = Velocity_Pid_fun(0.01);
+			//velocity_u = Velocity_Pid_fun(0.01);
 		}
     //左 抬升电机
 	  angle_duty = constrain_uint32(duty_up_left);

@@ -17,6 +17,12 @@ float velocity_error = 0; //角度误差
 
 float Angle_Pid_fun(float dt)
 {  
+		if(init_yaw_lock)
+		{
+			angle_target = get_two_points_azimuth(gps_tau1201.latitude,gps_tau1201.longitude,target_point[0],target_point[1]);
+			if( 180 <= angle_target < 360)
+					angle_target -= 360;
+		}
 		angle_error = angle_target - yaw;
     //角度环
     PidLocCtrl(&angle_pid,angle_error, dt);

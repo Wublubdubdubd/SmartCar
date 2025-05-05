@@ -34,7 +34,7 @@ double my_atan2(double y, double x) {
         return theta; // 第一象限和第四象限
    // 处理x < 0的情况
     } else {
-        if (y >= 0) {
+        if (y > 0) {
             return theta + M_PI; // 第二象限或x轴负半轴
         } else {
             return theta - M_PI; // 第三象限

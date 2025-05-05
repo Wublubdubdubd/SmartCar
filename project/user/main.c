@@ -42,7 +42,10 @@ void main()
   
     char write_index = 0; //打点索引，测试用
     char read_index = 0; //读点索引，测试用
-  
+		
+		double distance = 999;
+
+	
     pObject = Object_one_index; //科目一开始
 			
     init();  
@@ -75,7 +78,8 @@ void main()
       */
       switch(command[0])
       {
-        case 's':pid_enable = 1;break;
+        case 's':pid_enable = 1;origin_point[0]=gps_tau1201.latitude;origin_point[1]=gps_tau1201.longitude;
+				sprintf(str_buffer,"Start!\r\n");ble6a20_send_string(str_buffer);break;
         case '1':duty_up_left+=50;duty_up_right+=50;break;
         case '2':duty_up_left-=50;duty_up_right-=50;break;
         case '3':duty_forward_left+=50;duty_forward_right+=50;break;
@@ -91,8 +95,40 @@ void main()
         sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);break;
         default :;
       }
+			
       command[0] = 0 ; //清空
 			command[1] = 0 ; 
+			if(pid_enable)
+			{
+				if(init_yaw_lock == 0)
+				{
+					
+					distance = get_two_points_distance(origin_point[0],origin_point[1],gps_tau1201.latitude,gps_tau1201.longitude);
+					sprintf(str_buffer,"D:%lf \r\n",distance);
+					ble6a20_send_string(str_buffer);
+					if(distance > 2)
+					{
+						
+						init_yaw_lock = 1;
+						yaw = get_two_points_azimuth(origin_point[0],origin_point[1],gps_tau1201.latitude,gps_tau1201.longitude);
+						sprintf(str_buffer,"Init! D:%lf Y:%lf\r\n",distance,yaw);ble6a20_send_string(str_buffer);
+						if( 180 <= yaw < 360)
+							yaw -= 360;
+						distance = 999;
+					}
+				}
+				else
+				{
+					
+					distance = get_two_points_distance(gps_tau1201.latitude,gps_tau1201.longitude,target_point[0],target_point[1]);
+
+					if(distance < 2)
+					{
+						sprintf(str_buffer,"Arrival! D:%lf \r\n",distance);ble6a20_send_string(str_buffer);
+						duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;pid_enable=0;
+					}
+				}
+		  }
       ips114_show_float(0,64,roll,4,4);
       ips114_show_float(80,64,pitch,4,4);
 			

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  main                                                               05/05/25  18:01:34  PAGE 1   
+C251 COMPILER V5.60.0,  main                                                               05/05/25  21:48:42  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE main
@@ -55,91 +55,131 @@ stmt  level    source
    42   1        
    43   1          char write_index = 0; //打点索引，测试用
    44   1          char read_index = 0; //读点索引，测试用
-   45   1        
-   46   1          pObject = Object_one_index; //科目一开始
-   47   1            
-   48   1          init();  
-   49   1        
-   50   1        
-   51   1          while(1)
-   52   1          {
-   53   2      #if IPS_USE     
-   54   2            IPS114_Show_Info(); //显示必要信息
-   55   2      #endif
-C251 COMPILER V5.60.0,  main                                                               05/05/25  18:01:34  PAGE 2   
+   45   1          
+   46   1          double distance = 999;
+   47   1      
+   48   1        
+   49   1          pObject = Object_one_index; //科目一开始
+   50   1            
+   51   1          init();  
+   52   1        
+   53   1        
+   54   1          while(1)
+   55   1          {
+C251 COMPILER V5.60.0,  main                                                               05/05/25  21:48:42  PAGE 2   
 
-   56   2            blue_tooth_read(command);
-   57   2            /*
-   58   2            命令集：（ 计划废弃 s、1~4 使其自动增加到目标值 ）
-   59   2            s: 10%占空比启动抬升电机，测试接线
-   60   2            
-   61   2            1：抬升电机占空比 + 10%
-   62   2            2：抬升电机占空比 - 10%
-   63   2            3：推进电机占空比 + 10%
-   64   2            4：推进电机占空比 - 10%
-   65   2            
-   66   2            b: 刹车 四个电机占空比值 0%
-   67   2            
-   68   2            w: 向当前科目的EEPROM区写当前位置的经纬度，写满后不可再写，只有清除后可再次重新写入。何时写满取决与
-             -当前科目（未完善）
-   69   2            r: 读取当前科目下一点到目标点
+   56   2      #if IPS_USE     
+   57   2            IPS114_Show_Info(); //显示必要信息
+   58   2      #endif
+   59   2            blue_tooth_read(command);
+   60   2            /*
+   61   2            命令集：（ 计划废弃 s、1~4 使其自动增加到目标值 ）
+   62   2            s: 10%占空比启动抬升电机，测试接线
+   63   2            
+   64   2            1：抬升电机占空比 + 10%
+   65   2            2：抬升电机占空比 - 10%
+   66   2            3：推进电机占空比 + 10%
+   67   2            4：推进电机占空比 - 10%
+   68   2            
+   69   2            b: 刹车 四个电机占空比值 0%
    70   2            
-   71   2            p: 打印目标点经纬度到蓝牙助手
-   72   2            
-   73   2            e：擦除EEPROM第一页，写索引值 0 
-   74   2            
-   75   2            */
-   76   2            switch(command[0])
-   77   2            {
-   78   3              case 's':pid_enable = 1;break;
-   79   3              case '1':duty_up_left+=50;duty_up_right+=50;break;
-   80   3              case '2':duty_up_left-=50;duty_up_right-=50;break;
-   81   3              case '3':duty_forward_left+=50;duty_forward_right+=50;break;
-   82   3              case '4':duty_forward_left-=50;duty_forward_right-=50;break;
-   83   3              case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;pid_enab
+   71   2            w: 向当前科目的EEPROM区写当前位置的经纬度，写满后不可再写，只有清除后可再次重新写入。何时写满取决与
+             -当前科目（未完善）
+   72   2            r: 读取当前科目下一点到目标点
+   73   2            
+   74   2            p: 打印目标点经纬度到蓝牙助手
+   75   2            
+   76   2            e：擦除EEPROM第一页，写索引值 0 
+   77   2            
+   78   2            */
+   79   2            switch(command[0])
+   80   2            {
+   81   3              case 's':pid_enable = 1;origin_point[0]=gps_tau1201.latitude;origin_point[1]=gps_tau1201.longitud
+             -e;
+   82   3              sprintf(str_buffer,"Start!\r\n");ble6a20_send_string(str_buffer);break;
+   83   3              case '1':duty_up_left+=50;duty_up_right+=50;break;
+   84   3              case '2':duty_up_left-=50;duty_up_right-=50;break;
+   85   3              case '3':duty_forward_left+=50;duty_forward_right+=50;break;
+   86   3              case '4':duty_forward_left-=50;duty_forward_right-=50;break;
+   87   3              case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;pid_enab
              -le=0;
-   84   3              sprintf(str_buffer,"Break!\r \n");ble6a20_send_string(str_buffer);break;
-   85   3              case 'w':if( write_index < 4 ){WritePoint(pObject[write_index]); write_index++;}//W25Q_PageProgra
+   88   3              sprintf(str_buffer,"Break!\r \n");ble6a20_send_string(str_buffer);break;
+   89   3              case 'w':if( write_index < 4 ){WritePoint(pObject[write_index]); write_index++;}//W25Q_PageProgra
              -m_32(0, write_buf, 2);//
-   86   3              sprintf(str_buffer,"Write!\r\n");ble6a20_send_string(str_buffer);break;
-   87   3              case 'r':ReadPoint(pObject[read_index]); read_index++; read_index %= 4;//W25Q_FastRead_6B(0, buf,
+   90   3              sprintf(str_buffer,"Write!\r\n");ble6a20_send_string(str_buffer);break;
+   91   3              case 'r':ReadPoint(pObject[read_index]); read_index++; read_index %= 4;//W25Q_FastRead_6B(0, buf,
              - 256);//
-   88   3              sprintf(str_buffer,"Read!\r\n");ble6a20_send_string(str_buffer);break;
-   89   3              case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf\r\n", target_point[0], target_point[1]);ble6a20_s
+   92   3              sprintf(str_buffer,"Read!\r\n");ble6a20_send_string(str_buffer);break;
+   93   3              case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf\r\n", target_point[0], target_point[1]);ble6a20_s
              -end_string(str_buffer);break;
-   90   3              case 'e':W25Q_Erase4K_20(0, 1);//iap_erase_page(0);write_index = 0;//第一页 512k
-   91   3              sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);break;
-   92   3              default :;
-   93   3            }
-   94   2            command[0] = 0 ; //清空
-   95   2            command[1] = 0 ; 
-   96   2            ips114_show_float(0,64,roll,4,4);
-   97   2            ips114_show_float(80,64,pitch,4,4);
+   94   3              case 'e':W25Q_Erase4K_20(0, 1);//iap_erase_page(0);write_index = 0;//第一页 512k
+   95   3              sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);break;
+   96   3              default :;
+   97   3            }
    98   2            
-   99   2      //      //显示已打点数和当前所在点
-  100   2      //      read_index += '1';
-  101   2      //      write_index += '0';
-  102   2      //      ips114_show_char(0,64,read_index);
-  103   2      //      ips114_show_char(20,64,'/');
-  104   2      //      ips114_show_char(40,64,write_index);
-  105   2      //      read_index -= '1';
-  106   2      //      write_index -= '0';
-  107   2            
-  108   2            ips114_show_float(160,64,yaw,4,4);
-  109   2          }
-  110   1      }
+   99   2            command[0] = 0 ; //清空
+  100   2            command[1] = 0 ; 
+  101   2            if(pid_enable)
+  102   2            {
+  103   3              if(init_yaw_lock == 0)
+  104   3              {
+  105   4                
+  106   4                distance = get_two_points_distance(origin_point[0],origin_point[1],gps_tau1201.latitude,gps_tau1201.
+             -longitude);
+  107   4                sprintf(str_buffer,"D:%lf \r\n",distance);
+  108   4                ble6a20_send_string(str_buffer);
+  109   4                if(distance > 2)
+  110   4                {
+  111   5                  
+  112   5                  init_yaw_lock = 1;
+  113   5                  yaw = get_two_points_azimuth(origin_point[0],origin_point[1],gps_tau1201.latitude,gps_tau1201.longi
+             -tude);
+C251 COMPILER V5.60.0,  main                                                               05/05/25  21:48:42  PAGE 3   
+
+  114   5                  sprintf(str_buffer,"Init! D:%lf Y:%lf\r\n",distance,yaw);ble6a20_send_string(str_buffer);
+  115   5                  if( 180 <= yaw < 360)
+  116   5                    yaw -= 360;
+  117   5                  distance = 999;
+  118   5                }
+  119   4              }
+  120   3              else
+  121   3              {
+  122   4                
+  123   4                distance = get_two_points_distance(gps_tau1201.latitude,gps_tau1201.longitude,target_point[0],target
+             -_point[1]);
+  124   4      
+  125   4                if(distance < 2)
+  126   4                {
+  127   5                  sprintf(str_buffer,"Arrival! D:%lf \r\n",distance);ble6a20_send_string(str_buffer);
+  128   5                  duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;pid_enable=0;
+  129   5                }
+  130   4              }
+  131   3            }
+  132   2            ips114_show_float(0,64,roll,4,4);
+  133   2            ips114_show_float(80,64,pitch,4,4);
+  134   2            
+  135   2      //      //显示已打点数和当前所在点
+  136   2      //      read_index += '1';
+  137   2      //      write_index += '0';
+  138   2      //      ips114_show_char(0,64,read_index);
+  139   2      //      ips114_show_char(20,64,'/');
+  140   2      //      ips114_show_char(40,64,write_index);
+  141   2      //      read_index -= '1';
+  142   2      //      write_index -= '0';
+  143   2            
+  144   2            ips114_show_float(160,64,yaw,4,4);
+  145   2          }
+  146   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       918     ------
+  code size            =      1929     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
-C251 COMPILER V5.60.0,  main                                                               05/05/25  18:01:34  PAGE 3   
-
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        54     ------
+  xdata size           =        62     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
@@ -149,7 +189,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =        56     ------
+  hconst size          =       112     ------
 End of Module Information.
 
 

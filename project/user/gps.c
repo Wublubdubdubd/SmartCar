@@ -2,7 +2,11 @@
 
 bit gps_date_ready=0;//gps数据是否解析完成
 
+bit init_yaw_lock = 0;
+
 double target_point[2] = {0};//目标点的经、纬度
+
+double origin_point[2] = {0};//起始点的经纬度
 
 uint8* pObject = NULL; //指向当前科目目标点数组的指针
 /*
