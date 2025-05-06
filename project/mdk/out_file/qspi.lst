@@ -1,11 +1,11 @@
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 1   
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE qspi
 OBJECT MODULE PLACED IN .\out_file\qspi.obj
-COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE ..\user\qspi.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) 
-                    -BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_drive
-                    -r;..\user;..\code) DEBUG PRINT(.\out_file\qspi.lst) TABS(2) OBJECT(.\out_file\qspi.obj) 
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\qspi.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BRO
+                    -WSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;.
+                    -.\user;..\code) DEBUG PRINT(.\out_file\qspi.lst) TABS(2) OBJECT(.\out_file\qspi.obj) 
 
 stmt  level    source
 
@@ -66,7 +66,7 @@ stmt  level    source
    55   1          QSPI_HCR1 = 0x00;               //设置READ_HOLD时间1(0x00)
    56   1          QSPI_HCR2 = 0x00;               //设置READ_HOLD时间2(0x00)
    57   1          QSPI_SetFIFOLevel(31);          //设置FIFO阈值为(31+1)=32字节
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 2   
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 2   
 
    58   1          QSPI_CR3 = 0x00;                //关闭QSPI中断
    59   1          QSPI_SetClockDivider(3);        //设置QSPI时钟为系统时钟/(3+1)
@@ -134,7 +134,7 @@ stmt  level    source
   121   1          QSPI_NoData();                  //无数据
   122   1          QSPI_SetInstruction(cmd);       //设置指令
   123   1          QSPI_SetAddress(addr);          //设置地址
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 3   
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 3   
 
   124   1      
   125   1          while (!QSPI_CheckTransfer());  //等到数据传输完成
@@ -202,7 +202,7 @@ stmt  level    source
   187   1          QSPI_SetWriteMode();            //写模式
   188   1          QSPI_SetAddressSize(3);         //设置地址宽度为32位(3+1字节)
   189   1          QSPI_SetDummyCycles(0);         //设置DUMMY时钟
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 4   
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 4   
 
   190   1          QSPI_InstructionSingMode();     //设置指令为单线模式
   191   1          QSPI_AddressQuadMode();         //设置地址为四线模式
@@ -270,7 +270,7 @@ stmt  level    source
   253   1          QSPI_SetAddress(addr);          //设置地址
   254   1          QSPI_InstructionSingMode();     //设置指令为单线模式
   255   1          QSPI_AddressSingMode();         //设置地址为单线模式
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 5   
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 5   
 
   256   1          
   257   1          QSPI_DMA_READ(pdat, datalen);
@@ -338,7 +338,7 @@ stmt  level    source
   319          void QSPI_READ_INSTR_DADDR24_DALT8_DDATA(BYTE cmd, DWORD addr, BYTE alt, BYTE *pdat, WORD datalen)
   320          {
   321   1          while (QSPI_CheckBusy());       //检测忙状态
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 6   
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 6   
 
   322   1      
   323   1          QSPI_SetReadMode();             //读模式
@@ -406,7 +406,7 @@ stmt  level    source
   385   1          QSPI_SetAlternate(alt);         //设置间隔字节
   386   1          QSPI_SetInstruction(cmd);       //设置指令
   387   1          QSPI_SetAddress(addr);          //设置地址
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 7   
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 7   
 
   388   1      
   389   1          while (!QSPI_CheckTransfer());  //等到数据传输完成
@@ -474,7 +474,7 @@ stmt  level    source
   451   1              QSPI_ReadData();
   452   1      }
   453          
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 8   
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 8   
 
   454          void QSPI_DMA_READ_INSTR_SADDR24_DUMMY_DDATA(BYTE cmd, DWORD addr, BYTE dcyc, BYTE *pdat, WORD datalen)
   455          {
@@ -542,7 +542,7 @@ stmt  level    source
   517   1          QSPI_InstructionSingMode();     //设置指令为单线模式
   518   1          QSPI_AddressSingMode();         //设置地址为单线模式
   519   1      
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 9   
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 9   
 
   520   1          QSPI_DMA_READ(pdat, datalen);
   521   1      }
@@ -610,7 +610,7 @@ stmt  level    source
   583   1          QSPI_DataQuadMode();            //设置数据为四线模式
   584   1          QSPI_SetInstruction(cmd);       //设置指令
   585   1          QSPI_SetAddress(addr);          //设置地址
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 10  
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 10  
 
   586   1      
   587   1          while (!QSPI_CheckTransfer());  //等到数据传输完成
@@ -678,7 +678,7 @@ stmt  level    source
   648   1          while (QSPI_CheckFIFOLevel())   //清空FIFO
   649   1              QSPI_ReadData();
   650   1      }
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 11  
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 11  
 
   651          
   652          void QSPI_DMA_READ_INSTR_QADDR24_QALT8_DUMMY_QDATA(BYTE cmd, DWORD addr, BYTE alt, BYTE dcyc, BYTE *pdat,
@@ -746,7 +746,7 @@ stmt  level    source
   711   1          QSPI_SetAddressSize(3);         //设置地址宽度为32位(3+1字节)
   712   1          QSPI_SetAlternateSize(0);       //设置间隔字节宽度为8位(0+1字节)
   713   1          QSPI_SetDummyCycles(dcyc);      //设置DUMMY时钟
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 12  
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 12  
 
   714   1          QSPI_NoInstruction();           //设置无指令模式(防止误触发)
   715   1          QSPI_NoAddress();               //设置无地址模式(防止误触发)
@@ -814,7 +814,7 @@ stmt  level    source
   777   1          QSPI_SetDataLength(datalen-1);  //设置数据长度
   778   1          QSPI_SetAddressSize(2);         //设置地址宽度为24位(2+1字节)
   779   1          QSPI_SetDummyCycles(0);         //设置DUMMY时钟
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 13  
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 13  
 
   780   1          QSPI_InstructionSingMode();     //设置指令为单线模式
   781   1          QSPI_AddressSingMode();         //设置地址为单线模式
@@ -882,7 +882,7 @@ stmt  level    source
   843          void QSPI_DMA_WRITE_INSTR_SADDR32_SDATA(BYTE cmd, DWORD addr, BYTE *pdat, WORD datalen)
   844          {
   845   1          while (QSPI_CheckBusy());       //检测忙状态
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 14  
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 14  
 
   846   1      
   847   1          QSPI_SetWriteMode();            //写模式
@@ -950,7 +950,7 @@ stmt  level    source
   909          {
   910   1          while (QSPI_CheckBusy());       //检测忙状态
   911   1      
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 15  
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 15  
 
   912   1          QSPI_SetWriteMode();            //写模式
   913   1          QSPI_SetDummyCycles(0);         //设置DUMMY时钟
@@ -1018,7 +1018,7 @@ stmt  level    source
   975   1          QSPI_SetAddressSize(2);         //设置地址宽度为24位(2+1字节)
   976   1          QSPI_SetDummyCycles(dcyc);      //设置DUMMY时钟
   977   1          QSPI_InstructionQuadMode();     //设置指令为四线模式
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 16  
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 16  
 
   978   1          QSPI_AddressQuadMode();         //设置地址为四线模式
   979   1          QSPI_NoAlternate();             //无间隔字节
@@ -1086,7 +1086,7 @@ stmt  level    source
  1040   2              *pdat = QSPI_ReadData();    //从FIFO中读取数据
  1041   2              pdat++;
  1042   2              datalen--;
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 17  
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 17  
 
  1043   2          }
  1044   1          
@@ -1154,7 +1154,7 @@ stmt  level    source
  1105   1          QSPI_SetDummyCycles(0);         //设置DUMMY时钟
  1106   1          QSPI_InstructionSingMode();     //设置指令为单线模式
  1107   1          QSPI_NoAddress();               //无地址字节
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 18  
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 18  
 
  1108   1          QSPI_NoAlternate();             //无间隔字节
  1109   1          QSPI_DataSingMode();            //设置数据为单线模式
@@ -1222,7 +1222,7 @@ stmt  level    source
  1171   1          while (!(DMA_QSPI_STA & 0x01)); //等待DMA操作完成
  1172   1          DMA_QSPI_STA = 0x00;            //清除DMA状态
  1173   1          DMA_QSPI_CFG = 0x00;
-C251 COMPILER V5.60.0,  qspi                                                               02/05/25  16:15:11  PAGE 19  
+C251 COMPILER V5.60.0,  qspi                                                               06/05/25  18:53:49  PAGE 19  
 
  1174   1          DMA_QSPI_CR = 0x00;
  1175   1          QSPI_ClearTransfer();           //清除传输完成标志

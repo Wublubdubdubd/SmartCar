@@ -75,3 +75,22 @@ void GetEuler(float gyro[], float dt)
     pitch = asin(2.0f * (q0 * q2 - q3 * q1)) * 57.29578f;
     yaw   = my_atan2(2.0f * (q0 * q3 + q1 * q2), 1.0f - 2.0f * (q2 * q2 + q3 * q3)) * 57.29578f;
 }
+void EulerToQuaternion()
+{
+	  // ×ª»»Îª»¡¶È
+		float roll_rad = roll* 0.0174533f;  // ¦Ð/180 ¡Ö 0.0174533
+		float pitch_rad = pitch * 0.0174533f;
+		float yaw_rad = yaw * 0.0174533f;
+	
+    double cr = cos(roll_rad * 0.5f);  // cos(¦Õ/2)
+    double sr = sin(roll_rad * 0.5f);  // sin(¦Õ/2)
+    double cp = cos(pitch_rad * 0.5f); // cos(¦È/2)
+    double sp = sin(pitch_rad * 0.5f); // sin(¦È/2)
+    double cy = cos(yaw_rad * 0.5f);   // cos(¦×/2)
+    double sy = sin(yaw_rad * 0.5f);   // sin(¦×/2)
+
+    q0 = cy * cp * cr + sy * sp * sr; // q0 = w
+    q1 = cy * cp * sr - sy * sp * cr; // q1 = x
+    q2 = sy * cp * sr + cy * sp * cr; // q2 = y
+    q3 = sy * cp * cr - cy * sp * sr; // q3 = z
+}

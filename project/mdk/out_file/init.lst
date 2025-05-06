@@ -1,11 +1,11 @@
-C251 COMPILER V5.60.0,  init                                                               05/05/25  20:58:33  PAGE 1   
+C251 COMPILER V5.60.0,  init                                                               06/05/25  18:53:48  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE init
 OBJECT MODULE PLACED IN .\out_file\init.obj
-COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE ..\user\init.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) 
-                    -BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_drive
-                    -r;..\user;..\code) DEBUG PRINT(.\out_file\init.lst) TABS(2) OBJECT(.\out_file\init.obj) 
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\init.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BRO
+                    -WSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_driver;.
+                    -.\user;..\code) DEBUG PRINT(.\out_file\init.lst) TABS(2) OBJECT(.\out_file\init.obj) 
 
 stmt  level    source
 
@@ -67,7 +67,7 @@ Module Information          Static   Overlayable
   code size            =        86     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
-C251 COMPILER V5.60.0,  init                                                               05/05/25  20:58:33  PAGE 2   
+C251 COMPILER V5.60.0,  init                                                               06/05/25  18:53:48  PAGE 2   
 
   idata size           =    ------     ------
   pdata size           =    ------     ------

@@ -14,6 +14,8 @@ extern double origin_point[];//起始点的经纬度
 
 extern double target_point[];//目标点的经纬度
 
+extern double gps_point_error[];//俩次上电后的GPS点相对误差
+
 extern uint8* pObject; //指向当前科目目标点数组的指针
 
 extern uint8 Object_one_index[];//科目一的四个点
@@ -22,7 +24,6 @@ extern uint8 PID_param_index[];//PID 参数
 
 //将当前点写入eeprom
 void WritePoint(uint8 offset);
-//从eeprom读取点
+//从flash读取上一次目标点
 void ReadPoint(uint8 offset);
-  
 #endif

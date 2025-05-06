@@ -1,16 +1,0 @@
-C251 COMPILER V5.60.0,  seekfree_assistant_interface                                       05/05/25  15:23:08  PAGE 1   
-
-
-C251 COMPILER V5.60.0, COMPILATION OF MODULE seekfree_assistant_interface
-OBJECT MODULE PLACED IN .\out_file\seekfree_assistant_interface.obj
-COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE ..\..\libraries\zf_components\seekfree_assistant_interface.c LARGE NOA
-                    -LIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\.
-                    -.\libraries\zf_device;..\..\libraries\zf_driver;..\user;..\code) DEBUG PRINT(.\out_file\seekfree_assistant_interface.lst
-                    -) TABS(2) OBJECT(.\out_file\seekfree_assistant_interface.obj) 
-
-stmt  level    source
-
-*** ERROR C318 OF ..\..\libraries\zf_components\seekfree_assistant_interface.c: can't open file '..\..\libraries\zf_comp
-             -onents\seekfree_assistant_interface.c'
-
-C251 COMPILATION COMPLETE.  0 WARNING(S),  1 ERROR(S)

@@ -17,5 +17,5 @@
 
 void FOCF(int16* pData,int16* pPreData,float alpha);//一阶互补滤波
 void GetEuler(float gyro[], float dt);//获取欧拉角
-
+void EulerToQuaternion(void);//欧拉角转换四元数
 #endif

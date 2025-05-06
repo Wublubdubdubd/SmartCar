@@ -41,11 +41,10 @@ void main()
     char str_buffer[50];//蓝牙信息的buffer
   
     char write_index = 0; //打点索引，测试用
-    char read_index = 0; //读点索引，测试用
+    char read_index = 1; //0索引设定为起始点读点索引，测试用
 		
 		double distance = 999;
 
-	
     pObject = Object_one_index; //科目一开始
 			
     init();  
@@ -58,8 +57,8 @@ void main()
 #endif
 			blue_tooth_read(command);
       /*
-      命令集：（ 计划废弃 s、1~4 使其自动增加到目标值 ）
-      s: 10%占空比启动抬升电机，测试接线
+      命令集：（ 计划废弃 1~4 使其自动增加到目标值 ）
+      s: 记录起始点，计算GPS误差，准备初始化yaw角
       
       1：抬升电机占空比 + 10%
       2：抬升电机占空比 - 10%
@@ -69,7 +68,7 @@ void main()
       b: 刹车 四个电机占空比值 0%
       
       w: 向当前科目的EEPROM区写当前位置的经纬度，写满后不可再写，只有清除后可再次重新写入。何时写满取决与当前科目（未完善）
-      r: 读取当前科目下一点到目标点
+      r: 读取当前科目下一点到目标点 （ 仅作测试用 计划废弃 ）
       
       p: 打印目标点经纬度到蓝牙助手
       
@@ -79,17 +78,20 @@ void main()
       switch(command[0])
       {
         case 's':pid_enable = 1;origin_point[0]=gps_tau1201.latitude;origin_point[1]=gps_tau1201.longitude;
-				sprintf(str_buffer,"Start!\r\n");ble6a20_send_string(str_buffer);break;
+				ReadPoint(pObject[read_index++]);//将点1数据装载至target
+				gps_point_error[0]=origin_point[0]-target_point[0];
+				gps_point_error[1]=origin_point[1]-target_point[1];
+				sprintf(str_buffer,"Start!\r\nerror:%lf\r\n%lf\r\n",gps_point_error[0],gps_point_error[1]);ble6a20_send_string(str_buffer);break;
         case '1':duty_up_left+=50;duty_up_right+=50;break;
         case '2':duty_up_left-=50;duty_up_right-=50;break;
         case '3':duty_forward_left+=50;duty_forward_right+=50;break;
         case '4':duty_forward_left-=50;duty_forward_right-=50;break;
         case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;pid_enable=0;
         sprintf(str_buffer,"Break!\r \n");ble6a20_send_string(str_buffer);break;
-        case 'w':if( write_index < 4 ){WritePoint(pObject[write_index]); write_index++;}//W25Q_PageProgram_32(0, write_buf, 2);//
-				sprintf(str_buffer,"Write!\r\n");ble6a20_send_string(str_buffer);break;
-        case 'r':ReadPoint(pObject[read_index]); read_index++; read_index %= 4;//W25Q_FastRead_6B(0, buf, 256);//
-				sprintf(str_buffer,"Read!\r\n");ble6a20_send_string(str_buffer);break;
+        case 'w':if( write_index < 4 ){WritePoint(pObject[write_index++]);}//W25Q_PageProgram_32(0, write_buf, 2);
+				sprintf(str_buffer,"Write P%d!\r\n",write_index);ble6a20_send_string(str_buffer);break;
+        case 'r':ReadPoint(pObject[read_index++]); read_index %= 4==0? 1:read_index %= 4;//W25Q_FastRead_6B(0, buf, 256);//
+				sprintf(str_buffer,"Read P%d!\r\n",read_index);ble6a20_send_string(str_buffer);break;
         case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf\r\n", target_point[0], target_point[1]);ble6a20_send_string(str_buffer);break;
         case 'e':W25Q_Erase4K_20(0, 1);//iap_erase_page(0);write_index = 0;//第一页 512k
         sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);break;
@@ -100,21 +102,29 @@ void main()
 			command[1] = 0 ; 
 			if(pid_enable)
 			{
-				if(init_yaw_lock == 0)
+				if(!init_yaw_lock)
 				{
-					
 					distance = get_two_points_distance(origin_point[0],origin_point[1],gps_tau1201.latitude,gps_tau1201.longitude);
-					sprintf(str_buffer,"D:%lf \r\n",distance);
-					ble6a20_send_string(str_buffer);
+					//sprintf(str_buffer,"D:%lf \r\n",distance);ble6a20_send_string(str_buffer);
 					if(distance > 2)
 					{
-						
+						//锁住初始化
 						init_yaw_lock = 1;
+            //计算yaw角
 						yaw = get_two_points_azimuth(origin_point[0],origin_point[1],gps_tau1201.latitude,gps_tau1201.longitude);
-						sprintf(str_buffer,"Init! D:%lf Y:%lf\r\n",distance,yaw);ble6a20_send_string(str_buffer);
-						if( 180 <= yaw < 360)
+            //修正至-180~180
+            if( 180 <= yaw < 360)
 							yaw -= 360;
 						distance = 999;
+            //修正四元数
+						EulerToQuaternion();
+            //提示信息
+						sprintf(str_buffer,"Init! D:%lf Y:%lf\r\n",distance,yaw);ble6a20_send_string(str_buffer);
+            //装载下一目标点
+            ReadPoint(pObject[read_index++]);
+            sprintf(str_buffer,"Read P%d!\r\n",read_index);ble6a20_send_string(str_buffer);
+            //不是循环跑，不需要下面的语句
+            //read_index = (read_index > 4 ) ? 0 : read_index;
 					}
 				}
 				else
@@ -124,8 +134,17 @@ void main()
 
 					if(distance < 2)
 					{
-						sprintf(str_buffer,"Arrival! D:%lf \r\n",distance);ble6a20_send_string(str_buffer);
-						duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;pid_enable=0;
+            //到达目标点
+						sprintf(str_buffer,"Arrival P%d! D:%lf \r\n",read_index,distance);ble6a20_send_string(str_buffer);
+
+            //装载下一目标点
+            ReadPoint(pObject[read_index++]);
+            sprintf(str_buffer,"Read P%d!\r\n",read_index);ble6a20_send_string(str_buffer);
+            //跑完三个点刹车
+            if( read_index == 4 )
+            {
+              duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;pid_enable=0;
+            }
 					}
 				}
 		  }
