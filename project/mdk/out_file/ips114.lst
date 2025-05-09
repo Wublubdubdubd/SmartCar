@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  ips114                                                             06/05/25  18:53:48  PAGE 1   
+C251 COMPILER V5.60.0,  ips114                                                             09/05/25  21:42:22  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE ips114
@@ -11,83 +11,147 @@ stmt  level    source
 
     1          #include "ips114.h"
     2          
-    3          /**
-    4            * @brief 显示单位
-    5            * @param 无
-    6            * @return 无
-    7            */
-    8          void IPS114_Show_Unit(void) 
-    9          {  
-   10   1          //加速度
-   11   1          ips114_set_color(RGB565_BLUE,RGB565_WHITE);
-   12   1          ips114_show_string(0,16*0,"Acc: x,y,z");
-   13   1          ips114_show_char(60,16*1,'g');
-   14   1          ips114_show_char(140,16*1,'g');
-   15   1          ips114_show_char(220,16*1,'g');
-   16   1      
-   17   1          //角速度
-   18   1          ips114_set_color(RGB565_PURPLE,RGB565_WHITE);
-   19   1          ips114_show_string(0,16*2,"Gyro: x,y,z");
-   20   1          ips114_show_char(60,16*3,'d');
-   21   1          ips114_show_char(140,16*3,'d');
-   22   1          ips114_show_char(220,16*3,'d');
-   23   1      
-   24   1          //GPS
-   25   1          ips114_set_color(RGB565_PINK,RGB565_WHITE);
-   26   1          ips114_show_string(0, 16*5, "S: ");//定位状态
-   27   1          ips114_show_string(50, 16*5,"N: ");//卫星数目
-   28   1          ips114_show_string(130, 16*5,"H: ");//GPS天线高度
-   29   1      
-   30   1          ips114_show_string(0, 16*6, "Lat:");//纬度
-   31   1          ips114_show_string(130, 16*6, "Lon:");//经度
-   32   1          ips114_show_string(0, 16*7, "v:");//速度
-   33   1          ips114_show_string(130, 16*7, "d:");//方向
-   34   1          
-   35   1          ips114_set_color(RGB565_RED,RGB565_WHITE);
-   36   1      }
-   37          /**
-   38            * @brief 显示信息
-   39            * @param 无
-   40            * @return 无
-   41            */
-   42          void IPS114_Show_Info(void)
-   43          {   
-   44   1          //循环变量
-   45   1          unsigned char index=0;  
-   46   1          //IMU
-   47   1          ips114_show_float(100,0,x_v,2,3);
-   48   1          ips114_show_float(180,0,x_p,2,3);
-   49   1          for(index=0;index<3;index++)
-   50   1          {
-   51   2            ips114_show_float(80*index, 16*1 ,imu_acc[index],2,3);//加速度信息 字符8x16
-   52   2            ips114_show_float(80*index, 16*3 ,imu_gyro[index],2,3);//角速度信息
-   53   2          }
-   54   1          //GPS
-   55   1          if(gps_date_ready)
-   56   1          {
-   57   2            //显示GPS位置信息
-C251 COMPILER V5.60.0,  ips114                                                             06/05/25  18:53:48  PAGE 2   
+    3          uint8 page_num = 0; //页面
+    4          
+    5          /**
+    6            * @brief 显示单位
+    7            * @param 无
+    8            * @return 无
+    9            */
+   10          void IPS114_Show_Unit(void) 
+   11          {  
+   12   1          switch(page_num)
+   13   1          {
+   14   2            case 0:
+   15   2            {
+   16   3              //加速度
+   17   3              ips114_set_color(RGB565_BLUE,RGB565_WHITE);
+   18   3              ips114_show_string(0,16*0,"Acc: x,y,z");
+   19   3              ips114_show_char(60,16*1,'g');
+   20   3              ips114_show_char(140,16*1,'g');
+   21   3              ips114_show_char(220,16*1,'g');
+   22   3      
+   23   3              //角速度
+   24   3              ips114_set_color(RGB565_PURPLE,RGB565_WHITE);
+   25   3              ips114_show_string(0,16*2,"Gyro: x,y,z");
+   26   3              ips114_show_char(60,16*3,'d');
+   27   3              ips114_show_char(140,16*3,'d');
+   28   3              ips114_show_char(220,16*3,'d');
+   29   3      
+   30   3              //GPS
+   31   3              ips114_set_color(RGB565_PINK,RGB565_WHITE);
+   32   3              ips114_show_string(0, 16*5, "S: ");//定位状态
+   33   3              ips114_show_string(50, 16*5,"N: ");//卫星数目
+   34   3              ips114_show_string(130, 16*5,"H: ");//GPS天线高度
+   35   3      
+   36   3              ips114_show_string(0, 16*6, "Lat:");//纬度
+   37   3              ips114_show_string(130, 16*6, "Lon:");//经度
+   38   3              ips114_show_string(0, 16*7, "v:");//速度
+   39   3              ips114_show_string(130, 16*7, "d:");//方向
+   40   3              
+   41   3              ips114_set_color(RGB565_RED,RGB565_WHITE);
+   42   3               break;
+   43   3            }
+   44   2            case 1:
+   45   2            {
+   46   3              //角度环
+   47   3              ips114_set_color(RGB565_BLUE,RGB565_WHITE);
+   48   3              ips114_show_string(0,16*0,"Angle");
+   49   3              ips114_show_char(0,16*1,'P');
+   50   3              ips114_show_char(40,16*1,'I');
+   51   3              ips114_show_char(120,16*1,'D');
+   52   3      
+   53   3              //角速度
+   54   3              ips114_set_color(RGB565_PURPLE,RGB565_WHITE);
+   55   3              ips114_show_string(0,16*2,"Velocity");
+   56   3              ips114_show_char(0,16*3,'P');
+   57   3              ips114_show_char(80,16*3,'I');
+C251 COMPILER V5.60.0,  ips114                                                             09/05/25  21:42:22  PAGE 2   
 
-   58   2            ips114_show_uint8(15, 16*5, gps_tau1201.state);
-   59   2            ips114_show_uint8(70, 16*5, gps_tau1201.satellite_used);
-   60   2            ips114_show_float(160, 16*5, gps_tau1201.height, 4, 6);
-   61   2              
-   62   2            ips114_show_float(30, 16*6, gps_tau1201.latitude, 4, 6);
-   63   2            ips114_show_float(160, 16*6, gps_tau1201.longitude, 4, 6);
-   64   2            ips114_show_float(30, 16*7, gps_tau1201.speed, 4, 6);
-   65   2            ips114_show_float(160, 16*7, gps_tau1201.direction, 4, 6);
-   66   2          }
-   67   1      }
+   58   3              ips114_show_char(160,16*3,'D');
+   59   3              break;
+   60   3            }
+   61   2          }
+   62   1      
+   63   1      }
+   64          /**
+   65            * @brief 显示信息
+   66            * @param 无
+   67            * @return 无
+   68            */
+   69          void IPS114_Show_Info(void)
+   70          {   
+   71   1          //循环变量
+   72   1          unsigned char index=0;
+   73   1          if(key1_flag)
+   74   1          {
+   75   2            page_num++; 
+   76   2            page_num %= 2;
+   77   2            ips114_clear(RGB565_WHITE);
+   78   2            IPS114_Show_Unit();//显示单位
+   79   2          }
+   80   1          switch(page_num)
+   81   1          {
+   82   2            case 0:
+   83   2            {
+   84   3              //IMU
+   85   3              ips114_show_float(100,0,velocity,2,3);
+   86   3              for(index=0;index<3;index++)
+   87   3              {
+   88   4                ips114_show_float(80*index, 16*1 ,imu_acc[index],2,3);//加速度信息 字符8x16
+   89   4                ips114_show_float(80*index, 16*3 ,imu_gyro[index],2,3);//角速度信息
+   90   4              }
+   91   3              switch(curState)
+   92   3              {
+   93   4                case State_Init:ips114_show_string(0,16*4,"Init  ");break;
+   94   4                case State_Unlock:ips114_show_string(0,16*4,"Unlock");break;
+   95   4                case State_Yaw_Init:ips114_show_string(0,16*4,"YawInit");break;
+   96   4                case State_Subject_1:ips114_show_string(0,16*4,"Object");break;
+   97   4              }
+   98   3              //GPS
+   99   3              if(gps_date_ready)
+  100   3              {
+  101   4                //显示GPS位置信息
+  102   4                ips114_show_uint8(15, 16*5, gps_tau1201.state);
+  103   4                ips114_show_uint8(70, 16*5, gps_tau1201.satellite_used);
+  104   4                ips114_show_float(160, 16*5, gps_tau1201.height, 4, 6);
+  105   4                  
+  106   4                ips114_show_float(30, 16*6, gps_tau1201.latitude, 4, 6);
+  107   4                ips114_show_float(160, 16*6, gps_tau1201.longitude, 4, 6);
+  108   4                ips114_show_float(30, 16*7, gps_tau1201.speed, 4, 6);
+  109   4                ips114_show_float(160, 16*7, gps_tau1201.direction, 4, 6);
+  110   4              }
+  111   3              // 航向角
+  112   3              ips114_show_float(160,64,yaw,4,4);
+  113   3              break;
+  114   3            }
+  115   2            case 1:
+  116   2            {
+  117   3              ips114_show_float(10, 16*1 ,angle_KP,3,3);
+  118   3              ips114_show_float(90, 16*1 ,angle_KI,3,3);
+  119   3              ips114_show_float(170, 16*1 ,angle_KD,3,3);
+  120   3              
+  121   3              ips114_show_float(10, 16*3 ,velocity_KP,3,3);
+  122   3              ips114_show_float(90, 16*3 ,velocity_KI,3,3);
+  123   3              ips114_show_float(170, 16*3 ,velocity_KD,3,3);
+C251 COMPILER V5.60.0,  ips114                                                             09/05/25  21:42:22  PAGE 3   
+
+  124   3              
+  125   3              break;
+  126   3            }
+  127   2          }
+  128   1      
+  129   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       825     ------
+  code size            =      1402     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =         1     ------
+  xdata size           =         2     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
@@ -97,7 +161,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =        51     ------
+  hconst size          =       101     ------
 End of Module Information.
 
 

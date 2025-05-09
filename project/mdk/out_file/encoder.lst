@@ -1,0 +1,47 @@
+C251 COMPILER V5.60.0,  encoder                                                            09/05/25  20:55:16  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE encoder
+OBJECT MODULE PLACED IN .\out_file\encoder.obj
+COMPILER INVOKED BY: D:\C251\C251\BIN\C251.EXE ..\user\encoder.c LARGE NOALIAS FLOAT64 WARNINGLEVEL(3) OPTIMIZE(2,SIZE) 
+                    -BROWSE INCDIR(..\..\libraries\zf_common;..\..\libraries\zf_components;..\..\libraries\zf_device;..\..\libraries\zf_drive
+                    -r;..\user;..\code) DEBUG PRINT(.\out_file\encoder.lst) TABS(2) OBJECT(.\out_file\encoder.obj) 
+
+stmt  level    source
+
+    1          #include "encoder.h"
+    2          
+    3          #define wheel_radius 0.034
+    4          
+    5          #define PI 3.1415926535
+    6          
+    7          const float encode2vel = - (2 * PI * wheel_radius / 1024) ;
+    8          
+    9          int encoder_data = 0;// ±àÂëÆ÷¶ÁÊý
+   10          
+   11          float velocity = 0;// ËÙ¶È
+   12          
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =    ------     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =         6     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =        20     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

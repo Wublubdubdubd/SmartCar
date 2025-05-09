@@ -29,11 +29,14 @@ typedef struct
 extern float angle_KP, angle_KI,angle_KD, angle_IMAX, angle_OUTMAX;
 extern float angle_target;
 extern pid_param_t angle_pid;  // 角度PID
+extern float angle_error; //角度误差
+
 
 // 角度PID初始化参数
 extern float velocity_KP, velocity_KI,velocity_KD, velocity_IMAX, velocity_OUTMAX;
 extern float velocity_target;
 extern pid_param_t velocity_pid;  // 速度PID
+extern float angle_u,velocity_u;//速度环控制量
 
 float Angle_Pid_fun(float dt); //角度环
 float Velocity_Pid_fun(float dt); //速度环

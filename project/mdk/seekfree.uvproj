@@ -737,6 +737,26 @@
               <FileType>5</FileType>
               <FilePath>..\user\w25qxx.h</FilePath>
             </File>
+            <File>
+              <FileName>button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\button.c</FilePath>
+            </File>
+            <File>
+              <FileName>button.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\button.h</FilePath>
+            </File>
+            <File>
+              <FileName>encoder.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\encoder.c</FilePath>
+            </File>
+            <File>
+              <FileName>encoder.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\encoder.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

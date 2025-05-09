@@ -8,22 +8,21 @@
 
 extern bit gps_date_ready;//gps数据是否解析成功 0:失败 1:成功
 
-extern bit init_yaw_lock;
-
-extern double origin_point[];//起始点的经纬度
-
 extern double target_point[];//目标点的经纬度
+
+extern double target_distance; //当前点到目标点的距离
 
 extern double gps_point_error[];//俩次上电后的GPS点相对误差
 
 extern uint8* pObject; //指向当前科目目标点数组的指针
+extern uint8 cur_point_num; //当前装载点的序号
+extern uint8 cur_object_num; //当前科目点的数目
 
 extern uint8 Object_one_index[];//科目一的四个点
-
-extern uint8 PID_param_index[];//PID 参数
+extern const uint8 Object_one_num; // 科目一的点数
 
 //将当前点写入eeprom
 void WritePoint(uint8 offset);
 //从flash读取上一次目标点
-void ReadPoint(uint8 offset);
+void LoadPoint();
 #endif

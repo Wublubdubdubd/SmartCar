@@ -36,130 +36,176 @@
 
 void main()
 {
-    // 变量必须先定义 再调用
-    char command[2];//蓝牙控制命令 使用轮询方式获取 但应该改为中断 
-    char str_buffer[50];//蓝牙信息的buffer
+    char command[command_size];//蓝牙控制命令
+  
+    char str_buffer[50];//向蓝牙发送信息的buffer
   
     char write_index = 0; //打点索引，测试用
-    char read_index = 1; //0索引设定为起始点读点索引，测试用
-		
-		double distance = 999;
-
-    pObject = Object_one_index; //科目一开始
-			
-    init();  
-	
   
+    float temp_float = 0; // 零时变量
+		
+    //科目一开始
+    pObject = Object_one_index; 
+    cur_object_num = Object_one_num;
+		
+    //设备初始化
+    init();
+    
     while(1)
 		{
+      get_key();
 #if IPS_USE     
       IPS114_Show_Info(); //显示必要信息
 #endif
 			blue_tooth_read(command);
       /*
-      命令集：（ 计划废弃 1~4 使其自动增加到目标值 ）
+      命令集:
       s: 记录起始点，计算GPS误差，准备初始化yaw角
-      
-      1：抬升电机占空比 + 10%
-      2：抬升电机占空比 - 10%
-      3：推进电机占空比 + 10%
-      4：推进电机占空比 - 10%
       
       b: 刹车 四个电机占空比值 0%
       
       w: 向当前科目的EEPROM区写当前位置的经纬度，写满后不可再写，只有清除后可再次重新写入。何时写满取决与当前科目（未完善）
-      r: 读取当前科目下一点到目标点 （ 仅作测试用 计划废弃 ）
-      
-      p: 打印目标点经纬度到蓝牙助手
-      
+           
       e：擦除EEPROM第一页，写索引值 0 
       
       */
+      if((curState == State_Init) && key2_flag)curState = State_Unlock;
+      
       switch(command[0])
       {
-        case 's':pid_enable = 1;origin_point[0]=gps_tau1201.latitude;origin_point[1]=gps_tau1201.longitude;
-				ReadPoint(pObject[read_index++]);//将点1数据装载至target
-				gps_point_error[0]=origin_point[0]-target_point[0];
-				gps_point_error[1]=origin_point[1]-target_point[1];
-				sprintf(str_buffer,"Start!\r\nerror:%lf\r\n%lf\r\n",gps_point_error[0],gps_point_error[1]);ble6a20_send_string(str_buffer);break;
-        case '1':duty_up_left+=50;duty_up_right+=50;break;
-        case '2':duty_up_left-=50;duty_up_right-=50;break;
-        case '3':duty_forward_left+=50;duty_forward_right+=50;break;
-        case '4':duty_forward_left-=50;duty_forward_right-=50;break;
-        case 'b':duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;pid_enable=0;
-        sprintf(str_buffer,"Break!\r \n");ble6a20_send_string(str_buffer);break;
-        case 'w':if( write_index < 4 ){WritePoint(pObject[write_index++]);}//W25Q_PageProgram_32(0, write_buf, 2);
-				sprintf(str_buffer,"Write P%d!\r\n",write_index);ble6a20_send_string(str_buffer);break;
-        case 'r':ReadPoint(pObject[read_index++]); read_index %= 4==0? 1:read_index %= 4;//W25Q_FastRead_6B(0, buf, 256);//
-				sprintf(str_buffer,"Read P%d!\r\n",read_index);ble6a20_send_string(str_buffer);break;
-        case 'p':sprintf(str_buffer,"Lat:%lf\r\nLon:%lf\r\n", target_point[0], target_point[1]);ble6a20_send_string(str_buffer);break;
-        case 'e':W25Q_Erase4K_20(0, 1);//iap_erase_page(0);write_index = 0;//第一页 512k
-        sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);break;
+        case 's':
+        {
+          if(curState == State_Unlock)
+          {
+            //装载 P1 至 target
+            LoadPoint();
+           
+            // 计算gps的漂移
+            gps_point_error[0] = gps_tau1201.latitude - target_point[0];
+            gps_point_error[1] = gps_tau1201.longitude - target_point[1];
+            
+            // 输出提示语句
+            sprintf(str_buffer,"Start!\r\nGPS Error: lat %lf lon %lf\r\n",gps_point_error[0],gps_point_error[1]);ble6a20_send_string(str_buffer);
+            
+            // 更新状态
+            curState = State_Yaw_Init;
+          }
+          break;
+        }
+        case 'b':
+        {
+          curState = State_Shut;
+          sprintf(str_buffer,"Break!\r \n");ble6a20_send_string(str_buffer);
+          break;
+        }
+        case 'w':
+        {
+          WritePoint(pObject[write_index++]);//W25Q_PageProgram_32(0, write_buf, 2);
+          sprintf(str_buffer,"Write P%d!\r\n",write_index);ble6a20_send_string(str_buffer);
+          break;
+        }
+        case 'e':
+        {
+          W25Q_Erase4K_20(0, 1);//iap_erase_page(0);write_index = 0;//第一页 512k
+          sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);
+          break;
+        }
+        case 'A':
+        {
+          temp_float = func_str_to_float(&command[2]);
+          switch(command[1])
+          {
+            case 'P':angle_KP = temp_float;break;
+            case 'I':angle_KI = temp_float;break;
+            case 'D':angle_KD = temp_float;break;
+          }
+          break;
+        }
+        case 'V':
+        {
+          temp_float = func_str_to_float(&command[2]);
+          switch(command[1])
+          {
+            case 'P':velocity_KP = temp_float;break;
+            case 'I':velocity_KI = temp_float;break;
+            case 'D':velocity_KD = temp_float;break;
+          }
+          break;          
+        }
+        case 'U':
+        {
+          curState = State_Yaw_Init;
+          sprintf(str_buffer,"Start!\r\n");ble6a20_send_string(str_buffer);
+          break;
+        }
         default :;
       }
-			
-      command[0] = 0 ; //清空
-			command[1] = 0 ; 
-			if(pid_enable)
-			{
-				if(!init_yaw_lock)
-				{
-					distance = get_two_points_distance(origin_point[0],origin_point[1],gps_tau1201.latitude,gps_tau1201.longitude);
-					//sprintf(str_buffer,"D:%lf \r\n",distance);ble6a20_send_string(str_buffer);
-					if(distance > 2)
-					{
-						//锁住初始化
-						init_yaw_lock = 1;
+			//sprintf(str_buffer,"%f\r\n%f\r\n",angle_u,velocity_u);ble6a20_send_string(str_buffer);
+      memset(command,0,command_size);
+      refresh_button();
+      
+      switch(curState)
+      {
+        case State_Yaw_Init:
+        {
+          target_distance = get_two_points_distance(target_point[0],target_point[1],gps_tau1201.latitude,gps_tau1201.longitude);
+        
+          //sprintf(str_buffer,"D:%lf \r\n",target_distance);ble6a20_send_string(str_buffer);
+          
+          // 离开两米后
+          if(target_distance > 2)
+          {
             //计算yaw角
-						yaw = get_two_points_azimuth(origin_point[0],origin_point[1],gps_tau1201.latitude,gps_tau1201.longitude);
+            yaw = get_two_points_azimuth(target_point[0],target_point[1],gps_tau1201.latitude,gps_tau1201.longitude);
             //修正至-180~180
-            if( 180 <= yaw < 360)
-							yaw -= 360;
-						distance = 999;
+            if( (180 <= yaw) && (yaw < 360))
+              yaw -= 360;
+            //修正到imu坐标系
+            yaw = - yaw;
             //修正四元数
-						EulerToQuaternion();
+            EulerToQuaternion();
             //提示信息
-						sprintf(str_buffer,"Init! D:%lf Y:%lf\r\n",distance,yaw);ble6a20_send_string(str_buffer);
+            sprintf(str_buffer,"Init! D:%lf Y:%lf\r\n",target_distance,yaw);ble6a20_send_string(str_buffer);
             //装载下一目标点
-            ReadPoint(pObject[read_index++]);
-            sprintf(str_buffer,"Read P%d!\r\n",read_index);ble6a20_send_string(str_buffer);
-            //不是循环跑，不需要下面的语句
-            //read_index = (read_index > 4 ) ? 0 : read_index;
-					}
-				}
-				else
-				{
-					
-					distance = get_two_points_distance(gps_tau1201.latitude,gps_tau1201.longitude,target_point[0],target_point[1]);
+            LoadPoint();
 
-					if(distance < 2)
-					{
-            //到达目标点
-						sprintf(str_buffer,"Arrival P%d! D:%lf \r\n",read_index,distance);ble6a20_send_string(str_buffer);
+            sprintf(str_buffer,"Load P%d!\r\n",cur_point_num);ble6a20_send_string(str_buffer);
+            
+            curState = State_Subject_1;
+            
+            target_distance = 999;
+          }
+          break;
+        }
+        case State_Subject_1:
+        {
+          sprintf(str_buffer,"Error:%f!\r\n",angle_error);ble6a20_send_string(str_buffer);
 
-            //装载下一目标点
-            ReadPoint(pObject[read_index++]);
-            sprintf(str_buffer,"Read P%d!\r\n",read_index);ble6a20_send_string(str_buffer);
-            //跑完三个点刹车
-            if( read_index == 4 )
-            {
-              duty_up_left=500;duty_up_right=500;duty_forward_left=500;duty_forward_right=500;pid_enable=0;
-            }
-					}
-				}
-		  }
-      ips114_show_float(0,64,roll,4,4);
-      ips114_show_float(80,64,pitch,4,4);
-			
-//      //显示已打点数和当前所在点
-//			read_index += '1';
-//			write_index += '0';
-//      ips114_show_char(0,64,read_index);
-//      ips114_show_char(20,64,'/');
-//      ips114_show_char(40,64,write_index);
-//			read_index -= '1';
-//			write_index -= '0';
-			
-      ips114_show_float(160,64,yaw,4,4);
+          target_distance = get_two_points_distance(gps_tau1201.latitude,gps_tau1201.longitude,target_point[0],target_point[1]);
+
+          if(target_distance < 2)
+          {
+             //到达目标点
+             sprintf(str_buffer,"Arrival P%d! D:%lf \r\n",cur_point_num,target_distance);ble6a20_send_string(str_buffer);
+
+             //装载下一目标点
+             LoadPoint();
+             sprintf(str_buffer,"Load P%d!\r\n",cur_point_num);ble6a20_send_string(str_buffer);
+          }
+          break;
+        }
+        case State_Finish:
+        {
+          sprintf(str_buffer,"Finish!\r\n");ble6a20_send_string(str_buffer);
+          while(1){};
+        }
+      }
+
+      if(cur_point_num == cur_object_num)//先更新为结束状态
+      {
+        curState = State_Finish;
+      }
+      
+      
     }
 }

@@ -2,9 +2,9 @@
 
 uint16 duty[4]={0}; //四个电机的占空比
 
-int duty_up_left=500,duty_up_right=500;
+int duty_up_left=500, duty_up_right=500, duty_forward_left=500, duty_forward_right=500;
 
-int duty_forward_left=500,duty_forward_right=500;
+uint8 up_times = 0; // 抬升电机占空比自增计数 自动运行，每次 + 1% 
 
 void my_pwm_init(void)
 {
@@ -23,4 +23,13 @@ void my_pwm_init(void)
     // 在50Hz的控制频率下，无刷电调转速 60%  为 800
     // 在50Hz的控制频率下，无刷电调转速 80%  为 900
     // 在50Hz的控制频率下，无刷电调转速 100% 为 1000
+}
+
+
+void Break()
+{
+   duty_up_left=500;
+   duty_up_right=500;
+   duty_forward_left=500;
+   duty_forward_right=500;
 }

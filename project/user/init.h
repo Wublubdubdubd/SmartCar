@@ -15,9 +15,8 @@
 #include "StateMachine.h"
 #include "qspi.h"
 #include "w25qxx.h"
+#include "encoder.h"
 
 void init(void);
-
-
 
 #endif

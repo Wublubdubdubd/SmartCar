@@ -1,29 +1,32 @@
 #include "pid.h"
 
 // 角度PID初始化参数
-float angle_KP = 1.0, angle_KI = 0.5,angle_KD = 1.0, angle_IMAX = 20, angle_OUTMAX = 100;
+float angle_KP = 1.0, angle_KI = 1.0,angle_KD = 1.0, angle_IMAX = 60, angle_OUTMAX = 120;
 
 pid_param_t angle_pid; //角度PID
 float angle_target = 0;//角度输入
 float angle_error = 0; //角度误差
+float angle_u = 0 ;//角度环控制量
 
 // 速度PID初始化参数
-float velocity_KP = 10.0, velocity_KI = 0,velocity_KD = 0, velocity_IMAX = 0, velocity_OUTMAX = 100;
+float velocity_KP = 600.0, velocity_KI = 60,velocity_KD = 0, velocity_IMAX = 140, velocity_OUTMAX = 200;
 
-pid_param_t velocity_pid; //角度PID
-float velocity_target = 1;//角度输入
-float velocity_error = 0; //角度误差
+pid_param_t velocity_pid; //速度PID
+float velocity_target = 0.05;//速度输入
+float velocity_error = 0; //速度误差
+float velocity_u = 0;//速度环控制量
 
 
 float Angle_Pid_fun(float dt)
 {  
-		if(init_yaw_lock)
+		if(curState == State_Subject_1)
 		{
 			angle_target = get_two_points_azimuth(gps_tau1201.latitude,gps_tau1201.longitude,target_point[0],target_point[1]);
 			if( 180 <= angle_target < 360)
 					angle_target -= 360;
 		}
-		angle_error = angle_target - yaw;
+		angle_error = (-angle_target) - yaw;
+		
     //角度环
     PidLocCtrl(&angle_pid,angle_error, dt);
 	
@@ -32,8 +35,8 @@ float Angle_Pid_fun(float dt)
 
 float Velocity_Pid_fun(float dt)
 {  
-		velocity_error = velocity_target - x_v;
-    //角度环
+		velocity_error = velocity_target - velocity;
+    //速度环
     PidLocCtrl(&velocity_pid,velocity_error, dt);
 	
 		return velocity_pid.out;

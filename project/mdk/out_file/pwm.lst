@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  pwm                                                                06/05/25  18:53:49  PAGE 1   
+C251 COMPILER V5.60.0,  pwm                                                                09/05/25  17:25:55  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE pwm
@@ -13,9 +13,9 @@ stmt  level    source
     2          
     3          uint16 duty[4]={0}; //四个电机的占空比
     4          
-    5          int duty_up_left=500,duty_up_right=500;
+    5          int duty_up_left=500, duty_up_right=500, duty_forward_left=500, duty_forward_right=500;
     6          
-    7          int duty_forward_left=500,duty_forward_right=500;
+    7          uint8 up_times = 0; // 抬升电机占空比自增计数 自动运行，每次 + 1% 
     8          
     9          void my_pwm_init(void)
    10          {
@@ -39,16 +39,25 @@ stmt  level    source
    24   1          // 在50Hz的控制频率下，无刷电调转速 80%  为 900
    25   1          // 在50Hz的控制频率下，无刷电调转速 100% 为 1000
    26   1      }
+   27          
+   28          
+   29          void Break()
+   30          {
+   31   1         duty_up_left=500;
+   32   1         duty_up_right=500;
+   33   1         duty_forward_left=500;
+   34   1         duty_forward_right=500;
+   35   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =        93     ------
+  code size            =       134     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        16     ------
+  xdata size           =        17     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
@@ -58,7 +67,9 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =        41     ------
+C251 COMPILER V5.60.0,  pwm                                                                09/05/25  17:25:55  PAGE 2   
+
+  hconst size          =        47     ------
 End of Module Information.
 
 

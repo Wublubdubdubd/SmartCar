@@ -264,23 +264,46 @@ void pit_hanlder_gps(void)
     else gps_date_ready = 0;
 }
 /**
-  * @brief TIM2中断处理函数，更新角度环
+  * @brief TIM11中断处理函数，更新角度环
   * @param 无
   * @return 无
   */
-bit pid_enable = 0; // pid 使能
 void pit_hanlder_angle(void)
 {
     uint32 angle_duty;
-		float angle_u = 0 ;//角度环控制量
-	  float velocity_u = 0;//速度环控制量
-		if(pid_enable)
-		{
-			// 角度环
-			angle_u = Angle_Pid_fun(0.01);
-			// 速度环
-			//velocity_u = Velocity_Pid_fun(0.01);
-		}
+
+  
+    encoder_data = encoder_get_count(ENCODER_DIR_1);  // 获取编码器计数
+    encoder_clear_count(ENCODER_DIR_1);               // 清空编码器计数
+    
+    velocity = encoder_data * encode2vel; 
+    
+    if( curState < State_Yaw_Init ) return; // 初始化或保护状态，不能运行
+
+    //抬升电机自动运行
+    if( up_times < 80)
+    {
+      duty_up_left += 5;
+      duty_up_right += 5;
+      duty_forward_left += 3;
+      duty_forward_right += 3;
+      up_times++;
+    }
+    
+    if( curState >= State_Shut ) 
+    {
+      Break();
+      angle_u = 0;
+      velocity_u = 0;
+    }
+    else
+    {
+      // 角度环
+      angle_u = Angle_Pid_fun(0.01);
+      // 速度环
+      velocity_u = Velocity_Pid_fun(0.01);
+    }
+    
     //左 抬升电机
 	  angle_duty = constrain_uint32(duty_up_left);
     pwm_set_duty(PWM_1,angle_duty);
@@ -288,24 +311,24 @@ void pit_hanlder_angle(void)
 	  angle_duty = constrain_uint32(duty_up_right);
     pwm_set_duty(PWM_2,angle_duty);
     //左 推进电机
-    angle_duty = constrain_uint32(duty_forward_left - angle_u + velocity_u);
+    angle_duty = constrain_uint32(duty_forward_left - angle_u + velocity_u + 20);
     pwm_set_duty(PWM_3,angle_duty);
     //右 推进电机
-    angle_duty = constrain_uint32(duty_forward_right + angle_u + velocity_u);
+    angle_duty = constrain_uint32(duty_forward_right + angle_u + velocity_u - 20 );
     pwm_set_duty(PWM_4,angle_duty);
     
 }
 void my_pit_init()
 {
-    //设置中断回调函数 5ms采样一次IMU数据
-    tim0_irq_handler = pit_hanlder_imu;	
-    pit_ms_init(PIT_IMU, 5);
-    //设置中断回调函数 1s采样一次GPS数据
+    //1s采样GPS数据
     tim1_irq_handler = pit_hanlder_GPS;	
     pit_ms_init(PIT_GPS, 1000);
-    //10ms更新一次角度环
+    //10ms更新角度环
     tim3_irq_handler = pit_hanlder_angle;
     pit_ms_init(PIT_ANGLE, 10);
+    //5ms采样IMU数据
+    tim4_irq_handler = pit_hanlder_imu;	
+    pit_ms_init(PIT_IMU, 5);
 }
 
 

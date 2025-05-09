@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 1   
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE w25qxx
@@ -66,7 +66,7 @@ stmt  level    source
    55          {
    56   1          BYTE dat;
    57   1          
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 2   
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 2   
 
    58   1          QSPI_READ_QINSTR_QDATA(0x05, (BYTE *)&dat, 1);
    59   1      
@@ -134,7 +134,7 @@ stmt  level    source
   121   1          QSPI_WRITE_INSTR_SADDR8(0x31, dat);
   122   1          W25Q_WaitBusy(100);
   123   1      }
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 3   
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 3   
 
   124          
   125          void W25Q_QPI_WriteSR2_31(BYTE dat)
@@ -202,7 +202,7 @@ stmt  level    source
   187          void W25Q_ReadData_Addr32_13(DWORD addr, BYTE *pdat, WORD datalen)
   188          {
   189   1          BYTE cnt;
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 4   
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 4   
 
   190   1          
   191   1          while (datalen > 0)
@@ -270,7 +270,7 @@ stmt  level    source
   253   1          QSPI_DMA_READ_QINSTR_QADDR24_DUMMY_QDATA(0x0b, addr, 2, pdat, datalen);
   254   1      }
   255          
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 5   
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 5   
 
   256          void W25Q_FastRead_Addr32_0C(DWORD addr, BYTE *pdat, WORD datalen)
   257          {
@@ -338,7 +338,7 @@ stmt  level    source
   319          
   320          void W25Q_DMA_FastRead_Addr32_3C(DWORD addr, BYTE *pdat, WORD datalen)
   321          {
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 6   
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 6   
 
   322   1          QSPI_DMA_READ_INSTR_SADDR32_DUMMY_DDATA(0x3c, addr, 8, pdat, datalen);
   323   1      }
@@ -406,7 +406,7 @@ stmt  level    source
   385   2              pdat += cnt;
   386   2          }
   387   1      }
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 7   
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 7   
 
   388          
   389          void W25Q_DMA_FastRead_BB(DWORD addr, BYTE *pdat, WORD datalen)
@@ -474,7 +474,7 @@ stmt  level    source
   451   2              
   452   2              datalen -= cnt;
   453   2              addr += cnt;
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 8   
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 8   
 
   454   2              pdat += cnt;
   455   2          }
@@ -542,7 +542,7 @@ stmt  level    source
   517   2                  cnt = datalen;
   518   2                  
   519   2              QSPI_READ_INSTR_QADDR24_QALT8_DUMMY_QDATA(0xe3, addr, 0x00, 0, pdat, cnt);
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 9   
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 9   
 
   520   2              
   521   2              datalen -= cnt;
@@ -610,7 +610,7 @@ stmt  level    source
   583   2                  
   584   2              if (cnt + (addr & 0xff) >= 0x100)
   585   2                  cnt = 0x100 - (addr & 0xff);
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 10  
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 10  
 
   586   2                  
   587   2              QSPI_WRITE_INSTR_SADDR32_SDATA(0x12, addr, pdat, cnt);
@@ -678,7 +678,7 @@ stmt  level    source
   649   1          
   650   1          W25Q_WriteEnable_06();
   651   1          while (datalen > 0)
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 11  
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 11  
 
   652   1          {
   653   2              cnt = 32;
@@ -746,7 +746,7 @@ stmt  level    source
   715          {
   716   1          W25Q_QPI_WriteEnable_06();
   717   1          QSPI_WRITE_QINSTR_QADDR24(0x52, addr);
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 12  
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 12  
 
   718   1          if (wait)
   719   1              W25Q_WaitBusy(100);
@@ -814,7 +814,7 @@ stmt  level    source
   781   1      }
   782          
   783          void W25Q_ProgramSuspend_75()
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 13  
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 13  
 
   784          {
   785   1          W25Q_EraseSuspend_75();
@@ -882,7 +882,7 @@ stmt  level    source
   847   1          return dat;
   848   1      }
   849          
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 14  
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 14  
 
   850          WORD W25Q_ReadID_92()
   851          {
@@ -950,7 +950,7 @@ stmt  level    source
   913   1          QSPI_WRITE_INSTR_SADDR24(0x44, addr);
   914   1      }
   915          
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 15  
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 15  
 
   916          void W25Q_ProgramSecurityReg_42(DWORD addr, BYTE *pdat, WORD datalen)
   917          {
@@ -1018,7 +1018,7 @@ stmt  level    source
   979   2              pdat += cnt;
   980   2          }
   981   1      }
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 16  
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 16  
 
   982          
   983          void W25Q_EnterQPIMode_38()
@@ -1086,7 +1086,7 @@ stmt  level    source
  1045          
  1046          void W25Q_QPI_UnlockGlobal_98()
  1047          {
-C251 COMPILER V5.60.0,  w25qxx                                                             06/05/25  18:53:49  PAGE 17  
+C251 COMPILER V5.60.0,  w25qxx                                                             09/05/25  17:38:47  PAGE 17  
 
  1048   1          QSPI_WRITE_QINSTR(0x98);
  1049   1      }

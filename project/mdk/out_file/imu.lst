@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  imu                                                                06/05/25  18:53:48  PAGE 1   
+C251 COMPILER V5.60.0,  imu                                                                09/05/25  20:54:14  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE imu
@@ -16,18 +16,10 @@ stmt  level    source
     5          float roll = 0.0f;
     6          float pitch = 0.0f;
     7          float yaw = 0.0f;
-    8          // 初始速度
-    9          float x_v = 0.0f;
-   10          float y_v = 0.0f;
-   11          float z_v = 0.0f;
-   12          // 初始位置
-   13          float x_p = 0.0f;
-   14          float y_p = 0.0f;
-   15          float z_p = 0.0f;
-   16          
-   17          // 四元数
-   18          float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f; // 四元数
-   19          float integralFBx = 0.0f, integralFBy = 0.0f, integralFBz = 0.0f; // 积分项
+    8          
+    9          // 四元数
+   10          float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f; // 四元数
+   11          float integralFBx = 0.0f, integralFBy = 0.0f, integralFBz = 0.0f; // 积分项
 
 
 Module Information          Static   Overlayable
@@ -37,7 +29,7 @@ Module Information          Static   Overlayable
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        88     ------
+  xdata size           =        64     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
@@ -47,7 +39,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =       144     ------
+  hconst size          =        90     ------
 End of Module Information.
 
 
