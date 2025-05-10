@@ -8,7 +8,7 @@ uint8 page_num = 0; //页面
   * @return 无
   */
 void IPS114_Show_Unit(void) 
-{  
+{       
     switch(page_num)
     {
       case 0:
@@ -58,6 +58,12 @@ void IPS114_Show_Unit(void)
         ips114_show_char(160,16*3,'D');
         break;
       }
+      case 3:
+      {
+        ips114_show_string(0,16*0,"Waiting for erase...");
+        ips114_show_string(0, 16*1, "N:");
+        ips114_show_string(50, 16*1, "T:");
+      }
     }
 
 }
@@ -73,7 +79,7 @@ void IPS114_Show_Info(void)
     if(key1_flag)
     {
       page_num++; 
-      page_num %= 2;
+      page_num %= 3;
       ips114_clear(RGB565_WHITE);
       IPS114_Show_Unit();//显示单位
     }
@@ -123,6 +129,11 @@ void IPS114_Show_Info(void)
         ips114_show_float(170, 16*3 ,velocity_KD,3,3);
         
         break;
+      }
+      case 2:
+      {
+        ips114_show_uint8(20, 16*1, write_index);
+        ips114_show_uint8(70, 16*1, cur_object_num);
       }
     }
 

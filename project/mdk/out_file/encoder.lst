@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  encoder                                                            09/05/25  20:55:16  PAGE 1   
+C251 COMPILER V5.60.0,  encoder                                                            10/05/25  10:19:45  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE encoder
@@ -15,7 +15,7 @@ stmt  level    source
     4          
     5          #define PI 3.1415926535
     6          
-    7          const float encode2vel = - (2 * PI * wheel_radius / 1024) ;
+    7          const float encode2vel = - (2 * PI * wheel_radius / 1024 * 100) ;
     8          
     9          int encoder_data = 0;// ±àÂëÆ÷¶ÁÊý
    10          

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  gps                                                                09/05/25  17:38:46  PAGE 1   
+C251 COMPILER V5.60.0,  gps                                                                10/05/25  10:23:48  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE gps
@@ -22,66 +22,68 @@ stmt  level    source
    11          uint8* pObject = NULL; //指向当前科目目标点数组的指针
    12          uint8 cur_point_num = 0; //当前装载点的序号
    13          uint8 cur_object_num = 0; //当前科目点的数目
-   14          /*
-   15          
-   16          科目1 使用四个点
+   14          uint8 write_index = 0; //打点索引，测试用
+   15          bit is_erase = 0;//擦除与否
+   16          /*
    17          
-   18          数组保存：点在EEPROM内的偏移地址
+   18          科目1 使用四个点
    19          
-   20          使用方法： ReadPoint(Object_xxx_index[y]); 
+   20          数组保存：点在EEPROM内的偏移地址
    21          
-   22          即可获取第 y + 1 个点的经、纬度
+   22          使用方法： ReadPoint(Object_xxx_index[y]); 
    23          
-   24          */
-   25          const uint8 Object_one_num = 4; // 科目一的点数
-   26          uint8 Object_one_index[4] = {0 , 1 , 2 , 3}; // FLASH中的索引
-   27          
-   28          
-   29          //将当前点写入eeprom
-   30          void WritePoint(uint8 offset)
-   31          {
-   32   1        W25Q_PageProgram_32(offset , (uint8 *)&gps_tau1201.latitude, point_size);
-   33   1      }
-   34          
-   35          //从flash读取上一次目标点
-   36          void LoadPoint()
-   37          {
-   38   1        uint16 offset;
-   39   1        
-   40   1        if(cur_point_num == cur_object_num) return;//到达最后一个点，不再装载，准备更换科目
+   24          即可获取第 y + 1 个点的经、纬度
+   25          
+   26          */
+   27          const uint8 Object_one_num = 4; // 科目一的点数
+   28          uint8 Object_one_index[4] = {0 , 1 , 2 , 3}; // FLASH中的索引
+   29          
+   30          
+   31          //将当前点写入eeprom
+   32          void WritePoint(uint8 offset)
+   33          {
+   34   1        W25Q_PageProgram_32(offset , (uint8 *)&gps_tau1201.latitude, point_size);
+   35   1      }
+   36          
+   37          //从flash读取上一次目标点
+   38          void LoadPoint()
+   39          {
+   40   1        uint16 offset;
    41   1        
-   42   1        offset = pObject[cur_point_num];
+   42   1        if(cur_point_num == cur_object_num) return;//到达最后一个点，不再装载，准备更换科目
    43   1        
-   44   1        W25Q_FastRead_6B(offset * point_size, (uint8 *)target_point, point_size);
+   44   1        offset = pObject[cur_point_num];
    45   1        
-   46   1        cur_point_num ++ ;
+   46   1        W25Q_FastRead_6B(offset * point_size, (uint8 *)target_point, point_size);
    47   1        
-   48   1        //修正
-   49   1        target_point[0] += gps_point_error[0];
-   50   1        target_point[1] += gps_point_error[1];
-   51   1      }
+   48   1        cur_point_num ++ ;
+   49   1        
+   50   1        //修正
+   51   1        target_point[0] += gps_point_error[0];
+   52   1        target_point[1] += gps_point_error[1];
+   53   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       234     ------
+  code size            =       236     ------
+C251 COMPILER V5.60.0,  gps                                                                10/05/25  10:23:48  PAGE 2   
+
   ecode size           =    ------     ------
   data size            =    ------     ------
-C251 COMPILER V5.60.0,  gps                                                                09/05/25  17:38:46  PAGE 2   
-
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        53     ------
+  xdata size           =        54     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
-  bit size             =         1     ------
+  bit size             =         2     ------
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
   ebitaddressable size =    ------     ------
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =        86     ------
+  hconst size          =        92     ------
 End of Module Information.
 
 

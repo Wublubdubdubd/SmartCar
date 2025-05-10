@@ -9,10 +9,10 @@ float angle_error = 0; //角度误差
 float angle_u = 0 ;//角度环控制量
 
 // 速度PID初始化参数
-float velocity_KP = 600.0, velocity_KI = 60,velocity_KD = 0, velocity_IMAX = 140, velocity_OUTMAX = 200;
+float velocity_KP = 6, velocity_KI = 0.6,velocity_KD = 0, velocity_IMAX = 140, velocity_OUTMAX = 200;
 
 pid_param_t velocity_pid; //速度PID
-float velocity_target = 0.05;//速度输入
+float velocity_target = 1;//速度输入
 float velocity_error = 0; //速度误差
 float velocity_u = 0;//速度环控制量
 
@@ -22,7 +22,7 @@ float Angle_Pid_fun(float dt)
 		if(curState == State_Subject_1)
 		{
 			angle_target = get_two_points_azimuth(gps_tau1201.latitude,gps_tau1201.longitude,target_point[0],target_point[1]);
-			if( 180 <= angle_target < 360)
+			if( (180 <= angle_target)&&(angle_target < 360))
 					angle_target -= 360;
 		}
 		angle_error = (-angle_target) - yaw;

@@ -39,9 +39,7 @@ void main()
     char command[command_size];//蓝牙控制命令
   
     char str_buffer[50];//向蓝牙发送信息的buffer
-  
-    char write_index = 0; //打点索引，测试用
-  
+   
     float temp_float = 0; // 零时变量
 		
     //科目一开始
@@ -54,6 +52,7 @@ void main()
     while(1)
 		{
       get_key();
+      
 #if IPS_USE     
       IPS114_Show_Info(); //显示必要信息
 #endif
@@ -70,6 +69,14 @@ void main()
       
       */
       if((curState == State_Init) && key2_flag)curState = State_Unlock;
+      if((page_num == 2) && key3_flag && (is_erase == 0))
+      {
+        W25Q_Erase4K_20(0, 1);//iap_erase_page(0);write_index = 0;//第一页 512k
+        sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);
+        is_erase = 1 ;
+      }
+      else if ((page_num == 2) && key3_flag && (is_erase == 1))
+        WritePoint(pObject[write_index++]);
       
       switch(command[0])
       {
@@ -140,7 +147,8 @@ void main()
         }
         default :;
       }
-			//sprintf(str_buffer,"%f\r\n%f\r\n",angle_u,velocity_u);ble6a20_send_string(str_buffer);
+      //LoadPoint();
+			//sprintf(str_buffer,"P%d : %.8lf %.8lf\r\n",cur_point_num,target_point[0],target_point[1]);ble6a20_send_string(str_buffer);
       memset(command,0,command_size);
       refresh_button();
       

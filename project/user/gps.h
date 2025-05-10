@@ -17,6 +17,8 @@ extern double gps_point_error[];//俩次上电后的GPS点相对误差
 extern uint8* pObject; //指向当前科目目标点数组的指针
 extern uint8 cur_point_num; //当前装载点的序号
 extern uint8 cur_object_num; //当前科目点的数目
+extern uint8 write_index; //打点索引，测试用
+extern bit is_erase;//擦除与否
 
 extern uint8 Object_one_index[];//科目一的四个点
 extern const uint8 Object_one_num; // 科目一的点数

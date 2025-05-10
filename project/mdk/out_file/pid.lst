@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  pid                                                                09/05/25  22:47:17  PAGE 1   
+C251 COMPILER V5.60.0,  pid                                                                10/05/25  10:23:48  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE pid
@@ -20,10 +20,10 @@ stmt  level    source
     9          float angle_u = 0 ;//角度环控制量
    10          
    11          // 速度PID初始化参数
-   12          float velocity_KP = 600.0, velocity_KI = 60,velocity_KD = 0, velocity_IMAX = 140, velocity_OUTMAX = 200;
+   12          float velocity_KP = 6, velocity_KI = 0.6,velocity_KD = 0, velocity_IMAX = 140, velocity_OUTMAX = 200;
    13          
    14          pid_param_t velocity_pid; //速度PID
-   15          float velocity_target = 0.05;//速度输入
+   15          float velocity_target = 1;//速度输入
    16          float velocity_error = 0; //速度误差
    17          float velocity_u = 0;//速度环控制量
    18          
@@ -34,7 +34,7 @@ stmt  level    source
    23   1          {
    24   2            angle_target = get_two_points_azimuth(gps_tau1201.latitude,gps_tau1201.longitude,target_point[0],targe
              -t_point[1]);
-   25   2            if( 180 <= angle_target < 360)
+   25   2            if( (180 <= angle_target)&&(angle_target < 360))
    26   2                angle_target -= 360;
    27   2          }
    28   1          angle_error = (-angle_target) - yaw;
@@ -66,7 +66,7 @@ stmt  level    source
    54   1          Pid_Param_Init(&velocity_pid,velocity_KP, velocity_KI,velocity_KD, velocity_IMAX, velocity_OUTMAX);
    55   1      }
    56          
-C251 COMPILER V5.60.0,  pid                                                                09/05/25  22:47:17  PAGE 2   
+C251 COMPILER V5.60.0,  pid                                                                10/05/25  10:23:48  PAGE 2   
 
    57          
    58          /*******************************************************************************
@@ -134,7 +134,7 @@ stmt  level    source
   120   1          pid->out_i = pid->ki * error * t ;
   121   1          pid->out_d = pid->kd/t * ((error - pid->last_error) - pid->last_derivative);
   122   1      
-C251 COMPILER V5.60.0,  pid                                                                09/05/25  22:47:17  PAGE 3   
+C251 COMPILER V5.60.0,  pid                                                                10/05/25  10:23:48  PAGE 3   
 
   123   1          pid->last_derivative = error - pid->last_error;
   124   1          pid->last_error = error;
@@ -181,7 +181,7 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =      2313     ------
+  code size            =      2320     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------

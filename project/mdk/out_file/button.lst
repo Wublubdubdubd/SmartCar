@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  button                                                             09/05/25  21:42:22  PAGE 1   
+C251 COMPILER V5.60.0,  button                                                             10/05/25  10:23:48  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE button
@@ -67,7 +67,7 @@ Module Information          Static   Overlayable
   pdata size           =    ------     ------
   xdata size           =         9     ------
   xdata-const size     =    ------     ------
-C251 COMPILER V5.60.0,  button                                                             09/05/25  21:42:22  PAGE 2   
+C251 COMPILER V5.60.0,  button                                                             10/05/25  10:23:48  PAGE 2   
 
   edata size           =    ------     ------
   bit size             =    ------     ------

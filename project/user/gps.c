@@ -11,6 +11,8 @@ double gps_point_error[2]={0};//两次上电后的GPS点相对误差
 uint8* pObject = NULL; //指向当前科目目标点数组的指针
 uint8 cur_point_num = 0; //当前装载点的序号
 uint8 cur_object_num = 0; //当前科目点的数目
+uint8 write_index = 0; //打点索引，测试用
+bit is_erase = 0;//擦除与否
 /*
 
 科目1 使用四个点
