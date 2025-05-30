@@ -149,7 +149,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>1</TargetSelection>
+          <TargetSelection>-1</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -607,9 +607,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>zf_components</GroupName>
-        </Group>
-        <Group>
           <GroupName>user</GroupName>
           <Files>
             <File>
@@ -666,16 +663,6 @@
               <FileName>gps.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\gps.h</FilePath>
-            </File>
-            <File>
-              <FileName>bluetooth.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\user\bluetooth.c</FilePath>
-            </File>
-            <File>
-              <FileName>bluetooth.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\user\bluetooth.h</FilePath>
             </File>
             <File>
               <FileName>init.c</FileName>
@@ -756,19 +743,6 @@
               <FileName>encoder.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\encoder.h</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>code</GroupName>
-        </Group>
-        <Group>
-          <GroupName>doc</GroupName>
-          <Files>
-            <File>
-              <FileName>version.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\libraries\doc\version.txt</FilePath>
             </File>
           </Files>
         </Group>

@@ -18,8 +18,11 @@ void Break();//刹车
 
 extern uint8 up_times; // 抬升电机占空比自增计数 自动运行，每次 + 1% 
 
-extern int duty_up_left,duty_up_right;
+extern uint16 duty_up_left,duty_up_right;
 
-extern int duty_forward_left,duty_forward_right;
+extern uint16 duty_forward_left,duty_forward_right;
+
+extern uint16 feedforward;
+
 
 #endif

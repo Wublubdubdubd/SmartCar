@@ -1,82 +1,67 @@
 #include "pid.h"
-
-// 角度PID初始化参数
-float angle_KP = 1.0, angle_KI = 1.0,angle_KD = 1.0, angle_IMAX = 60, angle_OUTMAX = 120;
-
-pid_param_t angle_pid; //角度PID
-float angle_target = 0;//角度输入
-float angle_error = 0; //角度误差
-float angle_u = 0 ;//角度环控制量
-
-// 速度PID初始化参数
-float velocity_KP = 6, velocity_KI = 0.6,velocity_KD = 0, velocity_IMAX = 140, velocity_OUTMAX = 200;
-
-pid_param_t velocity_pid; //速度PID
-float velocity_target = 1;//速度输入
-float velocity_error = 0; //速度误差
-float velocity_u = 0;//速度环控制量
-
-
-float Angle_Pid_fun(float dt)
-{  
-		if(curState == State_Subject_1)
-		{
-			angle_target = get_two_points_azimuth(gps_tau1201.latitude,gps_tau1201.longitude,target_point[0],target_point[1]);
-			if( (180 <= angle_target)&&(angle_target < 360))
-					angle_target -= 360;
-		}
-		angle_error = (-angle_target) - yaw;
-		
-    //角度环
-    PidLocCtrl(&angle_pid,angle_error, dt);
-	
-		return angle_pid.out;
-}
-
-float Velocity_Pid_fun(float dt)
-{  
-		velocity_error = velocity_target - velocity;
-    //速度环
-    PidLocCtrl(&velocity_pid,velocity_error, dt);
-	
-		return velocity_pid.out;
-}
-
-/*******************************************************************************
-* 函 数 名         : My_Pid_Init
-* 函数功能         : PID初始化	
-* 输    入         : 无
-* 输    出         : 无
-*******************************************************************************/
-void My_Pid_Init(void)
+pid_param_t angle_outer_pid =  //角度外环PID
 {
-    Pid_Param_Init(&angle_pid,angle_KP, angle_KI,angle_KD, angle_IMAX, angle_OUTMAX);
-	  Pid_Param_Init(&velocity_pid,velocity_KP, velocity_KI,velocity_KD, velocity_IMAX, velocity_OUTMAX);
-}
-
-
-/*******************************************************************************
-* 函 数 名         : Pid_Param_Init
-* 函数功能         : PID参数初始化	
-* 输    入         : imax:积分项最大值
-* 输    出         : 无
-*******************************************************************************/
-void Pid_Param_Init(pid_param_t * pid, float kp, float ki, float kd, float imax, float outmax)
+0.8, //P *
+0.0, //I *
+1.3, //D *
+30,  //积分限幅 *
+0,   //积分输出
+0,   //pid输出
+42, //输出限幅 *
+0,   //积分值
+0    //上次误差
+};
+pid_param_t angle_inner_pid =  //角度内环PID
 {
-    pid->kp        = kp;
-    pid->ki        = ki;
-    pid->kd        = kd;
-    pid->imax      = imax;
-    pid->out_p     = 0;
-    pid->out_i     = 0;
-    pid->out_d     = 0;
-    pid->out       = 0;
-    pid->outmax    = outmax;
-    pid->integrator= 0;
-    pid->last_error= 0;
-    pid->last_derivative   = 0;
-    pid->last_t    = 0;
-}
+0.40, //P *
+0.0, //I *
+0.55, //D *
+0,  //积分限幅 *
+0,   //积分输出
+0,   //pid输出
+10, //输出限幅 *
+0,   //积分值
+0    //上次误差
+};
+pid_param_t velocity_outer_pid =  //速度外环PID
+{
+3.5, //P *
+0.0, //I *
+6.0, //D *
+0,  //积分限幅 *
+0,   //积分输出
+0,   //pid输出
+10, //输出限幅 *
+0,   //积分值
+0    //上次误差
+};
+pid_param_t velocity_inner_pid =  //速度内环PID
+{
+20, //P *
+0.0, //I *
+20, //D *
+0,  //积分限幅 *
+0,   //积分输出
+0,   //pid输出
+10, //输出限幅 *
+0,   //积分值
+0    //上次误差
+};
+/*内外环输出量*/
+float angle_outer_out = 0, velocity_outer_out = 0; //外环输出 作用于内环
+float angle_inner_out = 0, velocity_inner_out = 0; //内环输出 作用于对象
+/*外环控制量*/
+float u_angle = 0, u_velocity = 0;
+
+int basic_up_duty = 85;//抬升基础值
+int basic_forward_duty = 60; // 推进基础值
+int forward_feed = 7; // 前馈：左右电机PWM相差2x6%时，恰可走直线
+
+float target_angle = 0; //目标角度
+float target_velocity = 1.0; //目标速度
+float velocity = 0;//当前速度
+int basic_duty_index = 0;
+uint32 basic_duty_up_left=500, basic_duty_up_right=500, basic_duty_forward_left=500, basic_duty_forward_right=500;
 
 /*******************************************************************************
 * 函 数 名         : PidLocCtrl
@@ -86,78 +71,17 @@ void Pid_Param_Init(pid_param_t * pid, float kp, float ki, float kd, float imax,
 *******************************************************************************/
 float PidLocCtrl(pid_param_t * pid, float error, float t)
 {
-    /* 累积误差 */
-    pid->integrator += error;
-
     /* 误差限幅 */
-    pid->out_i = constrain_float(pid->integrator, -pid->imax, pid->imax);
-
-
-    pid->out_p = pid->kp * error;
-    pid->out_i = pid->ki * t * pid->integrator;
-    pid->out_d = pid->kd/t * (error - pid->last_error);
+    pid->integrator += error;
+    pid->integrator = (pid->out_i > pid->imax) ? pid->imax: pid->integrator;
+    pid->integrator = (pid->out_i < (-pid->imax)) ? (-pid->imax): pid->integrator;
 
     pid->last_error = error;
 
-    pid->out = pid->out_p + pid->out_i + pid->out_d;
-
-    pid->out = constrain_float(pid->out, -pid->outmax, pid->outmax);
-
+    pid->out = pid->kp*error + pid->ki* t * pid->integrator + pid->kd / t  *(error - pid->last_error);
+    
+    pid->out = (pid->out > pid->outmax) ? pid->outmax: pid->out;
+    pid->out = (pid->out < (-pid->outmax)) ? (-pid->outmax): pid->out;
+    
     return pid->out;
-}
-
-
-/*******************************************************************************
-* 函 数 名         : PidIncCtrl
-* 函数功能	   : 增量式PID控制
-* 输    入         : pid, error, t
-* 输    出         : float
-*******************************************************************************/
-float PidIncCtrl(pid_param_t * pid, float error, float t)
-{
-
-    pid->out_p = pid->kp * (error - pid->last_error);
-    pid->out_i = pid->ki * error * t ;
-    pid->out_d = pid->kd/t * ((error - pid->last_error) - pid->last_derivative);
-
-    pid->last_derivative = error - pid->last_error;
-    pid->last_error = error;
-
-    pid->out += pid->out_p + pid->out_i + pid->out_d;
-
-    pid->out = constrain_float(pid->out, -pid->outmax, pid->outmax);
-    return pid->out;
-}
-
-/*******************************************************************************
-* 函 数 名         : constrain_float
-* 函数功能         : 浮点型数限幅
-* 输    入         : amt,low,high
-* 输    出         : float
-*******************************************************************************/
-float constrain_float(float amt, float low, float high)
-{
-    return ((amt)<(low)?(low):((amt)>(high)?(high):(amt)));
-}
-
-/*******************************************************************************
-* 函 数 名         : constrain_short
-* 函数功能         : 短整型数限幅
-* 输    入         : amt,low,high
-* 输    出         : short
-*******************************************************************************/
-short constrain_short(short amt, short low, short high)
-{
-    return ((amt)<(low)?(low):((amt)>(high)?(high):(amt)));
-}
-
-/*******************************************************************************
-* 函 数 名         : constrain_uint32
-* 函数功能         : 限幅
-* 输    入         : amt,low,high
-* 输    出         : uint32
-*******************************************************************************/
-unsigned long constrain_uint32(float amt)
-{
-    return ((amt)<(500)?(500):((amt)>(max_duty)?(max_duty):(amt)));
 }

@@ -1,28 +1,29 @@
+#include "GUI.h"
 #include "ips114.h"
+#include "StateMachine.h"
 
-
-/* ²Ëµ¥Óë½¹µã×´Ì¬¶¨Òå */
+/* èœå•ä¸ç„¦ç‚¹çŠ¶æ€å®šä¹‰ */
 typedef enum {
-    MENU_STATUS = 0,   // ×´Ì¬½çÃæ
-    MENU_PID ,      // PIDµ÷Õû½çÃæ
+    MENU_STATUS = 0,   // çŠ¶æ€ç•Œé¢
+    MENU_PID ,      // PIDè°ƒæ•´ç•Œé¢
     MENU_SAVEPOINT,
-    MENU_RUN       // ÔËĞĞÈ·ÈÏ½çÃæ
+    MENU_RUN       // è¿è¡Œç¡®è®¤ç•Œé¢
 } MenuPage;
 
 typedef enum {
-    FOCUS_PID_TYPE = 0,    // Ñ¡ÔñPIDÀàĞÍ
-    FOCUS_PID_PARAM = 1,   // Ñ¡ÔñPID²ÎÊı
-    FOCUS_PID_EDIT = 2     // ±à¼­PID²ÎÊı
+    FOCUS_PID_TYPE = 0,    // é€‰æ‹©PIDç±»å‹
+    FOCUS_PID_PARAM = 1,   // é€‰æ‹©PIDå‚æ•°
+    FOCUS_PID_EDIT = 2     // ç¼–è¾‘PIDå‚æ•°
 } PIDFocus;
 
-/* È«¾Ö±äÁ¿ */
+/* å…¨å±€å˜é‡ */
 MenuPage page_num = MENU_STATUS;
 PIDFocus pid_focus = FOCUS_PID_TYPE;
-uint8 pid_type = 0;      // 0:½Ç¶ÈÍâ»· 1:½Ç¶ÈÄÚ»· 2:ËÙ¶ÈÍâ»· 3:ËÙ¶ÈÄÚ»·
+uint8 pid_type = 0;      // 0:è§’åº¦å¤–ç¯ 1:è§’åº¦å†…ç¯ 2:é€Ÿåº¦å¤–ç¯ 3:é€Ÿåº¦å†…ç¯
 uint8 pid_param = 0;     // 0:KP 1:KI 2:KD
 
 bool page_change = false;
-/* PIDÀàĞÍ×Ö·û´® */
+/* PIDç±»å‹å­—ç¬¦ä¸² */
 const char* pid_type_str[4] = {
     "AngleOuter",
     "AngleInner",
@@ -30,7 +31,7 @@ const char* pid_type_str[4] = {
     "VelInner"
 };
 
-/* »ñÈ¡µ±Ç°Ñ¡ÖĞµÄPID½á¹¹ÌåÖ¸Õë */
+/* è·å–å½“å‰é€‰ä¸­çš„PIDç»“æ„ä½“æŒ‡é’ˆ */
 static pid_param_t* get_pid_ptr(uint8 type) {
     switch(type) {
         case 0: return &angle_outer_pid;
@@ -41,7 +42,7 @@ static pid_param_t* get_pid_ptr(uint8 type) {
     }
 }
 
-/* ÏÔÊ¾¾²Ì¬ÄÚÈİ */
+/* æ˜¾ç¤ºé™æ€å†…å®¹ */
 void IPS114_Show_Unit(void)
 {
     uint8 i=0;
@@ -54,22 +55,19 @@ void IPS114_Show_Unit(void)
     {
         case MENU_STATUS:
             ips114_set_color(RGB565_BLUE,RGB565_WHITE);
-            ips114_show_string(0,16*0,"Acc:x,y,z(g)");
+            ips114_show_string(0,16*0,"Acc: x,y,z  (g)");
             ips114_set_color(RGB565_PURPLE,RGB565_WHITE);
-            ips114_show_string(0,16*2,"Gyro:x,y,z(d/s)");
+            ips114_show_string(0,16*2,"Gyro: x,y,z (d/s)");
             ips114_set_color(RGB565_PINK,RGB565_WHITE);
-            ips114_show_string(0,16*4,"GPS:S N H");
-            ips114_show_string(0,16*4,"GPS:");
-            ips114_show_string(0,16*6,"Lat:");
-            ips114_show_string(125,16*6,"Lon:");
-            ips114_show_string(0,16*7,"v:");
-            ips114_show_string(125,16*7,"yaw:");
+            ips114_show_string(0,16*4,"GPS: S N H");
+            ips114_show_string(0,16*5,"Lat:      Lon:");
+            ips114_show_string(0,16*6,"v:        d:");
             break;
 
         case MENU_PID:
             ips114_set_color(RGB565_BLUE,RGB565_WHITE);
             ips114_show_string(0,16*0,"PID Param");
-            // PIDÀàĞÍ
+            // PIDç±»å‹
             for(i=0;i<4;i++) {
                 char buf[20];
                 if(pid_type==i && pid_focus==FOCUS_PID_TYPE)
@@ -78,17 +76,16 @@ void IPS114_Show_Unit(void)
                     sprintf(buf," %s ",pid_type_str[i]);
                 ips114_show_string(0,16*(1+i),buf);
             }
-            // PID²ÎÊı
+            // PIDå‚æ•°
 
             ips114_show_string(100,16*1, pid_param==0 ? (pid_focus==FOCUS_PID_PARAM?"[KP]":" KP ") : " KP ");
             ips114_show_string(100,16*2, pid_param==1 ? (pid_focus==FOCUS_PID_PARAM?"[KI]":" KI ") : " KI ");
             ips114_show_string(100,16*3, pid_param==2 ? (pid_focus==FOCUS_PID_PARAM?"[KD]":" KD ") : " KD ");
-            ips114_show_string(100,16*4, " Om ");
-            ips114_show_string(100,16*5, " Oi ");
+            
             if(pid_focus==FOCUS_PID_EDIT)
-                ips114_show_string(100,16*6,"Edit Mode");
+                ips114_show_string(100,16*4,"Edit Mode");
             else
-                ips114_show_string(100,16*6,"         ");
+                ips114_show_string(100,16*4,"         ");
             break;
         case MENU_SAVEPOINT:
             ips114_set_color(RGB565_MAGENTA, RGB565_WHITE);
@@ -96,38 +93,53 @@ void IPS114_Show_Unit(void)
             ips114_show_string(0, 16*2, "Press [OK] to Save");
             ips114_show_string(0, 16*3, "Press [Next] to Run");
             ips114_show_string(30, 16*5, "/");
-            ips114_show_uint8(50, 16*5,Object_one_num);
+            ips114_show_uint8(50, 16*5,Object_PointNum[0]);
             ips114_show_string(0, 16*6, "Lat ");
             ips114_show_string(0, 16*7, "Lon ");
+            break;
+        case MENU_RUN:
+            ips114_set_color(RGB565_RED,RGB565_WHITE);
+            ips114_show_string(0,16*0,"Run Robot?");
+            ips114_show_string(0,16*2, run_confirm ? "[YES]" : " YES ");
+            ips114_show_string(0,16*3, !run_confirm ? "[NO]" : " NO ");
             break;
     }
 }
 
-/* ÏÔÊ¾¶¯Ì¬ÄÚÈİ */
+/* æ˜¾ç¤ºåŠ¨æ€å†…å®¹ */
 void IPS114_Show_Info(void)
 {
     uint8 i=0;
     switch(page_num)
     {
         case MENU_STATUS:
-            // ¶¯Ì¬ÏÔÊ¾IMU¡¢GPSµÈ
+            // åŠ¨æ€æ˜¾ç¤ºIMUã€GPSç­‰
+            ips114_show_float(100,0,velocity,2,3);
             for(i=0;i<3;i++) {
                 ips114_show_float(80*i, 16*1 ,imu_acc[i],2,3);
                 ips114_show_float(80*i, 16*3 ,imu_gyro[i],2,3);
             }
+            switch(curState)
+            {
+                case State_Init:     ips114_show_string(0,16*7,"Init  "); break;
+                case State_Unlock:   ips114_show_string(0,16*7,"Unlock"); break;
+                case State_Yaw_Init: ips114_show_string(0,16*7,"YawInit"); break;
+                case State_Subject_1:ips114_show_string(0,16*7,"Object"); break;
+            }
             if(gps_date_ready)
             {
-                ips114_show_uint8(8, 16*5, gps_tau1201.state);
-                ips114_show_uint8(88, 16*5, gps_tau1201.satellite_used);
-                ips114_show_float(160, 16*5, gps_tau1201.height, 4, 3);
+                ips114_show_uint8(15, 16*5, gps_tau1201.state);
+                ips114_show_uint8(70, 16*5, gps_tau1201.satellite_used);
+                ips114_show_float(160, 16*5, gps_tau1201.height, 4, 6);
                 ips114_show_float(30, 16*6, gps_tau1201.latitude, 4, 6);
-                ips114_show_float(155, 16*6, gps_tau1201.longitude, 4, 6);
+                ips114_show_float(160, 16*6, gps_tau1201.longitude, 4, 6);
+                ips114_show_float(30, 16*7, gps_tau1201.speed, 4, 6);
             }
-            ips114_show_float(30, 16*7 ,velocity,3,3);
-            ips114_show_float(155, 16*7 ,yaw,3,3);
+            ips114_show_float(120, 16*4 ,yaw,3,3);
+
             break;
         case MENU_SAVEPOINT:
-            // ¿ÉÏÔÊ¾µ±Ç°write_indexµÈĞÅÏ¢
+            // å¯æ˜¾ç¤ºå½“å‰write_indexç­‰ä¿¡æ¯
             ips114_show_uint8(0, 16*5, write_index);
             ips114_show_float(30, 16*6, gps_tau1201.latitude,4, 6);
             ips114_show_float(30, 16*7, gps_tau1201.longitude,4, 6);
@@ -138,11 +150,10 @@ void IPS114_Show_Info(void)
             ips114_show_float(160,16*1,pid->kp,3,3);
             ips114_show_float(160,16*2,pid->ki,3,3);
             ips114_show_float(160,16*3,pid->kd,3,3);
-						ips114_show_float(160,16*4,pid->outmax,3,3);
-            ips114_show_float(160,16*5,pid->out_i,3,3);
             break;
         }
         case MENU_RUN:
+            ips114_show_string(0,16*5,run_confirm ? "Ready to Run!" : "Waiting...     ");
             break;
     }
 }
@@ -153,7 +164,7 @@ void GUI_Handle_Key(void)
     switch(page_num)
     {
         case MENU_STATUS:
-            if(key3_flag) { // ÓÒ¼ü
+            if(key3_flag) { // å³é”®
                 page_num = MENU_PID;
                 page_change = true;
                 pid_focus = FOCUS_PID_TYPE;
@@ -163,43 +174,47 @@ void GUI_Handle_Key(void)
 
         case MENU_PID:
             if(pid_focus == FOCUS_PID_TYPE) {
-                if(key3_flag) {page_num = MENU_SAVEPOINT;page_change = true;} // ÓÒ¼üµ½ÏÂÒ»½çÃæ
-                if(key2_flag) pid_type = (pid_type + 1) % 4; // ÖĞ¼üÏÂÒ»¸ö
-                if(key1_flag) pid_focus = FOCUS_PID_PARAM;   // ×ó¼ü½øÈë²ÎÊıÑ¡Ôñ
+                if(key3_flag) {page_num = MENU_SAVEPOINT;page_change = true;} // å³é”®åˆ°ä¸‹ä¸€ç•Œé¢
+                if(key2_flag) pid_type = (pid_type + 1) % 4; // ä¸­é”®ä¸‹ä¸€ä¸ª
+                if(key1_flag) pid_focus = FOCUS_PID_PARAM;   // å·¦é”®è¿›å…¥å‚æ•°é€‰æ‹©
             } else if(pid_focus == FOCUS_PID_PARAM) {
-              if(key1_flag) pid_focus = FOCUS_PID_TYPE; // ×ó¼üµ½PIDÑ¡Ôñ
-                if(key2_flag) pid_param = (pid_param + 1) % 3; // ÖĞ¼üÏÂÒ»¸ö
-                if(key3_flag) pid_focus = FOCUS_PID_EDIT;      // ÓÒ¼ü½øÈë±à¼­
+              if(key1_flag) pid_focus = FOCUS_PID_TYPE; // å·¦é”®åˆ°PIDé€‰æ‹©
+                if(key2_flag) pid_param = (pid_param + 1) % 3; // ä¸­é”®ä¸‹ä¸€ä¸ª
+                if(key3_flag) pid_focus = FOCUS_PID_EDIT;      // å³é”®è¿›å…¥ç¼–è¾‘
             } else if(pid_focus == FOCUS_PID_EDIT) {
                 pid_param_t* pid = get_pid_ptr(pid_type);
                 float* param = pid_param == 0 ? &pid->kp : (pid_param == 1 ? &pid->ki : &pid->kd);
-                if(key1_flag) *param -= 0.1f; // ×ó¼ü¼õ
-                if(key2_flag) *param += 0.1f; // ÖĞ¼ü¼Ó
-                if(key3_flag) pid_focus = FOCUS_PID_PARAM; // ÓÒ¼üÍË³ö±à¼­
+                if(key1_flag) *param -= 0.1f; // å·¦é”®å‡
+                if(key2_flag) *param += 0.1f; // ä¸­é”®åŠ 
+                if(key3_flag) pid_focus = FOCUS_PID_PARAM; // å³é”®é€€å‡ºç¼–è¾‘
             }
             IPS114_Show_Unit();
             break;
         case MENU_SAVEPOINT:
-            if(key3_flag) { // ÓÒ¼üÏÂÒ»½çÃæ
-                page_num = MENU_STATUS;
+            if(key3_flag) { // å³é”®ä¸‹ä¸€ç•Œé¢
+                page_num = MENU_RUN;
                 page_change = true;
                 pid_focus = FOCUS_PID_TYPE;
                 IPS114_Show_Unit();
             }
 						if(key2_flag) { 
-                //W25Q_Erase4K_20(4096, 1);// ÏÈ²Á³ı
+                //W25Q_Erase4K_20(4096, 1);// å…ˆæ“¦é™¤
 								//ips114_show_string(100, 16*5, "Erease!");
 								write_index = 0;
             }
-            if(key1_flag&&(write_index<Object_one_num)) { // ×ó¼ü¼ÇÂ¼Ò»´Î
+            if(key1_flag&&(write_index<4)) { // å·¦é”®è®°å½•ä¸€æ¬¡
 
-                WritePoint(write_index++); // ¼ÇÂ¼
-                IPS114_Show_Info(); // Ë¢ĞÂ¶¯Ì¬ÄÚÈİ
+                WritePoint(write_index++); // è®°å½•
+                IPS114_Show_Info(); // åˆ·æ–°åŠ¨æ€å†…å®¹
             }
-						else if(key1_flag&&(write_index==Object_one_num))
-						{
-							//curState=State_Unlock;
-						}
+            break;
+        case MENU_RUN:
+            if(key1_flag) curState=State_Unlock; // å·¦é”®NO
+            if(key3_flag) { // å³é”®è¿”å›ä¸»ç•Œé¢
+                page_num = MENU_STATUS;
+                page_change = true;
+                IPS114_Show_Unit();
+            }
             break;
     }
 }

@@ -18,9 +18,9 @@ double my_atan2(double y, double x) {
     // 处理x = 0的情况
     if (x == 0) {
         if (y > 0) {
-            return M_PI / 2; // y轴正半轴
+            return PI / 2; // y轴正半轴
         } else if (y < 0) {
-            return -M_PI / 2; // y轴负半轴
+            return -PI / 2; // y轴负半轴
         } else {
             return 0; // 原点
         }
@@ -35,9 +35,9 @@ double my_atan2(double y, double x) {
    // 处理x < 0的情况
     } else {
         if (y > 0) {
-            return theta + M_PI; // 第二象限或x轴负半轴
+            return theta + PI; // 第二象限或x轴负半轴
         } else {
-            return theta - M_PI; // 第三象限
+            return theta - PI; // 第三象限
         }
      }
   }
@@ -52,9 +52,9 @@ void GetEuler(float gyro[], float dt)
     float norm; // 归一化因子
 
     // 陀螺仪数据转换为弧度/秒（因输入gyro[]单位为°/s）
-    float gx = gyro[0] * 0.0174533f; // °/s -> rad/s
-    float gy = gyro[1] * 0.0174533f;
-    float gz = gyro[2] * 0.0174533f;
+    float gx = ANGLE_TO_RAD(gyro[0]); // °/s -> rad/s
+    float gy = ANGLE_TO_RAD(gyro[1]);
+    float gz = ANGLE_TO_RAD(gyro[2]);
 
     // 四元数更新（仅陀螺仪积分）
     q0 += (-q1 * gx - q2 * gy - q3 * gz) * 0.5f * dt;
@@ -71,16 +71,16 @@ void GetEuler(float gyro[], float dt)
     q3 /= norm;
 
     // 四元数转欧拉角（弧度转角度）
-    roll  = my_atan2(2.0f * (q0 * q1 + q2 * q3), 1.0f - 2.0f * (q1 * q1 + q2 * q2)) * 57.29578f;
-    pitch = asin(2.0f * (q0 * q2 - q3 * q1)) * 57.29578f;
-    yaw   = my_atan2(2.0f * (q0 * q3 + q1 * q2), 1.0f - 2.0f * (q2 * q2 + q3 * q3)) * 57.29578f;
+    roll  = RAD_TO_ANGLE(my_atan2(2.0f * (q0 * q1 + q2 * q3), 1.0f - 2.0f * (q1 * q1 + q2 * q2)));
+    pitch = RAD_TO_ANGLE(asin(2.0f * (q0 * q2 - q3 * q1)));
+    yaw   = RAD_TO_ANGLE(my_atan2(2.0f * (q0 * q3 + q1 * q2), 1.0f - 2.0f * (q2 * q2 + q3 * q3)));
 }
 void EulerToQuaternion()
 {
 	  // 转换为弧度
-		float roll_rad = roll* 0.0174533f;  // π/180 ≈ 0.0174533
-		float pitch_rad = pitch * 0.0174533f;
-		float yaw_rad = yaw * 0.0174533f;
+		float roll_rad = ANGLE_TO_RAD(roll);  // π/180 ≈ 0.0174533
+		float pitch_rad = ANGLE_TO_RAD(pitch);
+		float yaw_rad = ANGLE_TO_RAD(yaw);
 	
     double cr = cos(roll_rad * 0.5f);  // cos(φ/2)
     double sr = sin(roll_rad * 0.5f);  // sin(φ/2)

@@ -40,15 +40,6 @@
 #include <stdio.h>
 #include "intrins.h"
 
-
-#ifndef ENABLE
-#define ENABLE 1
-#endif
-
-#ifndef DISABLE
-#define DISABLE 0
-#endif
-
 //数据类型声明
 typedef unsigned char   uint8  ;	//  8 bits
 typedef unsigned int  	uint16 ;	// 16 bits
@@ -100,10 +91,13 @@ extern void (*int2_irq_handler)(void);
 extern void (*int3_irq_handler)(void);
 extern void (*int4_irq_handler)(void);
 
-#define ZF_ENABLE           (1)
-#define ZF_DISABLE          (0)
+/*宏定义*/
+typedef unsigned char bool; 
+#define true 1
+#define false 0
 
-#define ZF_TRUE             (1)
-#define ZF_FALSE            (0)
+#define ANGLE_TO_RAD(x)     ((x) * PI / 180.0)                                  // 角度转换为弧度
+#define RAD_TO_ANGLE(x)     ((x) * 180.0 / PI)                                  // 弧度转换为角度
+#define PI                  (3.1415926535898)
 
 #endif

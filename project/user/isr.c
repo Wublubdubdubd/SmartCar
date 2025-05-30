@@ -214,7 +214,7 @@ void TM11_IRQHandler() interrupt 24
   * @param 无
   * @return 无
   */
-void pit_hanlder_imu(void)
+void pit_hanlder_data(void)
 { 
     
     //获取传感器数据
@@ -229,106 +229,111 @@ void pit_hanlder_imu(void)
     //gyro滤波
     FOCF(&imu660ra_gyro_x,&imu_gyro_x_pre,0.1);
     FOCF(&imu660ra_gyro_y,&imu_gyro_y_pre,0.1);
-    FOCF(&imu660ra_gyro_z,&imu_gyro_z_pre,0.1);
+    FOCF(&imu660ra_gyro_z,&imu_gyro_z_pre,0.05);
   
     //转换为实际物理值，纠正零偏
 	  imu_acc[0]=imu660ra_acc_transition(imu660ra_acc_x);
 	  imu_acc[1]=imu660ra_acc_transition(imu660ra_acc_y)+0.017;
 	  imu_acc[2]=imu660ra_acc_transition(imu660ra_acc_z);
 	
-
     imu_gyro[0]=imu660ra_gyro_transition(imu660ra_gyro_x);
 	  imu_gyro[1]=imu660ra_gyro_transition(imu660ra_gyro_y);
 	  imu_gyro[2]=imu660ra_gyro_transition(imu660ra_gyro_z);
 	
 		//数据融合获取欧拉角
 		GetEuler(imu_gyro,0.005);
-		
-//		imu_acc[0] -= (2*(q1*q3 - q0*q2));
-//		if(fabs(imu_acc[0])<0.05)imu_acc[0]=0;
-//		x_v += (imu_acc[0] * 0.005);
 }
 /**
-  * @brief TIM1中断处理函数，提取gps数据
+  * @brief TIM1中断处理函数，更新角度内环
   * @param 无
   * @return 无
   */
-void pit_hanlder_gps(void)
-{
-    //获取gps数据
-    if(gps_tau1201_flag)
-    {
-      gps_tau1201_flag = 0;
-      gps_date_ready = (!gps_data_parse()) ? 1 : 0;
-    }
-    else gps_date_ready = 0;
-}
-/**
-  * @brief TIM11中断处理函数，更新角度环
-  * @param 无
-  * @return 无
-  */
-void pit_hanlder_angle(void)
-{
-    uint32 angle_duty;
+void pit_control_inner(void)
+{		
 
+
+    if(curState < State_Yaw_Init) return; // 初始化或保护状态，不能运行
   
-    encoder_data = encoder_get_count(ENCODER_DIR_1);  // 获取编码器计数
-    encoder_clear_count(ENCODER_DIR_1);               // 清空编码器计数
-    
-    velocity = encoder_data * encode2vel; 
-    
-    if( curState < State_Yaw_Init ) return; // 初始化或保护状态，不能运行
+		if(basic_duty_index < basic_up_duty)
+		{
+			 basic_duty_up_left += 5;
+			 basic_duty_up_right += 5;
+		}
+		if(basic_duty_index < basic_forward_duty)
+		{
+			 basic_duty_forward_left += 5;
+			 basic_duty_forward_right += 5;
+		}
+		basic_duty_index++;
+		
+		//内环控制
+		angle_inner_out =PidLocCtrl(&angle_inner_pid,angle_outer_out - imu_gyro[2],0.007);
+		velocity_inner_out = PidLocCtrl(&velocity_inner_pid,velocity_outer_out - imu_acc[0]*9.8,0.007);
+		
+		duty_up_left = basic_duty_up_left;
+		duty_up_right = basic_duty_up_right;
+		
+		duty_forward_left = basic_duty_forward_left + velocity_inner_out*5 - angle_inner_out*5+ forward_feed*5;
+		duty_forward_right = basic_duty_forward_right + velocity_inner_out*5 + angle_inner_out*5- forward_feed*5;
+		
+		if(curState==State_Shut || curState==State_Finish)
+		{
+			 duty_up_left=500;
+			 duty_up_right=500;
+			 duty_forward_left=500;
+			 duty_forward_right=500;
+		 
+		}
+		
+		//左 抬升电机
+		pwm_set_duty(PWM_1,duty_up_left);
+		//右 抬升电机
+		pwm_set_duty(PWM_2,duty_up_right);
+		//左 推进电机
+		pwm_set_duty(PWM_3,duty_forward_left);
+		//右 推进电机
+		pwm_set_duty(PWM_4,duty_forward_right);
+}
+/**
+  * @brief TIM3中断处理函数，更新角度外环
+  * @param 无
+  * @return 无
+  */
+void pit_control_outer(void)
+{			
+    if(curState < State_Yaw_Init) return; // 初始化或保护状态，不能运行
+		//角度误差
+		u_angle =  target_angle - yaw;
+		//修正
+		if(u_angle<=(-180))u_angle+=360;
+		else if(u_angle>=180)u_angle-=360;
+		
+		//外环PID 输出作为内环控制量
+		angle_outer_out = PidLocCtrl(&angle_outer_pid,u_angle,0.042);
+		
+		//速度估计 1000/42 = 23.81Hz 
+		encoder_data = encoder_get_count(ENCODER_DIR_1);
+		encoder_clear_count(ENCODER_DIR_1);
 
-    //抬升电机自动运行
-    if( up_times < 80)
-    {
-      duty_up_left += 5;
-      duty_up_right += 5;
-      duty_forward_left += 3;
-      duty_forward_right += 3;
-      up_times++;
-    }
-    
-    if( curState >= State_Shut ) 
-    {
-      Break();
-      angle_u = 0;
-      velocity_u = 0;
-    }
-    else
-    {
-      // 角度环
-      angle_u = Angle_Pid_fun(0.01);
-      // 速度环
-      velocity_u = Velocity_Pid_fun(0.01);
-    }
-    
-    //左 抬升电机
-	  angle_duty = constrain_uint32(duty_up_left);
-    pwm_set_duty(PWM_1,angle_duty);
-	  //右 抬升电机
-	  angle_duty = constrain_uint32(duty_up_right);
-    pwm_set_duty(PWM_2,angle_duty);
-    //左 推进电机
-    angle_duty = constrain_uint32(duty_forward_left - angle_u + velocity_u + 20);
-    pwm_set_duty(PWM_3,angle_duty);
-    //右 推进电机
-    angle_duty = constrain_uint32(duty_forward_right + angle_u + velocity_u - 20 );
-    pwm_set_duty(PWM_4,angle_duty);
-    
+		velocity = encoder_data * encode2vel * 23.81; // 编码值转换为实际速度
+		
+		//速度误差
+		u_velocity =  target_velocity - velocity;
+
+		//外环PID 输出作为内环控制量
+		velocity_outer_out = PidLocCtrl(&velocity_outer_pid,u_velocity,0.042);
 }
 void my_pit_init()
 {
-    //1s采样GPS数据
-    tim1_irq_handler = pit_hanlder_GPS;	
-    pit_ms_init(PIT_GPS, 1000);
-    //10ms更新角度环
-    tim3_irq_handler = pit_hanlder_angle;
-    pit_ms_init(PIT_ANGLE, 10);
+		//7ms更新角度内环
+    tim1_irq_handler = pit_control_inner;
+    pit_ms_init(PIT_CONTROL_INNER, 7);
+    //42ms更新角度外环
+    tim3_irq_handler = pit_control_outer;
+    pit_ms_init(PIT_CONTROL_OUTER, 42);
     //5ms采样IMU数据
-    tim4_irq_handler = pit_hanlder_imu;	
-    pit_ms_init(PIT_IMU, 5);
+    tim4_irq_handler = pit_hanlder_data;	
+    pit_ms_init(PIT_DATA, 5);
 }
 
 

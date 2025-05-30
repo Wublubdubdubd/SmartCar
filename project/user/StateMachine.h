@@ -17,8 +17,8 @@ State = Event_xxx[State];
 typedef enum
 {
   State_Bringup,   // 唤醒
-  State_Init,      // 设备初始化完成
-  State_Unlock,   // 解锁
+  State_Init,      // 设备初始化
+  State_Unlock,    // 安全解锁
  
   State_Yaw_Init,  // 航向角初始化
   State_Subject_1, // 科目一

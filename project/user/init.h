@@ -1,8 +1,6 @@
 #ifndef __INIT_H_
 #define __INIT_H_
 
-#define IPS_USE (1) // «∑Ò π”√∆¡ƒª
-
 #include "zf_common_headfile.h"
 
 #include "pid.h"
@@ -16,6 +14,7 @@
 #include "qspi.h"
 #include "w25qxx.h"
 #include "encoder.h"
+
 
 void init(void);
 

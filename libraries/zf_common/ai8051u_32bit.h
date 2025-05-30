@@ -1,6 +1,10 @@
 #ifndef __AI8051U_H__
 #define __AI8051U_H__
 
+#include "stdio.h"
+extern void _m(void);//修正编译器的LCALL 0x0000异常
+#define main(x) main(x){_m();while(P0|!P0);sprintf(0, "0");}; void _m(x)
+
 /////////////////////////////////////////////////
 
 sfr         P0          =           0x80;

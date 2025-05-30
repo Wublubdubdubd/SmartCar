@@ -2,7 +2,9 @@
 
 uint16 duty[4]={0}; //四个电机的占空比
 
-int duty_up_left=500, duty_up_right=500, duty_forward_left=500, duty_forward_right=500;
+uint16 duty_up_left=500, duty_up_right=500, duty_forward_left=500, duty_forward_right=500;
+
+uint16 feedforward = 20;
 
 uint8 up_times = 0; // 抬升电机占空比自增计数 自动运行，每次 + 1% 
 

@@ -38,14 +38,14 @@
 
 #include "init.h"
 
+#define PIT_CONTROL_INNER (TIM1_PIT) // 角度内环 中断源 TIM1
 
-#define PIT_GPS  (TIM1_PIT) // GPS 中断源 TIM1
-#define PIT_ANGLE (TIM3_PIT) // 角度环 中断源 TIM3
-#define PIT_IMU  (TIM4_PIT) // IMU 中断源 TIM11
+#define PIT_CONTROL_OUTER (TIM3_PIT) // 角度外环 中断源 TIM3
 
-void pit_hanlder_imu(void); // TIM11 中断服务函数
-void pit_hanlder_GPS(void); // TIM1 中断服务函数
-void pit_hanlder_angle(void); // TIM3 中断服务函数
+#define PIT_DATA  (TIM4_PIT) // IMU 中断源 TIM4
+
+void pit_hanlder_data(void); // TIM4 中断服务函数
+void pit_hanlder_control(void); // TIM3 中断服务函数
 
 void my_pit_init(void);
 

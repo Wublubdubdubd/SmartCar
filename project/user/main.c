@@ -36,85 +36,32 @@
 
 void main()
 {
-    char command[command_size];//蓝牙控制命令
+
+    char command[64];//蓝牙控制命令
   
     char str_buffer[50];//向蓝牙发送信息的buffer
-   
-    float temp_float = 0; // 零时变量
 		
+    float temp_float = 0,temp_float2=0; // 零时变量
+		int temp_int = 0;
+    uint8 index = 0;
     //科目一开始
-    pObject = Object_one_index; 
-    cur_object_num = Object_one_num;
+    //pObject = Object_one_index; 
+   
 		
     //设备初始化
     init();
     
     while(1)
 		{
-      get_key();
-      
-#if IPS_USE     
-      IPS114_Show_Info(); //显示必要信息
-#endif
-			blue_tooth_read(command);
-      /*
-      命令集:
-      s: 记录起始点，计算GPS误差，准备初始化yaw角
-      
-      b: 刹车 四个电机占空比值 0%
-      
-      w: 向当前科目的EEPROM区写当前位置的经纬度，写满后不可再写，只有清除后可再次重新写入。何时写满取决与当前科目（未完善）
-           
-      e：擦除EEPROM第一页，写索引值 0 
-      
-      */
-      if((curState == State_Init) && key2_flag)curState = State_Unlock;
-      if((page_num == 2) && key3_flag && (is_erase == 0))
-      {
-        W25Q_Erase4K_20(0, 1);//iap_erase_page(0);write_index = 0;//第一页 512k
-        sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);
-        is_erase = 1 ;
-      }
-      else if ((page_num == 2) && key3_flag && (is_erase == 1))
-        WritePoint(pObject[write_index++]);
-      
+      GetGPSData();
+	
+			ble6a20_read_buffer(command, 64);
       switch(command[0])
       {
-        case 's':
-        {
-          if(curState == State_Unlock)
-          {
-            //装载 P1 至 target
-            LoadPoint();
-           
-            // 计算gps的漂移
-            gps_point_error[0] = gps_tau1201.latitude - target_point[0];
-            gps_point_error[1] = gps_tau1201.longitude - target_point[1];
-            
-            // 输出提示语句
-            sprintf(str_buffer,"Start!\r\nGPS Error: lat %lf lon %lf\r\n",gps_point_error[0],gps_point_error[1]);ble6a20_send_string(str_buffer);
-            
-            // 更新状态
-            curState = State_Yaw_Init;
-          }
-          break;
-        }
         case 'b':
         {
           curState = State_Shut;
-          sprintf(str_buffer,"Break!\r \n");ble6a20_send_string(str_buffer);
-          break;
-        }
-        case 'w':
-        {
-          WritePoint(pObject[write_index++]);//W25Q_PageProgram_32(0, write_buf, 2);
-          sprintf(str_buffer,"Write P%d!\r\n",write_index);ble6a20_send_string(str_buffer);
-          break;
-        }
-        case 'e':
-        {
-          W25Q_Erase4K_20(0, 1);//iap_erase_page(0);write_index = 0;//第一页 512k
-          sprintf(str_buffer,"Erease!\r\n");ble6a20_send_string(str_buffer);
+          sprintf(str_buffer,"Break!\r\n");ble6a20_send_string(str_buffer);
           break;
         }
         case 'A':
@@ -122,9 +69,12 @@ void main()
           temp_float = func_str_to_float(&command[2]);
           switch(command[1])
           {
-            case 'P':angle_KP = temp_float;break;
-            case 'I':angle_KI = temp_float;break;
-            case 'D':angle_KD = temp_float;break;
+            case 'P':angle_outer_pid.kp = temp_float;break;
+            case 'I':angle_outer_pid.ki = temp_float;break;
+            case 'D':angle_outer_pid.kd = temp_float;break;
+						case 'O':angle_outer_pid.outmax = temp_float;break;
+						case 'o':angle_outer_pid.out_i = temp_float;break;
+						case 't':target_angle = temp_float;break;
           }
           break;
         }
@@ -133,33 +83,161 @@ void main()
           temp_float = func_str_to_float(&command[2]);
           switch(command[1])
           {
-            case 'P':velocity_KP = temp_float;break;
-            case 'I':velocity_KI = temp_float;break;
-            case 'D':velocity_KD = temp_float;break;
+            case 'P':velocity_outer_pid.kp = temp_float;break;
+            case 'I':velocity_outer_pid.ki = temp_float;break;
+            case 'D':velocity_outer_pid.kd = temp_float;break;
+						case 'O':velocity_outer_pid.outmax = temp_float;break;
+						case 'o':velocity_outer_pid.out_i = temp_float;break;
+						case 't':target_velocity = temp_float;break;
           }
           break;          
         }
-        case 'U':
+				case 'a':
         {
-          curState = State_Yaw_Init;
-          sprintf(str_buffer,"Start!\r\n");ble6a20_send_string(str_buffer);
+          temp_float = func_str_to_float(&command[2]);
+          switch(command[1])
+          {
+            case 'P':angle_inner_pid.kp = temp_float;break;
+            case 'I':angle_inner_pid.ki = temp_float;break;
+            case 'D':angle_inner_pid.kd = temp_float;break;
+						case 'O':angle_inner_pid.outmax = temp_float;break;
+						case 'o':angle_inner_pid.out_i = temp_float;break;
+						//case 't':angle_outer_out = temp_float;break;
+          }
           break;
         }
+        case 'v':
+        {
+          temp_float = func_str_to_float(&command[2]);
+          switch(command[1])
+          {
+            case 'P':velocity_inner_pid.kp = temp_float;break;
+            case 'I':velocity_inner_pid.ki = temp_float;break;
+            case 'D':velocity_inner_pid.kd = temp_float;break;
+						case 'O':velocity_inner_pid.outmax = temp_float;break;
+						case 'o':velocity_inner_pid.out_i = temp_float;break;
+						//case 't':velocity_outer_out = temp_float;break;
+          }
+          break;          
+        }
+				case 'S':
+			  {   
+						curState = State_Unlock;
+						sprintf(str_buffer,"Start!\r\n");ble6a20_send_string(str_buffer);
+						target_distance = 0;
+						break;
+				}
+				case 'U':
+				{
+						curState = State_Yaw_Init;
+						sprintf(str_buffer,"Unsafe Start!\r\n");ble6a20_send_string(str_buffer);
+						target_distance = 0;
+						break;
+				}
+				case 'D':
+				{
+					temp_int=func_str_to_int(&command[2]);
+					 switch(command[1])
+          {
+            case 'u': basic_up_duty= temp_int;break;
+            case 'f': basic_forward_duty = temp_int;break;
+            case 'e': forward_feed= temp_int;break;
+          }
+          break; 
+				}
+				case 'R':
+				{
+						basic_duty_up_left=500;
+						basic_duty_up_right=500;
+						basic_duty_forward_left=500;
+						basic_duty_forward_right=500;
+						basic_duty_index = 0;
+						curState = State_Init;
+						velocity_inner_pid.integrator=0;
+						angle_inner_pid.integrator=0;
+						velocity_outer_pid.integrator=0;
+						angle_outer_pid.integrator=0;
+					
+						roll =0;
+						yaw =0;
+						pitch =0;
+						q0=1;
+						q1=0;
+						q2=0;
+						q3=0;
+          
+            u_angle = 0;
+            u_velocity = 0;
+						sprintf(str_buffer,"Reset!\r\n");ble6a20_send_string(str_buffer);
+						break;
+				}
         default :;
       }
-      //LoadPoint();
-			//sprintf(str_buffer,"P%d : %.8lf %.8lf\r\n",cur_point_num,target_point[0],target_point[1]);ble6a20_send_string(str_buffer);
-      memset(command,0,command_size);
-      refresh_button();
+      memset(command,0,64);
+
       
       switch(curState)
       {
+				case State_Init:
+				{
+					 get_key();//读取按键状态
+				   IPS114_Show_Info(); //显示动态信息
+					 GUI_Handle_Key();//处理按键
+					 refresh_button();//刷新按键
+					  
+					 break;
+				}
+				case State_Unlock:
+				{
+
+					//装载 P1 至 target
+					if(!gps_date_ready)break;
+          for(index=1;index<=cur_object_num;index++)
+          {
+            sprintf(str_buffer,"P%d:%lf :%lf\r\n",index,Object_1_Point[index-1][0],Object_1_Point[index-1][1]);ble6a20_send_string(str_buffer);
+          }
+					LoadPoint();
+					gps_point_error[0]=gps_tau1201.latitude-target_point[0];
+					gps_point_error[1]=gps_tau1201.longitude-target_point[1];
+					target_point[0]=gps_tau1201.latitude;
+					target_point[1]=gps_tau1201.longitude;
+					sprintf(str_buffer,"GPS Error lat:%lf lon:%lf\r\n",gps_point_error[0],gps_point_error[1]);ble6a20_send_string(str_buffer);
+						
+					roll =0;
+					yaw =0;
+					pitch =0;
+					q0=1;
+					q1=0;
+					q2=0;
+					q3=0;
+					target_distance = 0;
+						
+					ips114_clear(RGB565_GREEN);
+					system_delay_ms(1000);
+					ips114_clear(RGB565_YELLOW);
+					system_delay_ms(1000);
+					ips114_clear(RGB565_RED);
+					system_delay_ms(1000);
+
+					// 更新状态
+					curState = State_Yaw_Init;
+					break;
+				}
         case State_Yaw_Init:
         {
-          target_distance = get_two_points_distance(target_point[0],target_point[1],gps_tau1201.latitude,gps_tau1201.longitude);
-        
-          //sprintf(str_buffer,"D:%lf \r\n",target_distance);ble6a20_send_string(str_buffer);
-          
+					/*角度环信息*/
+					//sprintf(str_buffer,"T=%f,Y=%f,U=%f,A=%f,O=%f,",target_angle,yaw,angle_outer_out,imu_gyro[2],angle_inner_out);ble6a20_send_string(str_buffer);
+					/*速度内环信息*/
+					//sprintf(str_buffer,"T=%f,A=%f,O=%f,",velocity_outer_out,imu_acc[0]*9.8,velocity_inner_out);ble6a20_send_string(str_buffer);
+					/*速度环信息*/
+					//sprintf(str_buffer,"T=%f,Y=%f,U=%f,A=%f,O=%f,",target_velocity,velocity,velocity_outer_out,imu_acc[0]*9.8,velocity_inner_out);ble6a20_send_string(str_buffer);
+					
+					if(gps_date_ready)
+					{
+						target_distance = get_two_points_distance(target_point[0],target_point[1],gps_tau1201.latitude,gps_tau1201.longitude);
+						sprintf(str_buffer,"E=%f,D=%f,",u_angle,target_distance);ble6a20_send_string(str_buffer);
+					}
+          //sprintf(str_buffer,"Error:%f V:%f\r\n",target_angle - yaw,velocity);ble6a20_send_string(str_buffer);
           // 离开两米后
           if(target_distance > 2)
           {
@@ -171,13 +249,13 @@ void main()
             //修正到imu坐标系
             yaw = - yaw;
             //修正四元数
+						target_angle = yaw;
             EulerToQuaternion();
             //提示信息
-            sprintf(str_buffer,"Init! D:%lf Y:%lf\r\n",target_distance,yaw);ble6a20_send_string(str_buffer);
+            sprintf(str_buffer,"Init!Y:%lf\r\n",yaw);ble6a20_send_string(str_buffer);
             //装载下一目标点
             LoadPoint();
-
-            sprintf(str_buffer,"Load P%d!\r\n",cur_point_num);ble6a20_send_string(str_buffer);
+            sprintf(str_buffer,"Load P%d! lat:%lf lon:%lf \r\n",cur_point_num,target_point[0],target_point[1]);ble6a20_send_string(str_buffer);
             
             curState = State_Subject_1;
             
@@ -187,33 +265,46 @@ void main()
         }
         case State_Subject_1:
         {
-          sprintf(str_buffer,"Error:%f!\r\n",angle_error);ble6a20_send_string(str_buffer);
-
-          target_distance = get_two_points_distance(gps_tau1201.latitude,gps_tau1201.longitude,target_point[0],target_point[1]);
-
-          if(target_distance < 2)
+					if(gps_date_ready)
+					{
+					  target_distance = get_two_points_distance(gps_tau1201.latitude,gps_tau1201.longitude,target_point[0],target_point[1]);
+						target_angle = get_two_points_azimuth(gps_tau1201.latitude,gps_tau1201.longitude,target_point[0],target_point[1]);
+						if( (180 <= target_angle)&&(target_angle < 360))
+							target_angle -= 360;
+						target_angle = -target_angle;
+						sprintf(str_buffer,"E=%f,D=%f,v=%f,",u_angle,target_distance,target_velocity);ble6a20_send_string(str_buffer);
+						if(u_angle>60)
+						{
+							target_velocity = -0.0075*u_angle+1.36;
+						}
+						else if(u_angle<-60)
+						{
+							target_velocity = 0.0075*u_angle+1.36;
+						}
+						else
+						{target_velocity=1.0;}
+					}
+          if(target_distance < 1.0)
           {
              //到达目标点
              sprintf(str_buffer,"Arrival P%d! D:%lf \r\n",cur_point_num,target_distance);ble6a20_send_string(str_buffer);
-
+						 if(cur_point_num == cur_object_num)//暂时更新为结束状态
+						 {
+								curState = State_Finish;
+								sprintf(str_buffer,"Finish!\r\n");ble6a20_send_string(str_buffer);
+								break;
+						 }
              //装载下一目标点
              LoadPoint();
-             sprintf(str_buffer,"Load P%d!\r\n",cur_point_num);ble6a20_send_string(str_buffer);
+						 target_distance = 999;
+             sprintf(str_buffer,"Load P%d! lat:%lf lon:%lf \r\n",cur_point_num,target_point[0],target_point[1]);ble6a20_send_string(str_buffer);
           }
           break;
         }
         case State_Finish:
         {
-          sprintf(str_buffer,"Finish!\r\n");ble6a20_send_string(str_buffer);
-          while(1){};
+          break;
         }
-      }
-
-      if(cur_point_num == cur_object_num)//先更新为结束状态
-      {
-        curState = State_Finish;
-      }
-      
-      
+      }     
     }
 }
